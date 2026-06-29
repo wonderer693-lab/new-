@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const frontmatter = {
+  title: 'About API Integration Hub — Our Mission & Team',
+  description: 'API Integration Hub is an independent technical reference for SaaS API integration errors. Learn about our mission, methodology, and the team behind the content.',
+  keywords: ['api integration hub about', 'saas integration troubleshooting team', 'api error documentation'],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <h1>About API Integration Hub</h1>
+    
+    <section>
+      <h2>Our Mission</h2>
+      <p>API Integration Hub is an independent technical reference dedicated to documenting API integration errors across SaaS platforms. We provide production-tested fixes, root cause analysis, and prevention strategies for developers building integrations between CRM, marketing automation, and communication tools.</p>
+      <p>Our goal is to reduce the time developers spend troubleshooting integration errors by providing accurate, actionable documentation that goes beyond official API docs.</p>
+    </section>
+
+    <section>
+      <h2>What We Cover</h2>
+      <ul>
+        <li><strong>Error codes</strong> — HTTP 401, 403, 429, and tool-specific errors with step-by-step fixes</li>
+        <li><strong>Integration errors</strong> — Cross-tool failures between Salesforce, HubSpot, Mailchimp, Slack, and more</li>
+        <li><strong>Silent failures</strong> — Errors that produce no HTTP status but corrupt data silently</li>
+        <li><strong>Migration guides</strong> — API version upgrades and breaking changes</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Our Methodology</h2>
+      <p>Every guide on API Integration Hub follows a consistent structure:</p>
+      <ol>
+        <li><strong>Root cause analysis</strong> — We identify the technical reason the error occurs</li>
+        <li><strong>Detection steps</strong> — How to confirm you're affected by this specific error</li>
+        <li><strong>Step-by-step fix</strong> — Production-ready code examples in Python, JavaScript, and curl</li>
+        <li><strong>Prevention</strong> — Strategies to avoid the error in future integrations</li>
+        <li><strong>Integration context</strong> — How the error manifests across different middleware (Zapier, Make, custom code)</li>
+      </ol>
+      <p>All content is reviewed by integration engineers with hands-on experience building and maintaining SaaS integrations in production environments.</p>
+    </section>
+
+    <section>
+      <h2>Independence</h2>
+      <p>API Integration Hub is not affiliated with, sponsored by, or endorsed by any of the tools we document. We are an independent resource created by developers, for developers.</p>
+      <p>We do not sell integration services, middleware, or consulting. Our content is free and open to all developers.</p>
+    </section>
+
+    <section>
+      <h2>Accuracy & Updates</h2>
+      <p>API platforms change frequently. We update our guides when:</p>
+      <ul>
+        <li>Official API documentation changes</li>
+        <li>New error codes are introduced</li>
+        <li>Rate limits or authentication mechanisms change</li>
+        <li>Community reports reveal new edge cases</li>
+      </ul>
+      <p>Every page displays a "Last Updated" date. If you find outdated information, please <a href="/contact">contact us</a>.</p>
+    </section>
+
+    <section>
+      <h2>The Team</h2>
+      <p>Learn more about our team's expertise and credentials on our <a href="/author">author page</a>.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Have a question, correction, or suggestion? Visit our <a href="/contact">contact page</a> to reach the team.</p>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,149 @@
+{
+  "tool_id": "activecampaign",
+  "tool_name": "ActiveCampaign",
+  "category": "Marketing Automation & CRM",
+  "official_api_docs": "https://developers.activecampaign.com/reference",
+  "api_base_url": "https://{account_name}.api-us1.com/api/3",
+  "api_version": "v3",
+  "last_updated": "2026-06-26",
+  "data_collected": "2026-06-26",
+  "data_sources": {
+    "official_docs": "https://developers.activecampaign.com/",
+    "community": ["https://community.activecampaign.com/", "https://stackoverflow.com/questions/tagged/activecampaign"],
+    "github": "https://github.com/GearPlug/activecampaign-python"
+  },
+
+  "authentication": {
+    "mechanisms": [
+      {
+        "type": "API Token (Header)",
+        "description": "All requests authenticated via API-Token header",
+        "header_name": "Api-Token",
+        "location": "Settings > Developer in ActiveCampaign account",
+        "per_user": true,
+        "notes": "Each user has unique API key. Deleting user breaks integrations using that key. No OAuth option available — API key only."
+      }
+    ],
+    "auth_header": "Api-Token: {your_api_token}",
+    "api_url_pattern": "https://{account_name}.api-us1.com/api/3",
+    "notes": "API key can be reset from Developer settings if compromised"
+  },
+
+  "rate_limits": {
+    "not_documented": "ActiveCampaign does not publicly document specific rate limits",
+    "error_on_exceed": "HTTP 429 Too Many Requests",
+    "notes": "Contact support or account manager for specific rate limit details. 429 errors indicate rate limiting."
+  },
+
+  "core_endpoints": [
+    {"endpoint": "/api/3/contacts", "method": "GET", "description": "List contacts"},
+    {"endpoint": "/api/3/contacts", "method": "POST", "description": "Create contact"},
+    {"endpoint": "/api/3/contacts/{id}", "method": "GET", "description": "Get contact"},
+    {"endpoint": "/api/3/contacts/{id}", "method": "PUT", "description": "Update contact"},
+    {"endpoint": "/api/3/contacts/{id}", "method": "DELETE", "description": "Delete contact"},
+    {"endpoint": "/api/3/contacts/{id}/tags", "method": "GET", "description": "Get contact tags"},
+    {"endpoint": "/api/3/contactTags", "method": "POST", "description": "Create contact tag association"},
+    {"endpoint": "/api/3/contactTags/{id}", "method": "DELETE", "description": "Delete contact tag"},
+    {"endpoint": "/api/3/deals", "method": "GET", "description": "List deals"},
+    {"endpoint": "/api/3/deals", "method": "POST", "description": "Create deal"},
+    {"endpoint": "/api/3/deals/{id}", "method": "PUT", "description": "Update deal"},
+    {"endpoint": "/api/3/lists", "method": "GET", "description": "Get lists"},
+    {"endpoint": "/api/3/lists/{id}/contacts", "method": "GET", "description": "Get contacts in a list"},
+    {"endpoint": "/api/3/automations", "method": "GET", "description": "List automations"},
+    {"endpoint": "/api/3/tags", "method": "GET", "description": "List tags"},
+    {"endpoint": "/api/3/tags", "method": "POST", "description": "Create tag"},
+    {"endpoint": "/api/3/accounts", "method": "GET", "description": "List accounts"},
+    {"endpoint": "/api/3/accounts", "method": "POST", "description": "Create account"},
+    {"endpoint": "/api/3/forms", "method": "GET", "description": "List forms"},
+    {"endpoint": "/api/3/users/me", "method": "GET", "description": "Get current user info (test auth)"}
+  ],
+
+  "webhooks": {
+    "supported": true,
+    "url": "https://developers.activecampaign.com/page/webhooks",
+    "description": "Webhooks available for various events (contact created, deal updated, etc.)"
+  },
+
+  "error_dictionary": [
+    {
+      "error_code": "400 Bad Request",
+      "description": "Malformed request body or missing required parameters",
+      "example_real": "POST /api/3/contactTags with body {\"contact\":\"1\",\"tag\":\"2\"} → returns 'No tag id provided'",
+      "real_response": "{\"errors\":[{\"title\":\"Invalid value for query parameter contactTag.tag\",\"detail\":\"No tag id provided\",\"source\":{\"parameter\":\"contactTag.tag\"}}]}",
+      "common_causes": ["Wrapping payload incorrectly (e.g., {contact, tag} instead of {contactTag: {contact, tag}})", "Missing required nested object key"],
+      "solution": "Always wrap resource-specific payloads in a nested object named after the resource. For contactTags: {\"contactTag\":{\"contact\":\"1\",\"tag\":\"2\"}}. Read API docs carefully for expected JSON structure"
+    },
+    {
+      "error_code": "401 Unauthorized",
+      "description": "Invalid or missing API token",
+      "real_response": "{\"message\":\"No Result found for CustomerAccount with id 2\"}",
+      "solution": "Verify Api-Token header is present and correct. Reset API key from Developer settings if compromised"
+    },
+    {
+      "error_code": "402 Payment Required",
+      "description": "Account payment issues — subscription expired or billing problem",
+      "solution": "Check account billing status in ActiveCampaign settings"
+    },
+    {
+      "error_code": "403 Forbidden",
+      "description": "Authentication failed or user not authorized for resource",
+      "causes": ["API key recycled without updating client", "User removed from account but key still being used", "Key expired or permissions changed"],
+      "solution": "Ensure API key is valid and user has appropriate permissions. Regenerate key if needed and update all integrations"
+    },
+    {
+      "error_code": "404 Not Found",
+      "description": "Requested resource does not exist",
+      "solution": "Check resource ID, verify the endpoint path, confirm account has the resource (list, tag, etc.)"
+    },
+    {
+      "error_code": "422 Unprocessable Entity",
+      "description": "Missing or invalid parameter — request understood but cannot be processed",
+      "real_response": "{\"errors\":[{\"title\":\"The connection service was not provided.\"},{\"title\":\"The connection externalid was not provided.\"}]}",
+      "solution": "Check error titles for which fields are missing or invalid. Ensure all required parameters are provided with correct types"
+    },
+    {
+      "error_code": "429 Too Many Requests",
+      "description": "Rate limit exceeded — sent too many requests in a given amount of time",
+      "solution": "Reduce request frequency. Contact support or account manager for rate limit details and possible increases"
+    }
+  ],
+
+  "community_constraints": [
+    {
+      "issue": "contactTags endpoint has confusing nested JSON requirement",
+      "frequency": "high",
+      "source": "StackOverflow / GitHub issues",
+      "detail": "Many developers try {\"contact\":\"1\",\"tag\":\"2\"} but API expects {\"contactTag\":{\"contact\":\"1\",\"tag\":\"2\"}}. Docs bug — example shows wrong format.",
+      "workaround": "Always nest resource data under the resource name key. For contactTags: use contactTag wrapper. For contacts: use contact wrapper, etc."
+    },
+    {
+      "issue": "403 Forbidden when API key is recycled — Python library crashes with KeyError",
+      "frequency": "medium",
+      "source": "GitHub GearPlug/activecampaign-python issue #11",
+      "detail": "When API returns 403, the Python wrapper library tries to read response.headers['Content-Type'] which may be missing, causing KeyError instead of a proper error message",
+      "workaround": "Always handle HTTP errors explicitly. Check response status code before parsing body. Patch: wrap in try/except or use a more robust library"
+    },
+    {
+      "issue": "HTTP errors not properly reported by official wrappers",
+      "frequency": "medium",
+      "source": "GitHub GearPlug/activecampaign-python issue #24",
+      "detail": "ActiveCampaign API often responds with error statuses. Library currently hides them and returns error body without raising exceptions",
+      "workaround": "Implement custom error handling that checks response.status_code and raises exceptions for 4xx/5xx. Do not rely on library to handle errors gracefully"
+    },
+    {
+      "issue": "No OAuth — API key only, which ties to individual user accounts",
+      "frequency": "medium",
+      "source": "Developer forums",
+      "detail": "ActiveCampaign only supports API key authentication (no OAuth). Each key is tied to a specific user. If user leaves, all integrations using their key break.",
+      "workaround": "Use a dedicated service account (not a real person) for API integrations. Regularly audit which users own API keys. Document key-to-integration mapping"
+    }
+  ],
+
+  "use_cases": [
+    "Sync contacts from CRM to ActiveCampaign for email automation",
+    "Tag contacts based on CRM lifecycle stages to trigger automations",
+    "Create deals in ActiveCampaign from form submissions or external events",
+    "Sync account/company data bidirectionally with external systems",
+    "Automate contact list management based on behavioral triggers from other platforms"
+  ]
+}

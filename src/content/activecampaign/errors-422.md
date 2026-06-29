@@ -1,0 +1,123 @@
+---
+layout: "../../layouts/ErrorCodeLayout.astro"
+title: "ActiveCampaign API 422: Missing or invalid parameter"
+description: "Fix ActiveCampaign API 422 (422 Unprocessable Entity) error. Missing or invalid parameter — request understood but cannot be processed. Check error titles for which fields are missing or invalid."
+tool: "activecampaign"
+errorCode: "422"
+errorName: "422 Unprocessable Entity"
+httpStatus: 422
+category: "validation"
+severity: "medium"
+priority: 2
+lastUpdated: "2026-06-29"
+lastReviewed: "2026-06-29"
+pageType: "error-code"
+author: "API Integration Hub"
+keywords:
+  - "activecampaign api 422 error"
+  - "activecampaign 422 fix"
+  - "activecampaign api missing or invalid parameter"
+  - "activecampaign http 422"
+---
+
+## What Causes ActiveCampaign 422
+
+ActiveCampaign returns HTTP 422 when the request is syntactically valid but the server cannot process it due to missing or invalid parameters. This is a validation error — the endpoint exists and the JSON parses, but the data doesn't meet business rules.
+
+The response includes an `errors` array with `title` and `detail` fields that indicate which parameter is wrong. Common validation failures: missing required fields on contact creation (like `email`), invalid field values (string where number expected), or attempting to set a value that doesn't match the field type.
+
+### Common Scenarios
+- Creating a contact without providing an email address
+- Sending a string value for a field that expects an integer (e.g., `"0"` instead of `0`)
+- Including an unrecognized field name in the payload
+- Setting a date field to an invalid date format
+- Trying to assign a tag or list that doesn't exist (returns 404, but the surrounding payload might also cause 422)
+
+## How to Detect If You're Affected
+
+1. Parse the errors array to identify the problematic field:
+   ```bash
+   curl -s -X POST "https://{account}.api-us1.com/api/3/contacts" \
+     -H "Api-Token: $TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"contact":{"email":"","firstName":"Test"}}' | jq '.errors'
+   ```
+
+2. Check the error title and detail:
+   ```bash
+   curl -s -X POST "https://{account}.api-us1.com/api/3/contacts" \
+     -H "Api-Token: $TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"contact":{"email":"test@example.com","field":"invalid"}}' \
+     | jq '.errors[] | {title: .title, detail: .detail, field: .source.pointer}'
+   ```
+
+3. Validate your payload against ActiveCampaign's documented schema: compare field names exactly as documented.
+
+## Step-by-Step Fix
+
+### 1. Identify the Invalid Field
+```python
+import requests
+
+headers = {"Api-Token": "YOUR_TOKEN"}
+url = "https://{account}.api-us1.com/api/3/contacts"
+payload = {"contact": {"email": "test@example.com", "invalid_field": "value"}}
+
+resp = requests.post(url, headers=headers, json=payload)
+if resp.status_code == 422:
+    errors = resp.json().get("errors", [])
+    for err in errors:
+        print(f"Field: {err.get('source', {}).get('pointer', 'unknown')}")
+        print(f"Error: {err.get('title', '')} — {err.get('detail', '')}")
+```
+
+### 2. Fix Required Fields (Contact Example)
+```python
+# BAD — missing required email
+bad_payload = {"contact": {"firstName": "John"}}
+resp = requests.post(url, headers=headers, json=bad_payload)
+print(resp.status_code)  # 422
+
+# GOOD — include all required fields
+good_payload = {"contact": {"email": "john@example.com", "firstName": "John"}}
+resp = requests.post(url, headers=headers, json=good_payload)
+print(resp.status_code)  # 201 Created
+```
+
+### 3. Validate Field Types
+```python
+# BAD — wrong type for a numeric field
+payload = {"contact": {"email": "test@example.com", "phone": "not_a_number"}}
+
+# GOOD — use correct types per ActiveCampaign API docs
+# Strings for text fields, integers for ID fields, ISO dates for date fields
+payload = {"contact": {"email": "test@example.com", "phone": "+1234567890"}}
+```
+
+## Prevention
+
+- Validate payloads against ActiveCampaign's API schema before sending
+- Use the API Playground in ActiveCampaign settings to test payloads interactively
+- Log the full errors array from 422 responses — it pinpoints the exact problem
+- Build a schema validation step into your integration (e.g., Python `jsonschema` library)
+- Test each field type independently when integrating a new ActiveCampaign module
+
+## Official Documentation
+
+- [ActiveCampaign API Overview](https://developers.activecampaign.com/reference/overview)
+- [ActiveCampaign Create Contact](https://developers.activecampaign.com/reference/create-a-contact)
+- [ActiveCampaign API Errors](https://developers.activecampaign.com/reference/errors)
+
+## People Also Ask
+
+- **What's the difference between ActiveCampaign 400 and 422?** 400 means the JSON is malformed (can't parse). 422 means the JSON is valid but the data fails business validation rules.
+- **How do I find required fields for ActiveCampaign endpoints?** Check the API documentation for each endpoint — required fields are marked in the request body schema.
+- **Can 422 be caused by duplicate data?** ActiveCampaign uses 422 for validation errors including duplicates in some cases, but duplicates typically return a different error structure.
+- **What does the source.pointer field mean?** It indicates which part of the request body caused the error, using JSON pointer notation (e.g., `/data/attributes/email`).
+
+## Related Errors
+
+- [ActiveCampaign 404 Not Found](/activecampaign/errors/404) — Resource does not exist
+- [ActiveCampaign 401 Unauthorized](/activecampaign/errors/401) — Invalid or missing API token
+- [ActiveCampaign 429 Rate Limit](/activecampaign/errors/429) — Too many requests

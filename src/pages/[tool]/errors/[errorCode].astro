@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import { extractSteps } from '../../../utils/extractSteps';
+import { extractFaq } from '../../../utils/extractFaq';
+
+export async function getStaticPaths() {
+  const errors = await getCollection('errors');
+  return errors.map(entry => ({
+    params: { tool: entry.data.tool, errorCode: entry.data.errorCode },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const steps = extractSteps(entry.body || '');
+const faqItems = extractFaq(entry.body || '');
+---
+
+<Content />
+
+{steps.length > 0 && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: entry.data.title,
+    description: entry.data.description,
+    step: steps.map((step, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  })} />
+)}
+
+{faqItems.length > 0 && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(item => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  })} />
+)}

@@ -1,0 +1,90 @@
+{
+  "integration_id": "hubspot-to-pipedrive",
+  "integration_name": "HubSpot ↔ Pipedrive Integration",
+  "tool_a": {
+    "tool_id": "hubspot",
+    "tool_name": "HubSpot"
+  },
+  "tool_b": {
+    "tool_id": "pipedrive",
+    "tool_name": "Pipedrive"
+  },
+  "sync_type": "Custom integration via API or middleware (Zapier, Make, n8n)",
+  "popularity": "medium — common for SMBs migrating from Pipedrive (Sales CRM) to HubSpot (full platform), or using Pipedrive for sales pipeline and HubSpot for marketing",
+  "last_updated": "2026-06-26",
+
+  "authentication_requirements": {
+    "hubspot_side": "OAuth 2.0 or Private App Token with CRM object scopes.",
+    "pipedrive_side": "OAuth 2.0 (recommended for higher rate limits) or Personal API Token. OAuth provides 4x higher burst limits."
+  },
+
+  "common_use_cases": [
+    "Migrate Pipedrive deals, persons, and organizations to HubSpot",
+    "Bi-directional contact/person sync between Pipedrive and HubSpot",
+    "Sync Pipedrive deal stages to HubSpot deal pipeline",
+    "Keep both CRMs in sync during phased migration from Pipedrive to HubSpot",
+    "Use Pipedrive for sales pipeline and HubSpot for marketing automation in parallel"
+  ],
+
+  "endpoints_involved": {
+    "hubspot_endpoints": [
+      {"endpoint": "/crm/v3/objects/contacts", "method": "GET/POST/PATCH", "purpose": "Contact sync"},
+      {"endpoint": "/crm/v3/objects/deals", "method": "GET/POST/PATCH", "purpose": "Deal sync"},
+      {"endpoint": "/crm/v3/objects/companies", "method": "GET/POST/PATCH", "purpose": "Company sync"},
+      {"endpoint": "/crm/v3/objects/owners", "method": "GET", "purpose": "Owner mapping"}
+    ],
+    "pipedrive_endpoints": [
+      {"endpoint": "/api/v2/persons", "method": "GET/POST/PATCH", "purpose": "Person sync (v2 recommended, 50% fewer tokens)"},
+      {"endpoint": "/api/v2/deals", "method": "GET/POST/PATCH", "purpose": "Deal sync (v2)"},
+      {"endpoint": "/api/v2/organizations", "method": "GET/POST/PATCH", "purpose": "Organization sync (v2)"},
+      {"endpoint": "/api/v1/pipelines", "method": "GET", "purpose": "Fetch pipeline and stage mappings"}
+    ]
+  },
+
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Custom field mapping mismatch",
+      "tool": "Pipedrive",
+      "category": "FIELD_MAPPING",
+      "cause": "Pipedrive uses numeric custom field keys (e.g., custom_fields.12345) that differ per account. Hardcoding field keys causes data to sync to wrong fields.",
+      "solution": "Use Pipedrive API to dynamically discover custom field mappings. Store field key-to-name mappings per connected account. Build a UI for users to map fields manually."
+    },
+    {
+      "error_code": "Pipedrive 429 with 10s penalty",
+      "tool": "Pipedrive",
+      "category": "RATE_LIMIT",
+      "cause": "Exceeded token-based burst limit. Pipedrive imposes a 10s penalty window (not standard retry-after).",
+      "solution": "Use OAuth instead of API token for 4x higher limits. Migrate to v2 endpoints (50% fewer tokens). Implement exponential backoff with jitter (2s → 4s → 8s + random). Single queue for API requests."
+    },
+    {
+      "error_code": "Pipedrive v1 endpoint deprecation",
+      "tool": "Pipedrive",
+      "category": "DEPRECATION",
+      "cause": "Pipedrive v1 endpoints for persons, deals, activities, organizations were deprecated April 2025, availability not guaranteed after Dec 31, 2025.",
+      "solution": "Migrate all API calls to v2 equivalents in 2026. v2 uses cursor-based pagination, is more efficient, and costs fewer tokens."
+    }
+  ],
+
+  "community_solutions": [
+    {
+      "problem": "Rate limits causing sync failures during bulk migration",
+      "solution": "Use Pipedrive v2 endpoints (50% fewer tokens). Chunk operations into small batches. Use OAuth instead of API token. Run migration during off-peak hours. Use middleware with built-in rate limit handling (n8n, Make).",
+      "source": "Pipedrive Dev Community / Truto blog"
+    },
+    {
+      "problem": "Mapping Pipedrive stages to HubSpot pipelines",
+      "solution": "Use Pipedrive /api/v1/pipelines endpoint to fetch all stages. Map stage IDs to HubSpot deal stage labels via custom property. Handle the case where pipeline structures differ (e.g., Pipedrive supports multiple pipelines, HubSpot requires pipeline ID mapping).",
+      "source": "Integration best practices"
+    }
+  ],
+
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "HubSpot Pipedrive integration",
+    "Pipedrive to HubSpot migration",
+    "HubSpot Pipedrive sync",
+    "Pipedrive HubSpot contact sync",
+    "Pipedrive to HubSpot deal migration",
+    "HubSpot Pipedrive API custom fields"
+  ]
+}

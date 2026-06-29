@@ -1,0 +1,219 @@
+{
+  "tool_id": "hubspot",
+  "tool_name": "HubSpot",
+  "category": "CRM & Marketing Automation",
+  "official_api_docs": "https://developers.hubspot.com/docs/api-reference/latest/overview",
+  "api_base_url": "https://api.hubapi.com",
+  "api_version": "2026-03 (date-versioned), legacy v3",
+  "last_updated": "2026-03-31",
+  "data_collected": "2026-06-26",
+  "data_sources": {
+    "official_docs": "https://developers.hubspot.com/",
+    "community": ["https://community.hubspot.com/", "https://stackoverflow.com/questions/tagged/hubspot"],
+    "github": "https://github.com/search?q=hubspot+api"
+  },
+
+  "authentication": {
+    "mechanisms": [
+      {
+        "type": "OAuth 2.0 Authorization Code",
+        "description": "For marketplace apps and multi-account integrations",
+        "token_endpoint": "/oauth/2026-03/token",
+        "authorize_endpoint": "/oauth/2026-03/authorize",
+        "access_token_lifetime": "30 minutes",
+        "refresh_token": "Supported, long-lived",
+        "scopes_required": ["crm.objects.contacts.read", "crm.objects.contacts.write", "crm.objects.deals.read", "crm.objects.deals.write", "content", "automation"],
+        "notes": "Use grant_type=authorization_code for initial token, grant_type=refresh_token for refreshing"
+      },
+      {
+        "type": "OAuth 2.0 Client Credentials",
+        "description": "For app-level authentication (no user context), e.g., webhooks journal API",
+        "token_endpoint": "/oauth/2026-03/token",
+        "grant_type": "client_credentials",
+        "access_token_lifetime": "Limited, short-term",
+        "notes": "No refresh token; re-issue JWT per request"
+      },
+      {
+        "type": "Private App Token (Static Auth)",
+        "description": "For single-account installations only",
+        "max_accounts": 1,
+        "location": "Found in app settings",
+        "notes": "Simpler setup but limited to one account"
+      }
+    ],
+    "auth_header": "Authorization: Bearer {access_token}",
+    "api_key_parameter": "hapikey (query param, for developer API keys only)"
+  },
+
+  "rate_limits": {
+    "public_oath_apps": {
+      "requests_per_10_seconds": 110,
+      "per_account": true,
+      "notes": "Each installed account has its own limit. Does not include CRM Search API."
+    },
+    "private_apps_free_starter": {
+      "requests_per_10_seconds": 100,
+      "daily_limit": 250000,
+      "per": "account"
+    },
+    "private_apps_professional": {
+      "requests_per_10_seconds": 190,
+      "daily_limit": 625000,
+      "per": "account"
+    },
+    "private_apps_enterprise": {
+      "requests_per_10_seconds": 190,
+      "daily_limit": 1000000,
+      "per": "account"
+    },
+    "api_limit_increase": {
+      "requests_per_10_seconds": 250,
+      "additional_daily": 1000000,
+      "max_increases": 2
+    },
+    "error_on_exceed": "HTTP 429 Too Many Requests",
+    "rate_limit_headers": [
+      "X-HubSpot-RateLimit-Daily",
+      "X-HubSpot-RateLimit-Daily-Remaining",
+      "X-HubSpot-RateLimit-Secondly (deprecated)",
+      "X-HubSpot-RateLimit-Secondly-Remaining (deprecated)"
+    ],
+    "retry_after": "Resets every 10 seconds; auto-retry for workflows on 429"
+  },
+
+  "core_endpoints": [
+    {"endpoint": "/crm/v3/objects/contacts", "method": "GET", "description": "List contacts (paginated)", "pagination": "cursor-based (after param)"},
+    {"endpoint": "/crm/v3/objects/contacts", "method": "POST", "description": "Create contact"},
+    {"endpoint": "/crm/v3/objects/contacts/{contactId}", "method": "GET", "description": "Get contact by ID"},
+    {"endpoint": "/crm/v3/objects/contacts/{contactId}", "method": "PATCH", "description": "Update contact"},
+    {"endpoint": "/crm/v3/objects/contacts/batch/create", "method": "POST", "description": "Batch create contacts"},
+    {"endpoint": "/crm/v3/objects/contacts/batch/update", "method": "POST", "description": "Batch update contacts"},
+    {"endpoint": "/crm/v3/objects/contacts/batch/read", "method": "POST", "description": "Batch read contacts"},
+    {"endpoint": "/crm/v3/objects/deals", "method": "GET", "description": "List deals"},
+    {"endpoint": "/crm/v3/objects/deals", "method": "POST", "description": "Create deal"},
+    {"endpoint": "/crm/v3/objects/deals/{dealId}", "method": "PATCH", "description": "Update deal"},
+    {"endpoint": "/crm/v3/objects/companies", "method": "GET", "description": "List companies"},
+    {"endpoint": "/crm/v3/objects/companies", "method": "POST", "description": "Create company"},
+    {"endpoint": "/crm/v3/objects/companies/{companyId}", "method": "PATCH", "description": "Update company"},
+    {"endpoint": "/crm/v3/objects/owners", "method": "GET", "description": "List owners"},
+    {"endpoint": "/crm/v3/objects/tickets", "method": "GET", "description": "List tickets"},
+    {"endpoint": "/crm/v3/objects/{object}/search", "method": "POST", "description": "Search CRM objects"},
+    {"endpoint": "/crm/2026-03/contacts", "method": "GET", "description": "New date-versioned endpoint for contacts"}
+  ],
+
+  "webhooks": {
+    "supported": true,
+    "max_subscriptions": 100,
+    "supported_events": [
+      "contact.creation", "contact.deletion", "contact.primarilyCompanyChange",
+      "deal.creation", "deal.deletion", "deal.stageChange",
+      "company.creation", "company.deletion",
+      "ticket.creation", "ticket.deletion", "ticket.stateChange",
+      "conversation.creation", "conversation.deletion"
+    ],
+    "retry_policy": "Up to 10 retries over 24 hours for 4XX (except 429 auto-retry), 5XX auto-retry with custom code actions up to 3 days",
+    "timeout": "Webhook URL must respond; connection failure or timeout triggers retry"
+  },
+
+  "error_dictionary": [
+    {
+      "error_code": "207 Multi-Status",
+      "description": "Partial success for batch endpoints when multi-status error handling is enabled",
+      "category": "BATCH_PARTIAL_ERROR",
+      "solution": "Check individual status entries in response body for per-item errors"
+    },
+    {
+      "error_code": "400 Bad Request",
+      "description": "Validation error, often due to invalid property values or missing required fields",
+      "category": "VALIDATION_ERROR",
+      "real_response": "{\"status\":\"error\",\"message\":\"Property values do not exist: invalid_property\",\"correlationId\":\"...\",\"category\":\"INVALID_INPUT\"}",
+      "solution": "Verify all property names and values against the CRM object schema before sending"
+    },
+    {
+      "error_code": "401 Unauthorized",
+      "description": "Invalid or expired access token",
+      "category": "INVALID_AUTHENTICATION",
+      "real_response": "{\"status\":\"error\",\"message\":\"Authentication token not found\",\"correlationId\":\"...\",\"category\":\"INVALID_AUTHENTICATION\"}",
+      "causes": ["Missing Authorization: Bearer header", "Expired access token (30 min lifetime)", "Token revoked by user", "Token never generated"],
+      "solution": "Check that access token is valid and not expired. Use refresh token to get a new access token via POST /oauth/2026-03/token with grant_type=refresh_token"
+    },
+    {
+      "error_code": "403 Forbidden",
+      "description": "Token lacks required OAuth scopes for the requested resource",
+      "category": "SCOPE_MISMATCH",
+      "real_response": "{\"status\":\"error\",\"message\":\"Token not authorized for this resource\",\"correlationId\":\"...\",\"category\":\"MISSING_SCOPES\"}",
+      "causes": ["OAuth token missing required scope (e.g., crm.objects.deals.read for Deals API)", "Private app token has restricted permissions"],
+      "solution": "Verify OAuth scopes during authorization flow. Re-authorize with required scopes"
+    },
+    {
+      "error_code": "404 Not Found",
+      "description": "Requested resource does not exist",
+      "solution": "Verify the object ID is correct and the object hasn't been deleted"
+    },
+    {
+      "error_code": "409 Conflict",
+      "description": "Duplicate detected or conflicting state (e.g., contact with same email already exists)",
+      "category": "DUPLICATE",
+      "solution": "Use upsert or batch operations with the appropriate ID; check for existing records first"
+    },
+    {
+      "error_code": "414 URI Too Long",
+      "description": "Request URI exceeds limits (e.g., too many query parameters or values)",
+      "solution": "Reduce query parameters or use POST batch/read endpoints instead of GET with many IDs in query"
+    },
+    {
+      "error_code": "423 Locked",
+      "description": "Attempting to sync large volume too quickly; system lock for ~2 seconds",
+      "real_response": "{\"status\":\"error\",\"message\":\"Resource locked\",\"correlationId\":\"...\",\"category\":\"LOCKED\"}",
+      "solution": "Add a delay of at least 2 seconds between requests. Throttle batch operations"
+    },
+    {
+      "error_code": "429 Too Many Requests",
+      "description": "Rate limit exceeded",
+      "category": "RATE_LIMITS",
+      "real_response": "{\"status\":\"error\",\"message\":\"You have reached your secondly limit.\",\"correlationId\":\"...\",\"category\":\"RATE_LIMITS\"}",
+      "causes": ["Exceeded 110 requests per 10 seconds (OAuth public apps)", "Exceeded daily limit"],
+      "headers_helpful": ["Retry-After (in seconds)", "X-HubSpot-RateLimit-Daily-Remaining"],
+      "solution": "Implement per-portal throttling, use batch endpoints, add retry with exponential backoff. HubSpot SDK auto-retries 429s with backoff via numberOfApiCallRetries option"
+    }
+  ],
+
+  "community_constraints": [
+    {
+      "issue": "429 Too Many Requests for public OAuth apps",
+      "frequency": "high",
+      "source": "HubSpot Community / StackOverflow",
+      "detail": "Public apps limited to 110 req/10s per installed account. Multiple accounts sharing a queue cause head-of-line blocking.",
+      "workaround": "Implement per-portal throttling queues, use batch endpoints, set SDK retries with numberOfApiCallRetries: 3"
+    },
+    {
+      "issue": "CRM Search API high latency with large result sets",
+      "frequency": "medium",
+      "source": "Developer forums",
+      "detail": "Search endpoint performance degrades with complex filters on large datasets",
+      "workaround": "Use batch GET by ID instead of search when fetching known records; paginate search results"
+    },
+    {
+      "issue": "OAuth token expiration (30 min) requires robust refresh logic",
+      "frequency": "high",
+      "source": "StackOverflow",
+      "detail": "Access tokens expire after 30 minutes; many integrations fail to implement proper refresh token rotation",
+      "workaround": "Always use refresh_token grant_type; store refresh token securely; preemptively refresh before expiry"
+    },
+    {
+      "issue": "Property value validation on write operations",
+      "frequency": "medium",
+      "source": "GitHub issues",
+      "detail": "400 errors when sending invalid property values or property names that don't exist in the account",
+      "workaround": "Use /crm/v3/properties/{objectType} to fetch available properties before writing; validate data types match"
+    }
+  ],
+
+  "use_cases": [
+    "Sync contacts and companies between HubSpot and external CRM",
+    "Automate deal creation from form submissions or website events",
+    "Bi-directional sync of lifecycle stages with marketing platforms",
+    "Send custom behavioral events from external app into HubSpot for scoring",
+    "Automated ticket creation from support@ emails or chat platforms"
+  ]
+}

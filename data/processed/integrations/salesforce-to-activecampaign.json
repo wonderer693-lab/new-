@@ -1,0 +1,155 @@
+{
+  "integration_id": "salesforce-to-activecampaign",
+  "integration_name": "Salesforce ↔ ActiveCampaign Integration",
+  "tool_a": {
+    "tool_id": "salesforce",
+    "tool_name": "Salesforce"
+  },
+  "tool_b": {
+    "tool_id": "activecampaign",
+    "tool_name": "ActiveCampaign"
+  },
+  "sync_type": "Unidirectional or bidirectional (via middleware or native Zapier/Make)",
+  "popularity": "medium-high — Salesforce for enterprise sales, ActiveCampaign for SMB email automation. Common in organizations that outgrew ActiveCampaign's CRM.",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "salesforce_side": "OAuth 2.0 JWT Bearer. Integration user with API Enabled + Read on Contact, Lead, Account.",
+    "activecampaign_side": "API Token (Api-Key header). Admin-level permissions for contact, tag, list, and automation management."
+  },
+  "common_use_cases": [
+    "Salesforce Leads → ActiveCampaign contacts with tags for automation",
+    "Deal stage 'Closed Won' → ActiveCampaign list add + automation exit",
+    "Salesforce campaign membership → ActiveCampaign automation trigger",
+    "ActiveCampaign email engagement data (opens, clicks) → Salesforce as custom activities",
+    "Lead scoring sync: ActiveCampaign score → Salesforce numeric field for reporting"
+  ],
+  "endpoints_involved": {
+    "salesforce_endpoints": [
+      {
+        "endpoint": "/services/data/v66.0/sobjects/Contact",
+        "method": "GET/POST/PATCH",
+        "purpose": "Read/write Contacts"
+      },
+      {
+        "endpoint": "/services/data/v66.0/sobjects/Lead",
+        "method": "GET/POST/PATCH",
+        "purpose": "Read/write Leads"
+      },
+      {
+        "endpoint": "/services/data/v66.0/query?q={SOQL}",
+        "method": "GET",
+        "purpose": "Query recently created/updated records"
+      },
+      {
+        "endpoint": "/services/data/v66.0/limits",
+        "method": "GET",
+        "purpose": "Monitor daily API call consumption"
+      }
+    ],
+    "activecampaign_endpoints": [
+      {
+        "endpoint": "/contacts",
+        "method": "GET/POST/PUT",
+        "purpose": "Create/update/get contacts"
+      },
+      {
+        "endpoint": "/contacts/{id}/contactTags",
+        "method": "GET/POST",
+        "purpose": "Add/get tags for contact"
+      },
+      {
+        "endpoint": "/contactTags",
+        "method": "POST",
+        "purpose": "Apply tag to contact"
+      },
+      {
+        "endpoint": "/contactLists",
+        "method": "POST",
+        "purpose": "Add contact to list"
+      },
+      {
+        "endpoint": "/automations/{id}/contact/add",
+        "method": "POST",
+        "purpose": "Start automation for contact"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "ContactTag wrapper bug",
+      "tool": "ActiveCampaign",
+      "category": "API_BUG",
+      "cause": "ActiveCampaign POST /contactTags requires {'contactTag':{'contact':'1','tag':'2'}} wrapper. Flat payload returns 400.",
+      "solution": "Wrap tag payload in 'contactTag' object. Always test with single contact before bulk operations."
+    },
+    {
+      "error_code": "Salesforce daily API limit exhausted by AC sync",
+      "tool": "Salesforce",
+      "category": "RATE_LIMIT",
+      "cause": "Bidirectional sync with ActiveCampaign consumes Salesforce API calls. Combined with other integrations, daily allocation exhausted by mid-day.",
+      "solution": "Use Salesforce Bulk API 2.0 for initial sync. Schedule incremental syncs in off-peak hours. Set field-level sync filters to reduce call volume."
+    },
+    {
+      "error_code": "Custom field type mismatch",
+      "tool": "ActiveCampaign",
+      "category": "FIELD_MAPPING",
+      "cause": "Salesforce picklist values mapped to ActiveCampaign dropdown fields don't match. Salesforce boolean not handled by ActiveCampaign checkbox.",
+      "solution": "Map picklist options explicitly. Use ActiveCampaign 'text' field type as fallback for unknown field types."
+    },
+    {
+      "error_code": "Deleted Salesforce records not removed from AC",
+      "tool": "Salesforce",
+      "category": "DATA_QUALITY",
+      "cause": "Contact or Lead deleted in Salesforce is not automatically removed from ActiveCampaign. Stale contacts accumulate.",
+      "solution": "Use Salesforce Recycle Bin monitoring or webhook on delete operations. POST to ActiveCampaign /contacts/{id}/delete on delete detection."
+    },
+    {
+      "error_code": "Automation re-trigger on update",
+      "tool": "ActiveCampaign",
+      "category": "AUTOMATION",
+      "cause": "Every contact update from Salesforce re-triggers ActiveCampaign automation if 'contact updated' trigger is active. Users receive duplicate emails.",
+      "solution": "Use ActiveCampaign 'contact added to list' trigger instead of 'contact updated'. Or add a 'skip automation' tag that automations check for."
+    },
+    {
+      "error_code": "Phone number format inconsistency",
+      "tool": "Both",
+      "category": "DATA_FORMAT",
+      "cause": "Salesforce stores phone as (555) 123-4567. ActiveCampaign normalizes to +15551234567. Re-sync flips between formats.",
+      "solution": "Choose one format as canonical. Configure ActiveCampaign phone field as text to prevent auto-formatting. Or accept AC's normalization."
+    },
+    {
+      "error_code": "List membership sync mismatch",
+      "tool": "ActiveCampaign",
+      "category": "SEGMENTATION",
+      "cause": "ActiveCampaign uses 'list' as the primary container; Salesforce uses 'campaign.' A contact added to Salesforce campaign should go to AC list, but mapping isn't 1:1.",
+      "solution": "Map Salesforce Campaign Member records to AC list add via middleware. One Salesforce campaign = one AC list name. Use AC tags for sub-segmentation."
+    },
+    {
+      "error_code": "Email engagement sync loops",
+      "tool": "Both",
+      "category": "SYNC_LOOP",
+      "cause": "ActiveCampaign email open → webhook updates Salesforce contact → Salesforce syncs back to AC → AC records another activity → infinite loop.",
+      "solution": "Track 'source' field on records. AC-created activities get source='ActiveCampaign'. Exclude source=ActiveCampaign records from AC→SF sync."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "ActiveCampaign API pagination limits — 20 per page default",
+      "solution": "Set ?limit=100 on AC list endpoints. For full sync, iterate with ?offset parameter.",
+      "source": "ActiveCampaign API docs"
+    },
+    {
+      "problem": "Salesforce sandbox vs production mismatch",
+      "solution": "Use separate API keys/connections for sandbox and production. AC doesn't differentiate environments.",
+      "source": "Salesforce StackExchange"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "Salesforce ActiveCampaign integration",
+    "Salesforce ActiveCampaign sync errors",
+    "ActiveCampaign Salesforce field mapping",
+    "Salesforce ActiveCampaign API limits",
+    "Salesforce to ActiveCampaign contact sync"
+  ]
+}

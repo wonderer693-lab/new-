@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const errors = await getCollection('errors');
+  const integrations = await getCollection('integrations');
+  const allTools = [...new Set([...errors.map(e => e.data.tool), ...integrations.flatMap(e => [e.data.toolA, e.data.toolB])])];
+  return allTools.map(tool => ({ params: { tool }, props: { tool } }));
+}
+
+const { tool } = Astro.props;
+const errors = (await getCollection('errors')).filter(e => e.data.tool === tool);
+const integrations = (await getCollection('integrations')).filter(e => e.data.toolA === tool || e.data.toolB === tool);
+const displayName = tool.charAt(0).toUpperCase() + tool.slice(1);
+const frontmatter = {
+  title: `${displayName} API Integration Guide — Error Codes & Fixes`,
+  description: `Complete ${displayName} API integration reference. ${errors.length} error codes with production fixes, ${integrations.length} integration guides, and best practices.`,
+  keywords: [`${tool} api integration`, `${tool} error codes`, `${tool} api troubleshooting`],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <nav aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
+        <li><span>{displayName}</span></li>
+      </ol>
+    </nav>
+
+    <h1>{displayName} API Integration Guide</h1>
+
+    <section>
+      <h2>Error Codes ({errors.length})</h2>
+      {errors.length > 0 ? (
+        <ul>
+          {errors.map(e => (
+            <li>
+              <a href={`/${tool}/errors/${e.data.errorCode}`}>
+                <strong>{e.data.errorCode}</strong> — {e.data.errorName}{e.data.severity === 'high' || e.data.severity === 'critical' ? ' ⚠' : ''}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : <p>No error guides yet.</p>}
+    </section>
+
+    <section>
+      <h2>Integration Guides ({integrations.length})</h2>
+      {integrations.length > 0 ? (
+        <ul>
+          {integrations.map(e => (
+            <li>
+              <a href={`/integrations/${e.data.integrationSlug}/errors/${e.data.errorSlug}`}>
+                {e.data.toolA} ↔ {e.data.toolB}: {e.data.errorName}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : <p>No integration guides yet.</p>}
+    </section>
+  </main>
+</BaseLayout>

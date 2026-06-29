@@ -1,0 +1,140 @@
+{
+  "integration_id": "hubspot-to-slack",
+  "integration_name": "HubSpot ↔ Slack Integration",
+  "tool_a": {
+    "tool_id": "hubspot",
+    "tool_name": "HubSpot"
+  },
+  "tool_b": {
+    "tool_id": "slack",
+    "tool_name": "Slack"
+  },
+  "sync_type": "Unidirectional (HubSpot → Slack via webhook/connector) or bidirectional (via Slack Workflow Builder)",
+  "popularity": "high — most common sales/marketing notification setup: deals closing → Slack alert, form submissions → Slack channel",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "hubspot_side": "OAuth 2.0 with webhook scopes. Workflow action scopes for creating Slack messages.",
+    "slack_side": "OAuth 2.0 Bot Token with chat:write, channels:read, incoming-webhook scopes."
+  },
+  "common_use_cases": [
+    "New deal created in HubSpot → Slack channel notification to sales team",
+    "High-value deal stage change ('Closed Won') → Slack @here alert",
+    "HubSpot form submission → Slack lead notification with contact details",
+    "Slack shortcut → Create HubSpot contact/ticket from Slack message",
+    "HubSpot ticket priority escalation → Slack channel with thread"
+  ],
+  "endpoints_involved": {
+    "hubspot_endpoints": [
+      {
+        "endpoint": "/crm/v3/objects/deals",
+        "method": "GET",
+        "purpose": "Fetch deal details for Slack notification"
+      },
+      {
+        "endpoint": "/crm/v3/objects/contacts",
+        "method": "GET",
+        "purpose": "Fetch contact details for Slack notification"
+      }
+    ],
+    "slack_endpoints": [
+      {
+        "endpoint": "/chat.postMessage",
+        "method": "POST",
+        "purpose": "Send message to Slack channel"
+      },
+      {
+        "endpoint": "/chat.postEphemeral",
+        "method": "POST",
+        "purpose": "Send ephemeral message to specific user"
+      },
+      {
+        "endpoint": "/conversations.join",
+        "method": "POST",
+        "purpose": "Bot joins channel before posting"
+      },
+      {
+        "endpoint": "/views.open",
+        "method": "POST",
+        "purpose": "Open Slack modal for HubSpot actions"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Slack rate limit (1 per second per method)",
+      "tool": "Slack",
+      "category": "RATE_LIMIT",
+      "cause": "Bulk deal update in HubSpot triggers 50 Slack messages simultaneously. Slack returns 429 with Retry-After.",
+      "solution": "Batch Slack notifications. Use a queue in your middleware. Send a single summary message instead of individual alerts."
+    },
+    {
+      "error_code": "Bot not in channel",
+      "tool": "Slack",
+      "category": "PERMISSION",
+      "cause": "Slack bot token has chat:write scope but bot hasn't joined the target channel. POST returns not_in_channel error.",
+      "solution": "Call conversations.join before chat.postMessage. Or use chat.postMessage with channel ID (not name) and ensure bot is invited."
+    },
+    {
+      "error_code": "Message formatting issues",
+      "tool": "Slack",
+      "category": "FORMATTING",
+      "cause": "HubSpot deal amount $1,000,000 sent as plain text without Slack Block Kit formatting. Message looks unprofessional.",
+      "solution": "Format Slack messages using Block Kit (blocks array in API call). Use section blocks with markdown text."
+    },
+    {
+      "error_code": "Duplicate messages on webhook retry",
+      "tool": "HubSpot",
+      "category": "WEBHOOK",
+      "cause": "HubSpot webhook delivery retries (up to 24h) cause duplicate Slack messages if middleware doesn't deduplicate by webhook event ID.",
+      "solution": "Track HubSpot webhook eventId in middleware. Skip processing if eventId already handled."
+    },
+    {
+      "error_code": "Slack token expiry (OAuth bot tokens don't expire by default unless revoked)",
+      "tool": "Slack",
+      "category": "AUTH",
+      "cause": "Slack bot token revoked by workspace admin. Middleware starts getting 401 errors silently.",
+      "solution": "Monitor for 401 responses from Slack API. Set up alert to re-authorize Slack app. Use token rotation if using granular permissions."
+    },
+    {
+      "error_code": "Message too long",
+      "tool": "Slack",
+      "category": "VALIDATION",
+      "cause": "HubSpot deal with 50+ custom fields sends a 10,000-character message. Slack max is 4,000 characters per block text.",
+      "solution": "Truncate field list to top 5-10 fields in Slack message. Add 'View in HubSpot' link for full record."
+    },
+    {
+      "error_code": "Thread replies lost on webhook timeout",
+      "tool": "HubSpot",
+      "category": "TIMEOUT",
+      "cause": "HubSpot webhook expects a 200 response within 5 seconds. Slack rate limit causes middleware to delay, HubSpot retries and creates duplicate threads.",
+      "solution": "Acknowledge webhook immediately (200, empty body). Process Slack message asynchronously in background."
+    },
+    {
+      "error_code": "Block Kit JSON malformed",
+      "tool": "Slack",
+      "category": "VALIDATION",
+      "cause": "HubSpot data contains characters that break Slack Block Kit markdown (unclosed * or _) or invalid Block Kit JSON structure.",
+      "solution": "Escape HubSpot text fields before inserting into Block Kit templates. Validate JSON before sending. Use Slack Block Kit Builder."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "Slack webhook URL vs API token confusion",
+      "solution": "Incoming Webhooks use a fixed URL (no token). API calls use Bot Token (xoxb-). Choose one pattern and stick with it.",
+      "source": "Slack API docs"
+    },
+    {
+      "problem": "Slack rate limit on bulk notification retry loops",
+      "solution": "HubSpot webhook retries + Slack rate limit = cascade failure. Implement dead-letter queue after 3 failed Slack attempts.",
+      "source": "r/Slack_Developers Reddit"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "HubSpot Slack integration",
+    "HubSpot to Slack notification setup",
+    "Slack API rate limit 429",
+    "HubSpot webhook Slack bot",
+    "Slack Block Kit HubSpot deals"
+  ]
+}

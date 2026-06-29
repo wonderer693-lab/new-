@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "toolA": "zapier",
+    "toolB": "calendly",
+    "integrationSlug": "zapier-to-calendly",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 3
+  },
+  "categories": [
+    {
+      "id": "webhook-timing",
+      "name": "Webhook Timing & Delivery",
+      "description": "Webhook delays, duplicates, and verification",
+      "severity": "high"
+    },
+    {
+      "id": "event-routing",
+      "name": "Event Type Routing",
+      "description": "Different actions per Calendly event type",
+      "severity": "high"
+    },
+    {
+      "id": "data-persistence",
+      "name": "Data Persistence Across Events",
+      "description": "Reschedule/cancel handling and timezone preservation",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "webhook-signature",
+      "categoryId": "webhook-timing",
+      "fieldName": "Webhook Signature Verification",
+      "fieldType": "text",
+      "toolAValue": "Zapier managed webhook (no sig needed)",
+      "toolBValue": "Calendly custom webhook: requires signature header verification",
+      "direction": "B-to-A",
+      "behavior": "auto-convert",
+      "severity": "high",
+      "notes": "Built-in Zapier Calendly trigger handles verification. Custom webhook triggers need manual sig check.",
+      "fixStrategy": "Use built-in Zapier Calendly integration. If custom webhook, implement HMAC-SHA256 signature verification.",
+      "mappedValues": []
+    },
+    {
+      "id": "event-type-routing",
+      "categoryId": "event-routing",
+      "fieldName": "Event Type to Action Mapping",
+      "fieldType": "picklist",
+      "toolAValue": "Calendly event type name (e.g., 'Discovery Call', 'Demo')",
+      "toolBValue": "Zapier action path (e.g., create lead vs create contact)",
+      "direction": "B-to-A",
+      "behavior": "auto-convert",
+      "severity": "high",
+      "notes": "Single Zap triggers same action for all event types by default.",
+      "fixStrategy": "Add Filter by Zapier step. Route based on event_type.name field.",
+      "mappedValues": []
+    },
+    {
+      "id": "reschedule-dedup",
+      "categoryId": "data-persistence",
+      "fieldName": "Reschedule Creates Duplicate",
+      "fieldType": "text",
+      "toolAValue": "Calendly 'event.created' on initial + reschedule",
+      "toolBValue": "Zapier creates 2 CRM records for same person",
+      "direction": "B-to-A",
+      "behavior": "silent-failure",
+      "severity": "medium",
+      "notes": "No 'rescheduled' event type in Calendly webhooks. Both initial and reschedule fire 'event.created'.",
+      "fixStrategy": "Dedup by email in Zapier. Check existing record before creating.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "reschedule-duplicate",
+      "errorName": "Rescheduled Event Creates Duplicate CRM Records",
+      "categoryId": "data-persistence",
+      "description": "Calendly sends event.created on reschedule. Zapier creates duplicate.",
+      "fixSummary": "Dedup by email before creating."
+    },
+    {
+      "errorSlug": "event-type-fanout",
+      "errorName": "Single Event Type Action Limitation",
+      "categoryId": "event-routing",
+      "description": "All event types trigger same Zapier action.",
+      "fixSummary": "Filter by event type name for different actions."
+    }
+  ]
+}

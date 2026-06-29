@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "toolA": "hubspot",
+    "toolB": "mailchimp",
+    "integrationSlug": "hubspot-to-mailchimp",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 5
+  },
+  "categories": [
+    {
+      "id": "sync-direction",
+      "name": "Sync Direction & Unidirectionality",
+      "description": "The native integration is unidirectional (HubSpot → Mailchimp only). Mailchimp changes don't flow back.",
+      "severity": "critical"
+    },
+    {
+      "id": "unsubscribe",
+      "name": "Unsubscribe Sync",
+      "description": "Unsubscribe status sync differences — Mailchimp unsubscribes don't propagate to HubSpot",
+      "severity": "high"
+    },
+    {
+      "id": "field-mapping",
+      "name": "Custom Field Mapping",
+      "description": "Differences in custom field naming, types, and data format between HubSpot properties and Mailchimp merge tags",
+      "severity": "medium"
+    },
+    {
+      "id": "list-audience",
+      "name": "List & Audience Mapping",
+      "description": "Mailchimp audience ID vs HubSpot list ID mapping — list membership sync behavior",
+      "severity": "medium"
+    },
+    {
+      "id": "frequency",
+      "name": "Sync Frequency & Triggers",
+      "description": "Sync cadence differences — real-time in HubSpot, batch in Mailchimp connector",
+      "severity": "low"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "unidirectional-sync-gap",
+      "categoryId": "sync-direction",
+      "fieldName": "Sync Direction — All Fields",
+      "fieldType": "text",
+      "toolAValue": "HubSpot → Mailchimp (native connector only)",
+      "toolBValue": "No reverse sync (Mailchimp → HubSpot)",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "critical",
+      "notes": "The native HubSpot-Mailchimp integration is unidirectional only. Contacts added or updated in Mailchimp (e.g., via signup form, import, or another integration) are never synced back to HubSpot. This creates data drift over time — HubSpot becomes increasingly out of date.",
+      "fixStrategy": "Use custom middleware (Zapier, Make, or custom API) for bidirectional sync. Or accept HubSpot as source of truth and disable Mailchimp-side contact creation."
+    },
+    {
+      "id": "unsubscribe-status",
+      "categoryId": "unsubscribe",
+      "fieldName": "Unsubscribe Status Sync",
+      "fieldType": "picklist",
+      "toolAValue": "HubSpot email status: \"subscribed\", \"bouncing\", \"unsubscribed\"",
+      "toolBValue": "Mailchimp status: \"subscribed\", \"unsubscribed\", \"cleaned\", \"pending\", \"transactional\"",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "When a contact unsubscribes in Mailchimp (via email footer link), the status is NOT synced back to HubSpot. HubSpot continues showing \"subscribed\" and may resend marketing emails through other channels. Mailchimp \"cleaned\" (hard bounce) also not reflected in HubSpot.",
+      "fixStrategy": "Set up a webhook in Mailchimp (unsubscribe webhook) that calls HubSpot API to update contact email status to 'unsubscribed'. Poll Mailchimp list members periodically and diff statuses."
+    },
+    {
+      "id": "custom-field-naming",
+      "categoryId": "field-mapping",
+      "fieldName": "Custom Field Names / Merge Tags",
+      "fieldType": "text",
+      "toolAValue": "HubSpot internal property name (e.g., \"phone\", \"jobtitle\")",
+      "toolBValue": "Mailchimp merge tag (e.g., \"PHONE\", \"MMERGE3\")",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "medium",
+      "notes": "HubSpot uses internal property names (snake_case). Mailchimp uses merge tags (uppercase, MERGE1–MERGE80 by default, optionally renamed). Native connector maps common fields (email, firstname, lastname, phone) but may fail on custom HubSpot properties that don't have a corresponding Mailchimp merge tag.",
+      "fixStrategy": "Ensure every HubSpot property you want to sync has a corresponding Mailchimp merge tag. Rename Mailchimp merge tags to match HubSpot property names for clarity."
+    },
+    {
+      "id": "field-type-coercion",
+      "categoryId": "field-mapping",
+      "fieldName": "Field Type Coercion",
+      "fieldType": "text",
+      "toolAValue": "HubSpot date (ISO 8601 timestamp)",
+      "toolBValue": "Mailchimp date (YYYY-MM-DD or formatted string)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "medium",
+      "notes": "HubSpot date/time properties are stored as ISO 8601 timestamps (e.g., \"2026-06-26T14:30:00Z\"). Mailchimp accepts date strings in various formats. Number fields: HubSpot sends integers, Mailchimp merge tags of type 'number' accept them correctly but checkbox/boolean fields may not translate.",
+      "fixStrategy": "Test date/number field sync with a sample record. Use text merge tags for any field type you're unsure about."
+    },
+    {
+      "id": "list-membership",
+      "categoryId": "list-audience",
+      "fieldName": "List & Audience Membership",
+      "fieldType": "text",
+      "toolAValue": "HubSpot static list (list ID, list membership)",
+      "toolBValue": "Mailchimp audience (audience ID, tags/groups)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "medium",
+      "notes": "HubSpot static lists don't map 1:1 to Mailchimp audiences. The native connector syncs all HubSpot contacts to one Mailchimp audience — it doesn't support mapping different HubSpot lists to different Mailchimp audiences. HubSpot list membership can be mapped to Mailchimp tags but requires custom setup.",
+      "fixStrategy": "Use Zapier or Make to route different HubSpot lists to different Mailchimp audiences based on list membership criteria."
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "unsubscribe-sync-failure",
+      "errorName": "Unsubscribe Sync Failure",
+      "categoryId": "unsubscribe",
+      "description": "Mailchimp unsubscribes are not reflected in HubSpot. HubSpot continues showing 'subscribed' and may resend emails.",
+      "fixSummary": "Set up Mailchimp unsubscribe webhook → HubSpot API update. Or poll and diff."
+    },
+    {
+      "errorSlug": "bidirectional-data-drift",
+      "errorName": "Bidirectional Data Drift",
+      "categoryId": "sync-direction",
+      "description": "Contacts added/updated in Mailchimp never sync to HubSpot due to unidirectional connector.",
+      "fixSummary": "Custom middleware for bidirectional sync or designate HubSpot as single source of truth."
+    },
+    {
+      "errorSlug": "list-audience-overlap",
+      "errorName": "List-Audience Overlap Mismatch",
+      "categoryId": "list-audience",
+      "description": "HubSpot list membership doesn't map correctly to Mailchimp audience tags, causing wrong targeting.",
+      "fixSummary": "Use Zapier/Make for conditional routing. Avoid relying on native connector for list segmentation."
+    },
+    {
+      "errorSlug": "date-field-format-mismatch",
+      "errorName": "Date/DateTime Field Format Mismatch",
+      "categoryId": "field-mapping",
+      "description": "HubSpot ISO 8601 timestamps may not render correctly in Mailchimp date merge tags.",
+      "fixSummary": "Test date sync. Use Mailchimp text merge tags for date fields if native date type fails."
+    }
+  ]
+}

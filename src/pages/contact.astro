@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const frontmatter = {
+  title: 'Contact — API Integration Hub',
+  description: 'Contact the API Integration Hub team. Report errors, suggest improvements, or ask questions about our content.',
+  keywords: ['api integration hub contact', 'report api error documentation', 'suggest integration guide'],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <h1>Contact Us</h1>
+
+    <section>
+      <h2>Get in Touch</h2>
+      <p>We welcome feedback, corrections, and suggestions. If you find an error in our documentation, have a question about an integration, or want to suggest a new guide, reach out using the methods below.</p>
+    </section>
+
+    <section>
+      <h2>Report an Error</h2>
+      <p>Found outdated or incorrect information? Let us know:</p>
+      <ul>
+        <li><strong>Page URL</strong> — Which page has the issue?</li>
+        <li><strong>Description</strong> — What's wrong or outdated?</li>
+        <li><strong>Suggested fix</strong> — If you know the correct information, share it</li>
+      </ul>
+      <p>Email: <a href="mailto:corrections@api-integration-hub.com">corrections@api-integration-hub.com</a></p>
+    </section>
+
+    <section>
+      <h2>Suggest a New Guide</h2>
+      <p>Want us to cover a specific integration error or tool? Send us:</p>
+      <ul>
+        <li><strong>Tools involved</strong> — Which two (or more) tools are you integrating?</li>
+        <li><strong>Error description</strong> — What error are you encountering?</li>
+        <li><strong>Context</strong> — Are you using native connectors, Zapier, Make, or custom code?</li>
+      </ul>
+      <p>Email: <a href="mailto:suggestions@api-integration-hub.com">suggestions@api-integration-hub.com</a></p>
+    </section>
+
+    <section>
+      <h2>General Inquiries</h2>
+      <p>For general questions about API Integration Hub, our methodology, or partnerships:</p>
+      <p>Email: <a href="mailto:hello@api-integration-hub.com">hello@api-integration-hub.com</a></p>
+    </section>
+
+    <section>
+      <h2>Response Time</h2>
+      <p>We aim to respond to all inquiries within 3-5 business days. Corrections to factual errors are prioritized and typically updated within 48 hours.</p>
+    </section>
+
+    <section>
+      <h2>GitHub</h2>
+      <p>API Integration Hub is open source. You can also contribute directly via GitHub:</p>
+      <p><a href="https://github.com/api-integration-hub">github.com/api-integration-hub</a></p>
+    </section>
+  </main>
+</BaseLayout>

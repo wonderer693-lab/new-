@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "toolA": "zoho",
+    "toolB": "mailchimp",
+    "integrationSlug": "zoho-to-mailchimp",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 3
+  },
+  "categories": [
+    {
+      "id": "auth-refresh",
+      "name": "OAuth Token Refresh",
+      "description": "Zoho 1-hour token vs Mailchimp API key longevity",
+      "severity": "critical"
+    },
+    {
+      "id": "duplicate-email",
+      "name": "Duplicate Email Handling",
+      "description": "Zoho allows duplicate emails. Mailchimp does not.",
+      "severity": "high"
+    },
+    {
+      "id": "field-priority",
+      "name": "Field Volume & Priority",
+      "description": "Zoho hundreds of fields vs Mailchimp 80 merge tag limit",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "oauth-refresh-60min",
+      "categoryId": "auth-refresh",
+      "fieldName": "Zoho Access Token TTL",
+      "fieldType": "text",
+      "toolAValue": "Zoho OAuth token: expires in 60 minutes",
+      "toolBValue": "Mailchimp API key: no expiry",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "critical",
+      "notes": "Stale Zoho token causes silent 401 failures mid-sync. Refresh token lasts 1 year or until revoked.",
+      "fixStrategy": "Implement proactive refresh at 50 min. Queue sync operations during token refresh window.",
+      "mappedValues": []
+    },
+    {
+      "id": "dup-email-resolution",
+      "categoryId": "duplicate-email",
+      "fieldName": "Duplicate Email in Zoho",
+      "fieldType": "email",
+      "toolAValue": "Multiple Zoho contacts with same email",
+      "toolBValue": "Mailchimp: one member per email",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "high",
+      "notes": "Last-synced contact wins by default. No merge logic — data loss risk.",
+      "fixStrategy": "Define priority rule: most recently modified Zoho contact wins. Log duplicate conflicts.",
+      "mappedValues": []
+    },
+    {
+      "id": "merge-tag-limit",
+      "categoryId": "field-priority",
+      "fieldName": "Field Count Limit",
+      "fieldType": "text",
+      "toolAValue": "Zoho: 100+ custom fields per module",
+      "toolBValue": "Mailchimp: max 80 merge tags per audience",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "medium",
+      "notes": "Excess fields are silently dropped. No error when merge tag limit exceeded.",
+      "fixStrategy": "Prioritize 20-30 high-value fields. Document excluded fields.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "oauth-stale-token",
+      "errorName": "Zoho OAuth Token Expiry Mid-Sync",
+      "categoryId": "auth-refresh",
+      "description": "60-minute token expiry causes mid-batch failures.",
+      "fixSummary": "Proactive refresh at 50 minutes. Retry on 401."
+    },
+    {
+      "errorSlug": "field-limit-drop",
+      "errorName": "Zoho Fields Dropped at Mailchimp 80 Merge Tag Limit",
+      "categoryId": "field-priority",
+      "description": "Fields beyond 80th merge tag silently not synced.",
+      "fixSummary": "Prioritize fields. Check merge tag count."
+    }
+  ]
+}

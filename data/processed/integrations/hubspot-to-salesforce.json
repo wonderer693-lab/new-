@@ -1,0 +1,148 @@
+{
+  "integration_id": "hubspot-to-salesforce",
+  "integration_name": "HubSpot ↔ Salesforce Integration",
+  "tool_a": {
+    "tool_id": "hubspot",
+    "tool_name": "HubSpot"
+  },
+  "tool_b": {
+    "tool_id": "salesforce",
+    "tool_name": "Salesforce"
+  },
+  "sync_type": "Bi-directional (native connector by HubSpot)",
+  "popularity": "very_high — most common CRM dual-use setup (HubSpot for Marketing, Salesforce for Sales)",
+  "last_updated": "2026-06-17",
+
+  "authentication_requirements": {
+    "hubspot_side": "OAuth 2.0 or Private App Token with scopes for contacts, deals, companies, activities",
+    "salesforce_side": "OAuth 2.0 JWT Bearer or Web Server flow. Integration user must have API Enabled permission, Read/Edit on all synced objects. Dedicated integration user recommended."
+  },
+
+  "common_use_cases": [
+    "Lead handoff from HubSpot Marketing to Salesforce Sales — MQLs become Leads/Opportunities in Salesforce",
+    "Bi-directional contact sync for unified customer view",
+    "Deal stage sync — Salesforce opportunity stages update HubSpot deal stages and vice versa",
+    "Activity sync — HubSpot calls, meetings, emails logged in Salesforce",
+    "Campaign member sync — HubSpot email campaign responses create/update Salesforce Campaign Members"
+  ],
+
+  "endpoints_involved": {
+    "hubspot_endpoints": [
+      {"endpoint": "/crm/v3/objects/contacts", "method": "GET/POST/PATCH", "purpose": "Read/write contacts"},
+      {"endpoint": "/crm/v3/objects/contacts/search", "method": "POST", "purpose": "Search contacts by email or custom property"},
+      {"endpoint": "/crm/v3/objects/deals", "method": "GET/POST/PATCH", "purpose": "Read/write deals"},
+      {"endpoint": "/crm/v3/objects/companies", "method": "GET/POST/PATCH", "purpose": "Read/write companies"},
+      {"endpoint": "/crm/v3/objects/owners", "method": "GET", "purpose": "Get HubSpot owner mappings"}
+    ],
+    "salesforce_endpoints": [
+      {"endpoint": "/services/data/v66.0/sobjects/Contact", "method": "GET/POST/PATCH", "purpose": "Read/write Contacts"},
+      {"endpoint": "/services/data/v66.0/sobjects/Lead", "method": "GET/POST/PATCH", "purpose": "Read/write Leads"},
+      {"endpoint": "/services/data/v66.0/sobjects/Opportunity", "method": "GET/POST/PATCH", "purpose": "Read/write Opportunities"},
+      {"endpoint": "/services/data/v66.0/sobjects/Account", "method": "GET/POST/PATCH", "purpose": "Read/write Accounts"},
+      {"endpoint": "/services/data/v66.0/query?q={SOQL}", "method": "GET", "purpose": "SOQL queries for matching records"},
+      {"endpoint": "/services/data/v66.0/limits", "method": "GET", "purpose": "Monitor API call consumption"}
+    ]
+  },
+
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Picklist value mismatch",
+      "tool": "Salesforce",
+      "category": "FIELD_MAPPING",
+      "cause": "HubSpot sends a picklist value that doesn't exist in Salesforce picklist (or vice versa). Salesforce 'Restrict picklist' setting is ON.",
+      "solution": "Turn OFF 'Restrict picklist to values defined in value set' in Salesforce field settings. Or ensure HubSpot values match Salesforce picklist options exactly. Audit all picklist mappings before going live."
+    },
+    {
+      "error_code": "Association cardinality mismatch",
+      "tool": "HubSpot ↔ Salesforce",
+      "category": "ASSOCIATION",
+      "cause": "An activity (task/email) associated with multiple contacts in HubSpot tries to sync to Salesforce. Salesforce only supports one contact association per activity.",
+      "solution": "Configure the integration to sync only the primary association. Or create separate activity records per contact in Salesforce."
+    },
+    {
+      "error_code": "Duplicate records",
+      "tool": "Both",
+      "category": "DATA_QUALITY",
+      "cause": "HubSpot allows duplicate contacts by email; Salesforce enforces one Contact per unique email. Different record creation logic in each system.",
+      "solution": "Use a unique identifier (e.g., Salesforce ID stored in HubSpot as custom property) to match records. Define system of record for each object type. Use deduplication tools on both sides."
+    },
+    {
+      "error_code": "Insufficient Salesforce permissions",
+      "tool": "Salesforce",
+      "category": "PERMISSION",
+      "cause": "Integration user lacks Read/Edit on objects or fields being synced. Or user profile doesn't have API Enabled permission.",
+      "solution": "Create a dedicated integration user with the HubSpot Integration Permission Set. Verify Read/Edit on all objects (Contact, Lead, Opportunity, Account, Task, Event) and their fields."
+    },
+    {
+      "error_code": "Validation rules blocking sync",
+      "tool": "Salesforce",
+      "category": "VALIDATION",
+      "cause": "A Salesforce Validation Rule fires when HubSpot updates a record, rejecting the change.",
+      "solution": "Add a formula condition to Salesforce validation rules to skip the integration user: e.g., $User.Email != 'integration@company.com'. Audit all validation rules that might affect synced objects."
+    },
+    {
+      "error_code": "Custom code errors (Apex/Flow/Process Builder)",
+      "tool": "Salesforce",
+      "category": "AUTOMATION",
+      "cause": "Salesforce automations (triggers, flows, workflows) modify or reject data during the sync process.",
+      "solution": "Disable or modify Salesforce automations that fire on the integration user's updates. Use a before-save flow to prevent interference."
+    },
+    {
+      "error_code": "API call limits exceeded",
+      "tool": "Salesforce",
+      "category": "RATE_LIMIT",
+      "cause": "HubSpot integration consumes too many Salesforce API calls, exceeding the daily allocation (e.g., 15K for Developer, 100K+user for Enterprise).",
+      "solution": "Set a lower API call allocation in HubSpot integration settings. Monitor via /services/data/v66.0/limits. Use Salesforce Composite API to batch calls. Consider purchasing additional API call add-ons."
+    },
+    {
+      "error_code": "Sync suspension",
+      "tool": "HubSpot ↔ Salesforce",
+      "category": "INTEGRATION",
+      "cause": "HubSpot suspends the integration for various reasons: API limits exceeded, permission errors, org locked, storage limits exceeded.",
+      "solution": "Check HubSpot integration error panel. Resolve underlying issue. Click 'Clear Suspension'. Common causes: API limit exceeded (60% of enterprise issues), Object permissions missing, Field permissions missing."
+    },
+    {
+      "error_code": "Owner Assignment error",
+      "tool": "Salesforce",
+      "category": "OWNER",
+      "cause": "HubSpot tries to assign a Salesforce task to a Queue owner, which is not supported for task assignment.",
+      "solution": "Configure the integration to assign tasks to individual users, not queues. Remove queue-based assignment rules in Salesforce."
+    },
+    {
+      "error_code": "Default sales process unavailable",
+      "tool": "Salesforce",
+      "category": "CONFIGURATION",
+      "cause": "Salesforce opportunities synced with a missing Record Type. Occurs when Record Types are enabled in Salesforce but some opportunities don't have one assigned.",
+      "solution": "Either assign a Record Type to all opportunities, or deactivate Record Types for the Opportunity object, or create a default Record Type."
+    }
+  ],
+
+  "community_solutions": [
+    {
+      "problem": "Sync delays — integration runs every 15 minutes, not real-time",
+      "solution": "Use custom middleware (Zapier, n8n, Workato) for near-real-time sync. Or use HubSpot Operations Hub for more frequent sync intervals.",
+      "source": "HubSpot Knowledge Base"
+    },
+    {
+      "problem": "\"Create and associate companies\" in HubSpot creates duplicate Companies in Salesforce",
+      "solution": "Disable 'Create and associate companies' in HubSpot Salesforce integration settings. Map company/account fields carefully to avoid auto-creation of duplicates.",
+      "source": "RevBlack integration guide"
+    },
+    {
+      "problem": "Field history tracking needed for debugging sync issues",
+      "solution": "Enable Field History Tracking in Salesforce for key fields. Use HubSpot Sync Activity tab on contact/company records for record-level sync insights.",
+      "source": "Accelant integration troubleshooting guide"
+    }
+  ],
+
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "HubSpot Salesforce integration",
+    "HubSpot Salesforce sync errors",
+    "HubSpot Salesforce duplicate contacts",
+    "HubSpot Salesforce picklist mismatch",
+    "HubSpot Salesforce API limit exceeded",
+    "HubSpot to Salesforce integration setup",
+    "HubSpot Salesforce permission errors"
+  ]
+}

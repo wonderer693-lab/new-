@@ -1,0 +1,151 @@
+{
+  "tool_id": "mailchimp",
+  "tool_name": "Mailchimp",
+  "category": "Email Marketing",
+  "official_api_docs": "https://mailchimp.com/developer/marketing/",
+  "api_base_url": "https://{dc}.api.mailchimp.com/3.0",
+  "api_version": "3.0",
+  "last_updated": "2026-06-26",
+  "data_collected": "2026-06-26",
+  "data_sources": {
+    "official_docs": "https://mailchimp.com/developer/",
+    "community": ["https://stackoverflow.com/questions/tagged/mailchimp", "https://github.com/search?q=mailchimp+api"],
+    "github": "https://github.com/search?q=mailchimp+api+v3"
+  },
+
+  "authentication": {
+    "mechanisms": [
+      {
+        "type": "API Key (Basic Auth / Bearer)",
+        "description": "For tightly coupled app-to-account integrations",
+        "location": "Settings > Extras > API Keys in Mailchimp",
+        "usage": "HTTP Basic Auth with username 'anystring' and password 'apikey', or Bearer token",
+        "data_center": "Embedded in API key (e.g., us6) — determines base URL",
+        "notes": "Tied to the user who created it. If user is removed, API key is revoked. Check user role via API Root endpoint."
+      },
+      {
+        "type": "OAuth 2.0",
+        "description": "For accessing multiple Mailchimp accounts (integrations/SaaS)",
+        "authorize_url": "https://login.mailchimp.com/oauth2/authorize",
+        "token_url": "https://login.mailchimp.com/oauth2/token",
+        "metadata_url": "https://login.mailchimp.com/oauth2/metadata",
+        "access_token_lifetime": "Does NOT expire — no refresh token needed",
+        "notes": "Access token remains valid unless user revokes app. Get server prefix (dc) from metadata endpoint after token exchange. Use OAuth in Authorization header."
+      }
+    ],
+    "auth_header": "Authorization: Bearer {access_token} or Basic base64('anystring:apikey')",
+    "user_role_restrictions": "User role (admin, manager, etc.) limits what API actions are allowed. 403 returned if role lacks permission."
+  },
+
+  "rate_limits": {
+    "simultaneous_connections": 10,
+    "timeout": "120 seconds per API call",
+    "error_on_exceed": "HTTP 429 (or 403 without JSON body at very high volumes)",
+    "batch_endpoint": {
+      "description": "For long-running or large operations — bypasses 10-connection limit",
+      "max_pending_batch_requests": 500,
+      "batch_webhook_max": 20,
+      "results_available": "7 days; download URL valid for 10 minutes",
+      "notes": "Operations run async on Mailchimp servers"
+    },
+    "no_option_to_raise": "Currently no option to raise limit per customer"
+  },
+
+  "core_endpoints": [
+    {"endpoint": "/3.0/", "method": "GET", "description": "API Root — get account info, user role, and API version"},
+    {"endpoint": "/3.0/lists", "method": "GET", "description": "Get all audiences/lists"},
+    {"endpoint": "/3.0/lists", "method": "POST", "description": "Create audience/list"},
+    {"endpoint": "/3.0/lists/{list_id}", "method": "GET", "description": "Get audience info"},
+    {"endpoint": "/3.0/lists/{list_id}/members", "method": "GET", "description": "Get members of audience (paginated)"},
+    {"endpoint": "/3.0/lists/{list_id}/members", "method": "POST", "description": "Add member to audience"},
+    {"endpoint": "/3.0/lists/{list_id}/members/{subscriber_hash}", "method": "PUT", "description": "Add/update member (upsert)"},
+    {"endpoint": "/3.0/lists/{list_id}/members/{subscriber_hash}", "method": "PATCH", "description": "Update specific member fields"},
+    {"endpoint": "/3.0/lists/{list_id}/merge-fields", "method": "GET", "description": "Get merge fields/tags for audience"},
+    {"endpoint": "/3.0/lists/{list_id}/merge-fields", "method": "POST", "description": "Create merge field"},
+    {"endpoint": "/3.0/lists/{list_id}/webhooks", "method": "GET", "description": "Get webhooks for audience"},
+    {"endpoint": "/3.0/lists/{list_id}/webhooks", "method": "POST", "description": "Create webhook"},
+    {"endpoint": "/3.0/lists/{list_id}/segments", "method": "GET", "description": "Get segments for audience"},
+    {"endpoint": "/3.0/campaigns", "method": "GET", "description": "Get campaigns"},
+    {"endpoint": "/3.0/batches", "method": "POST", "description": "Start async batch operation"},
+    {"endpoint": "/3.0/batches/{batch_id}", "method": "GET", "description": "Check batch status"}
+  ],
+  "pagination": {"type": "offset+count", "max_count": 1000, "default_count": 10, "offset_default": 0},
+
+  "webhooks": {
+    "supported": true,
+    "events": ["subscribe", "unsubscribe", "cleaned", "upemail", "profile", "campaign"],
+    "max_per_list": "Not explicitly documented but batch webhooks max at 20",
+    "hmac_signing": "Supported for batch webhooks — verify signature against raw request body bytes"
+  },
+
+  "error_dictionary": [
+    {
+      "error_code": "400 Bad Request",
+      "description": "Malformed request or validation error",
+      "common_causes": ["Invalid merge field format", "Missing required field (e.g., email_address)", "Member Exists — using POST create instead of PUT upsert"],
+      "solution": "Use PUT /3.0/lists/{list_id}/members/{subscriber_hash} for upsert (idempotent create/update). Pre-create merge fields matching HubSpot property names. Validate email format before submission"
+    },
+    {
+      "error_code": "403 Forbidden",
+      "description": "User role lacks permission for the action or API access disabled",
+      "causes": ["User role (e.g., Viewer) cannot create campaigns or manage lists", "API key invalid or user removed from account"],
+      "solution": "Use an admin-level user for API operations. Check role via GET /3.0/ endpoint"
+    },
+    {
+      "error_code": "404 Not Found",
+      "description": "Resource does not exist (e.g., invalid list_id or subscriber hash)",
+      "solution": "Verify list_id and subscriber hash (MD5 of lowercase email). List IDs can be fetched from GET /3.0/lists"
+    },
+    {
+      "error_code": "429 Too Many Requests",
+      "description": "Exceeded 10 simultaneous connections or high volume threshold",
+      "real_response": "At exceptionally high volumes, you may receive an HTTP 429 or 403 without a JSON body.",
+      "solution": "Implement request queuing — reduce parallelism. Use batch endpoint for large operations. 120s timeout means long requests should use batches"
+    },
+    {
+      "error_code": "Member Exists (400)",
+      "description": "Attempting to create a member that already exists using POST instead of PUT",
+      "real_response": "{\"type\":\"http://developer.mailchimp.com/documentation/mailchimp/reference/overview/errors/\",\"title\":\"Member Exists\",\"status\":400,\"detail\":\"[email] is already a list member. Use PUT to insert or update list members.\"}",
+      "solution": "Switch from POST to PUT /3.0/lists/{list_id}/members/{subscriber_hash}. PUT is idempotent and handles both create and update"
+    }
+  ],
+
+  "community_constraints": [
+    {
+      "issue": "Merge field case-sensitivity and format mismatch",
+      "frequency": "high",
+      "source": "HubSpot Community / StackOverflow",
+      "detail": "Mailchimp merge tags have character limits and formatting rules. A phone number stored as +63 917 123 4567 in CRM will fail silently when pushed to a 10-digit merge tag",
+      "workaround": "Pre-create merge fields matching source system format. Validate and sanitize data formats before sync. Test with a test segment first"
+    },
+    {
+      "issue": "Unsubscribe sync breaks — HubSpot keeps emailing unsubscribed contacts",
+      "frequency": "high",
+      "source": "Developer forums / HubSpot Community",
+      "detail": "When a contact unsubscribes in Mailchimp, the native integration doesn't sync that status back to HubSpot automatically",
+      "workaround": "Implement Mailchimp webhook to catch unsubscribes and update a custom property in HubSpot (e.g., mailchimp_unsubscribed). Use middleware (Zapier, n8n, Make) for bidirectional unsubscribe sync"
+    },
+    {
+      "issue": "10 concurrent connection limit is too restrictive for large syncs",
+      "frequency": "medium",
+      "source": "GitHub issues",
+      "detail": "Bulk operations (e.g., syncing 50k contacts) hit the 10-connection ceiling quickly",
+      "workaround": "Use Batch endpoint for async operations. Implement client-side queuing with max 10 concurrent requests"
+    },
+    {
+      "issue": "Server prefix (dc) confusion in API URL construction",
+      "frequency": "medium",
+      "source": "StackOverflow",
+      "detail": "API base URL must use the data center prefix (us1, us6, eu1, etc.) extracted from the API key or OAuth metadata. Using wrong prefix causes 404 or 403",
+      "workaround": "For OAuth: always call metadata endpoint after token exchange. For API keys: parse the dc from the key suffix (e.g., key-us6 → dc=us6)"
+    }
+  ],
+
+  "use_cases": [
+    "Sync CRM contacts to Mailchimp audience for email campaigns",
+    "Trigger automations based on external events via API",
+    "Sync unsubscribe status bidirectionally between CRM and Mailchimp",
+    "Batch import large contact lists using the async Batch endpoint",
+    "Segment audiences based on CRM properties using merge fields"
+  ]
+}

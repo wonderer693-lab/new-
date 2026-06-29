@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const integrations = await getCollection('integrations');
+  const slugs = [...new Set(integrations.map(e => e.data.integrationSlug))];
+  return slugs.map(slug => ({ params: { integrationSlug: slug }, props: { slug } }));
+}
+
+const { slug } = Astro.props;
+const integrations = (await getCollection('integrations')).filter(e => e.data.integrationSlug === slug);
+const first = integrations[0];
+const toolA = first.data.toolA.charAt(0).toUpperCase() + first.data.toolA.slice(1);
+const toolB = first.data.toolB.charAt(0).toUpperCase() + first.data.toolB.slice(1);
+
+const frontmatter = {
+  title: `${toolA} ↔ ${toolB} Integration Errors — Fixes & Troubleshooting`,
+  description: `All known integration errors between ${toolA} and ${toolB}. Root cause analysis, detection, and production-ready fixes for each error.`,
+  keywords: [`${first.data.toolA} ${first.data.toolB} integration`, `${first.data.toolA} ${first.data.toolB} errors`, `${first.data.toolA} ${first.data.toolB} troubleshooting`],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <nav aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
+        <li><a href="/integrations">Integrations</a><span aria-hidden="true"> / </span></li>
+        <li><span>{toolA} ↔ {toolB}</span></li>
+      </ol>
+    </nav>
+
+    <h1>{toolA} ↔ {toolB} Integration Errors</h1>
+    <p>All known errors when integrating {toolA} with {toolB}. Each guide includes root cause, detection steps, and production-ready fixes.</p>
+
+    <ul>
+      {integrations.map(e => (
+        <li>
+          <a href={`/integrations/${slug}/errors/${e.data.errorSlug}`}>
+            {e.data.errorName}{e.data.errorType === 'silent-failure' ? ' ⚠ Silent' : ''}
+          </a>
+          <span> — {e.data.category}</span>
+        </li>
+      ))}
+    </ul>
+  </main>
+</BaseLayout>

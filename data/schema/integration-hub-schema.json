@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "last_updated": "2026-06-26",
+  "description": "Hyper-Vertical API Integrations Hub Data Schema",
+  "niche": "CRM & Sales Automation Integrations",
+
+  "tool_schema": {
+    "tool_id": "hubspot",
+    "tool_name": "HubSpot",
+    "category": "CRM",
+    "official_website": "https://developers.hubspot.com",
+    "api_version": "v3",
+    "authentication": {
+      "mechanism": "OAuth 2.0 / Private App Token",
+      "grant_types": ["Authorization Code", "Client Credentials"],
+      "scopes_required": ["crm.objects.contacts.read", "crm.objects.contacts.write", ...],
+      "token_endpoint": "https://api.hubapi.com/oauth/v1/token"
+    },
+    "rate_limits": {
+      "requests_per_second": 10,
+      "requests_per_day": null,
+      "concurrency_limit": null,
+      "burst_limit": 100,
+      "notes": "Different limits for different API tiers"
+    },
+    "core_endpoints": [
+      {
+        "endpoint": "/crm/v3/objects/contacts",
+        "method": "GET",
+        "description": "List all contacts",
+        "query_params": ["limit", "properties", "after"],
+        "pagination": "cursor-based"
+      }
+    ],
+    "webhooks": {
+      "supported": true,
+      "events": ["contact.creation", "contact.deletion", "deal.creation", "deal.stageChange"],
+      "max_subscriptions": 100
+    },
+    "error_dictionary": [
+      {
+        "error_code": "401",
+        "message": "Unauthorized",
+        "cause": "Invalid or expired access token",
+        "solution": "Refresh the OAuth token using the refresh token"
+      }
+    ],
+    "common_use_cases": [
+      "Sync contacts from HubSpot to email marketing platform",
+      "Create deals automatically from form submissions"
+    ],
+    "community_constraints": [
+      {
+        "source": "StackOverflow",
+        "issue": "High latency on /crm/v3/objects/contacts search endpoint",
+        "frequency": "high",
+        "workaround": "Use batch GET by ID instead of search when possible"
+      }
+    ],
+    "last_crawled": "2026-06-26",
+    "data_quality_score": null
+  },
+
+  "integration_schema": {
+    "integration_id": "hubspot_to_mailchimp",
+    "tool_a": {
+      "tool_id": "hubspot",
+      "tool_name": "HubSpot",
+      "endpoints_involved": [
+        {"endpoint": "/crm/v3/objects/contacts", "method": "GET", "purpose": "Fetch contacts to sync"}
+      ]
+    },
+    "tool_b": {
+      "tool_id": "mailchimp",
+      "tool_name": "Mailchimp",
+      "endpoints_involved": [
+        {"endpoint": "/3.0/lists/{list_id}/members", "method": "POST", "purpose": "Add/update contact as list member"}
+      ]
+    },
+    "sync_type": "Unidirectional / Bi-directional",
+    "common_use_cases": [
+      "Automatically add HubSpot contacts to Mailchimp audience list",
+      "Tag Mailchimp subscribers based on HubSpot deal stage"
+    ],
+    "edge_cases_and_errors": [
+      {
+        "error_code": "422",
+        "error_tool": "Mailchimp",
+        "cause": "HubSpot contact email missing or malformed",
+        "solution": "Add email validation before sending to Mailchimp API",
+        "source": "StackOverflow"
+      }
+    ],
+    "authentication_flow": "OAuth 2.0 for both services; requires token refresh handling",
+    "community_solutions": [
+      {
+        "problem": "Duplicate contacts when syncing bidirectionally",
+        "solution": "Use Mailchimp's merge_fields with HubSpot ID as the unique identifier to prevent duplicates",
+        "source": "GitHub issue #142 - hubspot-mailchimp-sync"
+      }
+    ]
+  }
+}

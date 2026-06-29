@@ -1,0 +1,51 @@
+{
+  "tool_id": "make",
+  "tool_name": "Make (Integromat)",
+  "category": "Automation / Integration Platform (iPaaS)",
+  "official_api_docs": "https://developers.make.com/api-documentation/",
+  "api_base_url": "https://{region}.make.com/api/v2",
+  "api_version": "v2",
+  "data_collected": "2026-06-26",
+  "authentication": {
+    "mechanism": "User API Token (Bearer) with scopes",
+    "scope_required": ["admin:read", "admin:write", "scenarios:read", "scenarios:write", "organizations:read"],
+    "auth_header": "Authorization: Token {token}",
+    "notes": "Token created in Make account settings under Organization > API. Token is tied to user permissions."
+  },
+  "rate_limits": {
+    "core_plan": {"requests_per_minute": 60},
+    "pro_plan": {"requests_per_minute": 120},
+    "teams_plan": {"requests_per_minute": 240},
+    "enterprise_plan": {"requests_per_minute": 1000},
+    "error_on_exceed": "HTTP 429 — 'Requests limit for organization exceeded, please try again later.'",
+    "check_limit_endpoint": "GET /organizations/{organizationId} — response includes license.apiLimit",
+    "notes": "Rate limit resets after 1 minute. Different plans have different limits."
+  },
+  "core_endpoints": [
+    {"endpoint": "/organizations/{id}", "method": "GET", "description": "Get organization details (includes rate limit info)"},
+    {"endpoint": "/scenarios", "method": "GET", "description": "List scenarios"},
+    {"endpoint": "/scenarios", "method": "POST", "description": "Create scenario"},
+    {"endpoint": "/scenarios/{id}", "method": "GET", "description": "Get scenario details"},
+    {"endpoint": "/scenarios/{id}/start", "method": "POST", "description": "Start a scenario"},
+    {"endpoint": "/scenarios/{id}/stop", "method": "POST", "description": "Stop a scenario"},
+    {"endpoint": "/scenarios/{id}/clone", "method": "POST", "description": "Clone scenario"},
+    {"endpoint": "/executions", "method": "GET", "description": "Get execution history"},
+    {"endpoint": "/connections", "method": "GET", "description": "List connections"},
+    {"endpoint": "/webhooks", "method": "GET", "description": "List webhooks"},
+    {"endpoint": "/data-stores", "method": "GET", "description": "List data stores"}
+  ],
+  "error_dictionary": [
+    {"error_code": "400", "description": "Invalid request parameters", "solution": "Check request body and parameter types"},
+    {"error_code": "401", "description": "Unauthorized — invalid or missing token", "solution": "Verify API token is valid and has required scopes. Regenerate if needed"},
+    {"error_code": "403", "description": "Forbidden — insufficient permissions", "solution": "Check that token has the required scopes for the endpoint"},
+    {"error_code": "404", "description": "Resource not found", "solution": "Verify resource ID and organization context"},
+    {"error_code": "413", "description": "Payload too large", "solution": "Reduce request body size. Check if file size exceeds limits"},
+    {"error_code": "429", "description": "Rate limit exceeded — organization-level limit hit", "solution": "Wait 1 minute for the limit to reset. Check license.apiLimit via GET /organizations/{id}. Consider upgrading plan for higher limits. Implement request queuing"},
+    {"error_code": "5XX", "description": "Server error", "solution": "Retry with exponential backoff"}
+  ],
+  "community_constraints": [
+    {"issue": "API endpoints reserved for paid plans — free tier limited", "frequency": "high", "source": "Make developer docs", "workaround": "Most Make API endpoints require Core plan or higher. Free tier cannot access most API features"},
+    {"issue": "Case sensitivity in endpoint URLs", "frequency": "medium", "source": "Make docs", "workaround": "Make API is case-sensitive. Always use correct casing for endpoint paths as documented"}
+  ],
+  "use_cases": ["Create and manage automation scenarios programmatically", "Start/stop scenarios based on external events", "Monitor execution history and error rates", "Manage connections, webhooks, and data stores via API"]
+}

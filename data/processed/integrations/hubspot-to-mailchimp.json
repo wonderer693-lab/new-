@@ -1,0 +1,126 @@
+{
+  "integration_id": "hubspot-to-mailchimp",
+  "integration_name": "HubSpot ↔ Mailchimp Integration",
+  "tool_a": {
+    "tool_id": "hubspot",
+    "tool_name": "HubSpot"
+  },
+  "tool_b": {
+    "tool_id": "mailchimp",
+    "tool_name": "Mailchimp"
+  },
+  "sync_type": "Unidirectional (HubSpot → Mailchimp) via native connector; Bi-directional via middleware (Zapier/n8n/Make)",
+  "popularity": "very_high — most common email-CRM integration pair",
+  "last_updated": "2026-06-11",
+
+  "authentication_requirements": {
+    "hubspot_side": "OAuth 2.0 with content scopes. For native integration: connect via HubSpot Marketplace app.",
+    "mailchimp_side": "API Key with admin-level access. OAuth 2.0 for middleware integrations (access token never expires)."
+  },
+
+  "common_use_cases": [
+    "Automatically add HubSpot form submissions to Mailchimp audience",
+    "Sync contact name and email from HubSpot to Mailchimp for email campaigns",
+    "Track Mailchimp email engagement (opens, clicks) back in HubSpot",
+    "Tag Mailchimp subscribers based on HubSpot lifecycle stage or deal stage",
+    "Sync unsubscribe status bidirectionally to comply with CAN-SPAM",
+    "Segment Mailchimp audiences based on HubSpot custom properties"
+  ],
+
+  "endpoints_involved": {
+    "hubspot_endpoints": [
+      {"endpoint": "/crm/v3/objects/contacts", "method": "GET", "purpose": "Fetch contacts to sync"},
+      {"endpoint": "/crm/v3/objects/contacts/search", "method": "POST", "purpose": "Search contacts by custom properties"},
+      {"endpoint": "/crm/v3/objects/contacts/batch/create", "method": "POST", "purpose": "Batch create contacts (inbound sync)"}
+    ],
+    "mailchimp_endpoints": [
+      {"endpoint": "/3.0/lists/{list_id}/members", "method": "POST", "purpose": "Add member to audience"},
+      {"endpoint": "/3.0/lists/{list_id}/members/{subscriber_hash}", "method": "PUT", "purpose": "Upsert member (create or update)"},
+      {"endpoint": "/3.0/lists/{list_id}/members/{subscriber_hash}", "method": "PATCH", "purpose": "Update specific member fields"},
+      {"endpoint": "/3.0/lists/{list_id}/merge-fields", "method": "POST", "purpose": "Create custom merge fields"},
+      {"endpoint": "/3.0/lists/{list_id}/webhooks", "method": "POST", "purpose": "Set up unsubscribe/engagement webhooks"},
+      {"endpoint": "/3.0/batches", "method": "POST", "purpose": "Batch operations for large syncs"}
+    ]
+  },
+
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Merge field format mismatch",
+      "tool": "Mailchimp",
+      "category": "FIELD_MAPPING",
+      "cause": "HubSpot property format doesn't match Mailchimp merge tag format (e.g., phone with country code in a numeric-only field). Mailchimp silently drops the value.",
+      "solution": "Pre-create merge fields in Mailchimp matching HubSpot property names. Validate and sanitize data formats before pushing. Use middleware with field transformation logic."
+    },
+    {
+      "error_code": "Member Exists (400)",
+      "tool": "Mailchimp",
+      "category": "API_USAGE",
+      "cause": "Using POST /members to add a contact that already exists. POST is create-only.",
+      "solution": "Always use PUT /members/{subscriber_hash} for upsert (idempotent create/update). The subscriber_hash is the MD5 hash of the lowercase email address."
+    },
+    {
+      "error_code": "Unsubscribe not syncing back",
+      "tool": "Both",
+      "category": "SYNC_DIRECTION",
+      "cause": "Native integration is one-way (HubSpot → Mailchimp only). When a contact unsubscribes in Mailchimp, HubSpot doesn't know and keeps emailing.",
+      "solution": "Implement Mailchimp webhooks for 'unsubscribe' events. Create a custom HubSpot property 'mailchimp_unsubscribed'. Set it to true when webhook fires. Use HubSpot workflow to prevent re-emailing."
+    },
+    {
+      "error_code": "429 Too Many Requests",
+      "tool": "Mailchimp",
+      "category": "RATE_LIMIT",
+      "cause": "Exceeded 10 simultaneous connections during large batch sync.",
+      "solution": "Implement request queuing (max 10 concurrent). Use Mailchimp Batch endpoint for operations >10K records."
+    },
+    {
+      "error_code": "HubSpot 429 Too Many Requests",
+      "tool": "HubSpot",
+      "category": "RATE_LIMIT",
+      "cause": "Exceeded 110 requests per 10 seconds or daily limit during sync.",
+      "solution": "Use HubSpot Operations Hub for managed sync. Implement webhooks instead of polling. Reduce sync frequency."
+    },
+    {
+      "error_code": "Custom mapping requires paid plan",
+      "tool": "HubSpot",
+      "category": "PLAN_LIMITATION",
+      "cause": "HubSpot free/starter plans don't support custom field mappings in native Mailchimp integration.",
+      "solution": "Upgrade to Marketing Hub Professional for custom mapping. Or use middleware (Zapier, n8n) to handle the field mapping externally."
+    },
+    {
+      "error_code": "Segmentation complexity — one audience only",
+      "tool": "HubSpot ↔ Mailchimp",
+      "category": "ARCHITECTURE",
+      "cause": "Native integration maps one HubSpot list to one Mailchimp audience. Cannot route contacts to different audiences based on lifecycle stage or deal property.",
+      "solution": "Use a middleware workflow layer (n8n, Zapier, Make) that evaluates contact records and routes conditionally to different Mailchimp audiences."
+    }
+  ],
+
+  "community_solutions": [
+    {
+      "problem": "Contacts created before integration installed don't sync",
+      "solution": "Export existing contacts from HubSpot and import into Mailchimp manually (or via API bulk import) before enabling the integration. The native integration only syncs contacts created after installation.",
+      "source": "HubSpot Community"
+    },
+    {
+      "problem": "Duplicate audience members with overlapping audiences",
+      "solution": "Consolidate to one audience using Tags for segmentation. Use the subscriber_hash as unique identifier and check for existing members before adding.",
+      "source": "HubSpot Community forums"
+    },
+    {
+      "problem": "Mailchimp merge field character limits cause silent data loss",
+      "solution": "Add pre-sync validation in middleware: truncate fields to Mailchimp limits, normalize formats (phone, date). Map only the fields you need, not all HubSpot properties.",
+      "source": "Alltomate integration guide"
+    }
+  ],
+
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "HubSpot Mailchimp integration",
+    "HubSpot Mailchimp sync not working",
+    "HubSpot Mailchimp duplicate contacts",
+    "HubSpot to Mailchimp migration",
+    "HubSpot Mailchimp custom fields",
+    "Mailchimp unsubscribe sync HubSpot",
+    "HubSpot Mailchimp two way sync"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "integration_id": "make-to-slack",
+  "integration_name": "Make (Integromat) ↔ Slack Integration",
+  "tool_a": {
+    "tool_id": "make",
+    "tool_name": "Make (formerly Integromat)"
+  },
+  "tool_b": {
+    "tool_id": "slack",
+    "tool_name": "Slack"
+  },
+  "sync_type": "Unidirectional (Make → Slack via Slack module in Make scenarios)",
+  "popularity": "medium-high — Make's Slack module one of most popular, used for notifications from thousands of app integrations",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "make_side": "API Key per scenario (or OAuth per app). No rate limit per second, but monthly operation cap.",
+    "slack_side": "OAuth 2.0 Bot Token (xoxb-). Scopes: chat:write, channels:read, files:write for file uploads."
+  },
+  "common_use_cases": [
+    "Google Sheets row added → Make scenario → Slack channel notification",
+    "Webhook received → Make transforms data → Slack message with Block Kit",
+    "Database query results → Make aggregates → Slack daily report summary",
+    "Multiple source events → Make dedup → Slack thread updates",
+    "Error monitoring → Make catches → Slack alert with error details"
+  ],
+  "endpoints_involved": {
+    "make_endpoints": [
+      {
+        "endpoint": "Make internal API (module-managed)",
+        "method": "N/A",
+        "purpose": "Make manages Slack API calls internally via Slack module"
+      }
+    ],
+    "slack_endpoints": [
+      {
+        "endpoint": "/chat.postMessage",
+        "method": "POST",
+        "purpose": "Send message to Slack channel"
+      },
+      {
+        "endpoint": "/chat.update",
+        "method": "POST",
+        "purpose": "Update existing Slack message (for progress updates)"
+      },
+      {
+        "endpoint": "/files.upload",
+        "method": "POST",
+        "purpose": "Upload file to Slack channel"
+      },
+      {
+        "endpoint": "/conversations.info",
+        "method": "GET",
+        "purpose": "Get channel info to verify bot access"
+      },
+      {
+        "endpoint": "/chat.postEphemeral",
+        "method": "POST",
+        "purpose": "Send ephemeral message to specific user"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Slack rate limit in Make scenarios",
+      "tool": "Slack",
+      "category": "RATE_LIMIT",
+      "cause": "Make scenario processes 50 items in a loop. Each iteration sends a Slack message. Slack 1 req/sec per method causes 429 after first request.",
+      "solution": "Add 'Throttle' module in Make before Slack module. Set throttle to 1 second. Or aggregate messages and send one per batch."
+    },
+    {
+      "error_code": "Make Slack module OAuth re-authentication",
+      "tool": "Make",
+      "category": "AUTH",
+      "cause": "Make's Slack connection expires or Slack bot token revoked. Make scenario shows 'Connection Error'. Scenario stops processing silently.",
+      "solution": "Set up Make scenario error handler route that sends email alert on connection error. Re-authenticate Slack connection in Make dashboard."
+    },
+    {
+      "error_code": "Block Kit too complex for Make's JSON module",
+      "tool": "Make",
+      "category": "FORMATTING",
+      "cause": "Make's JSON module struggles with nested Block Kit arrays. Missing comma or bracket breaks the entire Slack message.",
+      "solution": "Build Block Kit JSON as a single text string using Make's 'set variable' module. Validate with Slack Block Kit Builder before production."
+    },
+    {
+      "error_code": "Message aggregation with Map function array limit",
+      "tool": "Make",
+      "category": "DATA_TRANSFORM",
+      "cause": "Make's Map function collects 200 items into array. Slack message with 200 items exceeds Slack block text limits. Static rendering fails.",
+      "solution": "Chunk the array: send multiple messages for > 50 aggregated items. Or send file attachment instead of message."
+    },
+    {
+      "error_code": "File upload size limit",
+      "tool": "Slack",
+      "category": "VALIDATION",
+      "cause": "Make-generated file (CSV report, screenshot) > 1GB fails Slack upload. Slack silently rejects oversized files.",
+      "solution": "Limit file size in Make scenario before upload. Compress files if needed. Use Slack's file upload limits guide."
+    },
+    {
+      "error_code": "Slack channel archived — message fails",
+      "tool": "Slack",
+      "category": "CONFIGURATION",
+      "cause": "Make scenario sends to channel that was archived by admin. Slacks returns 'is_archived' error. Scenario fails.",
+      "solution": "Add error handler in Make to detect 'is_archived'. Route to different channel or notify admin."
+    },
+    {
+      "error_code": "Scenario operation limit exhaustion",
+      "tool": "Make",
+      "category": "PLAN_LIMIT",
+      "cause": "Each Slack message = 1 Make operation. High-volume scenarios exhaust Make monthly operation limit (e.g., 10K on Pro plan).",
+      "solution": "Reduce Slack notification frequency. Aggregate messages. Use Make's data store to batch notifications."
+    },
+    {
+      "error_code": "Slack webhook URL expiry",
+      "tool": "Slack",
+      "category": "CONFIGURATION",
+      "cause": "Slack Incoming Webhook URLs can expire or be deactivated. Make's Slack module using legacy webhooks stops working.",
+      "solution": "Migrate to Slack Bot Token (OAuth) instead of Incoming Webhooks. Bot tokens don't expire."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "Make scenario execution time vs Slack rate limit",
+      "solution": "Make async scenarios don't respect Slack per-method rate limits across parallel executions. Use serial processing for Slack.",
+      "source": "Make community forum"
+    },
+    {
+      "problem": "Slack message formatting with HTML in source data",
+      "solution": "Strip HTML tags from source data in Make before sending to Slack. Use Make's 'replace' function with regex.",
+      "source": "Make Slack module docs"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "Make Slack integration",
+    "Make Integromat Slack notification",
+    "Make Slack rate limit",
+    "Make Slack message Block Kit",
+    "Make scenario Slack connection error"
+  ]
+}

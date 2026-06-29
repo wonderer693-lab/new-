@@ -1,0 +1,132 @@
+{
+  "integration_id": "pipedrive-to-mailchimp",
+  "integration_name": "Pipedrive ↔ Mailchimp Integration",
+  "tool_a": {
+    "tool_id": "pipedrive",
+    "tool_name": "Pipedrive"
+  },
+  "tool_b": {
+    "tool_id": "mailchimp",
+    "tool_name": "Mailchimp"
+  },
+  "sync_type": "Unidirectional (Pipedrive → Mailchimp, typically via middleware)",
+  "popularity": "medium — common for organizations using Pipedrive pipeline management + Mailchimp email marketing",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "pipedrive_side": "API Token (x-api-token header) or OAuth 2.0. v2 API required (v1 deprecated July 31, 2026).",
+    "mailchimp_side": "OAuth 2.0 or API Key. Audience manager permissions."
+  },
+  "common_use_cases": [
+    "Pipedrive deal 'Won' → Mailchimp list add + tag 'customer'",
+    "Pipedrive person created → Mailchimp audience member with merge fields",
+    "Pipedrive deal stage update → Mailchimp segment membership change",
+    "Pipedrive activity completed → Mailchimp automation trigger",
+    "Bulk Pipedrive person import → Mailchimp audience sync"
+  ],
+  "endpoints_involved": {
+    "pipedrive_endpoints": [
+      {
+        "endpoint": "/persons",
+        "method": "GET/POST",
+        "purpose": "Read/create persons in Pipedrive v2"
+      },
+      {
+        "endpoint": "/persons/search",
+        "method": "GET",
+        "purpose": "Search persons by email for matching"
+      },
+      {
+        "endpoint": "/deals",
+        "method": "GET",
+        "purpose": "Read deals for deal-to-audience mapping"
+      }
+    ],
+    "mailchimp_endpoints": [
+      {
+        "endpoint": "/lists/{id}/members",
+        "method": "GET/POST/PUT",
+        "purpose": "Manage audience members"
+      },
+      {
+        "endpoint": "/lists/{id}/members/{subscriber_hash}",
+        "method": "GET/PATCH",
+        "purpose": "Update specific member"
+      },
+      {
+        "endpoint": "/lists/{id}/segments",
+        "method": "GET/POST",
+        "purpose": "Manage segments"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Pipedrive v2 hash key field IDs in custom data",
+      "tool": "Pipedrive",
+      "category": "API_VERSION",
+      "cause": "Pipedrive v2 sends custom field data keyed by hash key (a1b2c3d4), not numeric ID. Middleware expecting numeric keys reads empty values.",
+      "solution": "After migrating to v2, fetch all custom field schemas and update middleware field mappings to use hash keys."
+    },
+    {
+      "error_code": "Pipedrive person email not required",
+      "tool": "Pipedrive",
+      "category": "DATA_QUALITY",
+      "cause": "Pipedrive persons can be created without an email. Mailchimp requires email as primary key. Sync silently skips these persons.",
+      "solution": "Filter Pipedrive persons with email = null before sync. Log skipped persons for manual data enrichment."
+    },
+    {
+      "error_code": "Mailchimp daily list add limit",
+      "tool": "Mailchimp",
+      "category": "RATE_LIMIT",
+      "cause": "Mailchimp enforces daily add limits (new subscribers) based on plan. Bulk Pipedrive sync exceeds limit. Mailchimp rejects.",
+      "solution": "Monitor Mailchimp subscriber count vs plan limit. Spread bulk syncs across multiple days. Delete inactive subscribers first."
+    },
+    {
+      "error_code": "Pipedrive deal 'Won' re-triggers on update",
+      "tool": "Pipedrive",
+      "category": "AUTOMATION",
+      "cause": "Pipedrive webhook fires on deal update even when stage doesn't change. Middleware sends duplicate 'customer' tags to Mailchimp.",
+      "solution": "Track deal stage transitions in middleware. Only trigger Mailchimp actions on actual stage changes, not every update."
+    },
+    {
+      "error_code": "Custom field mapping between v1 and v2 field IDs",
+      "tool": "Pipedrive",
+      "category": "MIGRATION",
+      "cause": "During v1→v2 migration, custom field IDs change from numeric to hash keys. Mailchimp mapping table becomes stale.",
+      "solution": "Rebuild custom field mapping table after v2 migration. Do not rely on cached field ID mappings."
+    },
+    {
+      "error_code": "Person merge in Pipedrive duplicates Mailchimp member",
+      "tool": "Pipedrive",
+      "category": "DATA_QUALITY",
+      "cause": "Two Pipedrive persons merged. Middleware receives update for both old and new person IDs. Mailchimp gets duplicate or inconsistent data.",
+      "solution": "Handle person merge events in middleware: identify merged persons by email dedup. Archive old Mailchimp member before adding new."
+    },
+    {
+      "error_code": "Deal-associated persons not implicitly synced",
+      "tool": "Pipedrive",
+      "category": "CONFIGURATION",
+      "cause": "Pipedrive deals have associated persons. Middleware watches deal stage changes but doesn't export associated person data to Mailchimp.",
+      "solution": "When deal stage triggers Mailchimp action, fetch associated person(s) via GET /persons/{id} and include their data in Mailchimp sync."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "Pipedrive webhook delivery guarantees — at least once",
+      "solution": "Pipedrive 'at least once' delivery can produce duplicate webhook events. Use idempotency key in middleware.",
+      "source": "Pipedrive developer docs"
+    },
+    {
+      "problem": "Mailchimp subscriber hash generation",
+      "solution": "Mailchimp subscriber_hash = md5(email.toLowerCase()). Ensure email is lowercased before hashing for PATCH operations.",
+      "source": "Mailchimp API docs"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "Pipedrive Mailchimp integration",
+    "Pipedrive to Mailchimp sync",
+    "Pipedrive Mailchimp v2 migration",
+    "Pipedrive deal to Mailchimp audience"
+  ]
+}

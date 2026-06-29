@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Integration Field Mapping Schema",
+  "description": "Structured field mapping data for cross-tool API integrations. Documents silent failures where field values, types, or formats differ between tools.",
+  "type": "object",
+  "required": ["meta", "mappings", "categories"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["toolA", "toolB", "integrationSlug", "lastUpdated", "totalMappings"],
+      "properties": {
+        "toolA": { "type": "string", "description": "Primary tool slug" },
+        "toolB": { "type": "string", "description": "Secondary tool slug" },
+        "integrationSlug": { "type": "string", "pattern": "^[a-z]+-to-[a-z]+$" },
+        "lastUpdated": { "type": "string", "format": "date" },
+        "totalMappings": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "severity"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+        }
+      }
+    },
+    "mappings": {
+      "type": "array",
+      "items:": {
+        "$ref": "#/definitions/FieldMapping"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "description": "Known errors caused by field mapping mismatches",
+      "items": {
+        "type": "object",
+        "required": ["errorSlug", "errorName", "categoryId", "description"],
+        "properties": {
+          "errorSlug": { "type": "string" },
+          "errorName": { "type": "string" },
+          "categoryId": { "type": "string" },
+          "description": { "type": "string" },
+          "fixSummary": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "FieldMapping": {
+      "type": "object",
+      "required": ["id", "categoryId", "fieldName", "fieldType", "toolAValue", "toolBValue", "direction", "behavor", "severity"],
+      "properties": {
+        "id": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "fieldName": { "type": "string", "description": "Human-readable field name" },
+        "fieldType": { "type": "string", "enum": ["picklist", "text", "number", "boolean", "date", "datetime", "currency", "phone", "email", "url", "id", "object"] },
+        "toolAValue": { "type": "string", "description": "Value/format in tool A" },
+        "toolBValue": { "type": "string", "description": "Value/format in tool B" },
+        "direction": { "type": "string", "enum": ["A-to-B", "B-to-A", "bidirectional"], "description": "Sync direction" },
+        "behavior": { "type": "string", "enum": ["silent-failure", "warning", "error", "auto-convert", "auto-convert-partial"], "description": "What happens on mismatch" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "notes": { "type": "string" },
+        "fixStrategy": { "type": "string" },
+        "mappedValues": {
+          "type": "array",
+          "description": "Value translation table entries",
+          "items": {
+            "type": "object",
+            "required": ["toolA", "toolB", "mapsCorrectly"],
+            "properties": {
+              "toolA": { "type": "string" },
+              "toolB": { "type": "string" },
+              "mapsCorrectly": { "type": "boolean" },
+              "notes": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

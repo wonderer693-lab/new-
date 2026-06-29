@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const frontmatter = {
+  title: 'Privacy Policy — API Integration Hub',
+  description: 'Privacy policy for API Integration Hub. Learn how we handle your data, cookies, and analytics.',
+  noindex: true,
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <h1>Privacy Policy</h1>
+    <p><strong>Last updated:</strong> June 29, 2026</p>
+
+    <section>
+      <h2>Overview</h2>
+      <p>API Integration Hub ("we", "us", "our") respects your privacy. This policy explains what information we collect, how we use it, and your rights.</p>
+    </section>
+
+    <section>
+      <h2>Information We Collect</h2>
+      <p>We collect minimal information to operate this website:</p>
+      <ul>
+        <li><strong>Server logs</strong> — IP address, browser type, pages visited, and timestamps. This data is automatically collected by our hosting provider (Vercel) and retained for 30 days.</li>
+        <li><strong>Analytics</strong> — If enabled, we use privacy-focused analytics (e.g., Plausible, Fathom) that do not use cookies or track individual users.</li>
+      </ul>
+      <p>We do <strong>not</strong> collect:</p>
+      <ul>
+        <li>Email addresses (unless you voluntarily contact us)</li>
+        <li>Payment information</li>
+        <li>Personal identifiers beyond IP address</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Cookies</h2>
+      <p>This website does not use cookies for tracking or advertising. We may use essential cookies for:</p>
+      <ul>
+        <li>Remembering your preferences (e.g., dark mode)</li>
+        <li>Session management (if you log in to a future feature)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Third-Party Services</h2>
+      <p>We use the following third-party services:</p>
+      <ul>
+        <li><strong>Vercel</strong> — Hosting and CDN. <a href="https://vercel.com/legal/privacy-policy">Vercel Privacy Policy</a></li>
+        <li><strong>GitHub</strong> — Source code hosting. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub Privacy Policy</a></li>
+      </ul>
+      <p>These services may collect data according to their own privacy policies.</p>
+    </section>
+
+    <section>
+      <h2>Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request access to any personal data we hold about you</li>
+        <li>Request deletion of your data</li>
+        <li>Opt out of analytics (if enabled)</li>
+      </ul>
+      <p>To exercise these rights, <a href="/contact">contact us</a>.</p>
+    </section>
+
+    <section>
+      <h2>Data Retention</h2>
+      <p>Server logs are retained for 30 days and then automatically deleted. We do not maintain long-term user profiles or databases.</p>
+    </section>
+
+    <section>
+      <h2>Children's Privacy</h2>
+      <p>This website is not intended for children under 13. We do not knowingly collect information from children.</p>
+    </section>
+
+    <section>
+      <h2>Changes to This Policy</h2>
+      <p>We may update this policy from time to time. Changes will be posted on this page with an updated "Last updated" date.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>For privacy-related questions, visit our <a href="/contact">contact page</a>.</p>
+    </section>
+  </main>
+</BaseLayout>

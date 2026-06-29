@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "toolA": "hubspot",
+    "toolB": "slack",
+    "integrationSlug": "hubspot-to-slack",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 3
+  },
+  "categories": [
+    {
+      "id": "message-format",
+      "name": "Message Formatting",
+      "description": "HubSpot data formatting for Slack Block Kit",
+      "severity": "high"
+    },
+    {
+      "id": "rate-limit",
+      "name": "Rate Limit & Queuing",
+      "description": "Slack per-method rate limit vs HubSpot webhook bursts",
+      "severity": "critical"
+    },
+    {
+      "id": "channel",
+      "name": "Channel Routing",
+      "description": "Mapping HubSpot pipeline stages to Slack channels",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "blockkit-formatting",
+      "categoryId": "message-format",
+      "fieldName": "Markdown Escape in Block Kit",
+      "fieldType": "text",
+      "toolAValue": "HubSpot field values (may contain *, _, ~, `)",
+      "toolBValue": "Slack mrkdwn (markdown with special chars)",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Unescaped * or _ in deal names breaks Block Kit rendering. Message appears malformed.",
+      "fixStrategy": "Escape HubSpot text: replace *, _, ~ with HTML entities or escape sequences before Block Kit insertion.",
+      "mappedValues": []
+    },
+    {
+      "id": "bulk-rate-limit",
+      "categoryId": "rate-limit",
+      "fieldName": "Bulk Notification Throttling",
+      "fieldType": "text",
+      "toolAValue": "HubSpot webhook: up to 100 events in seconds",
+      "toolBValue": "Slack: 1 req/sec per method per workspace",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "critical",
+      "notes": "Pipeline bulk update triggers 50 webhooks, each trying to post to Slack. All but first get 429.",
+      "fixStrategy": "Queue in middleware. Send at 1/sec. Or aggregate into one summary message.",
+      "mappedValues": []
+    },
+    {
+      "id": "channel-deal-stage",
+      "categoryId": "channel",
+      "fieldName": "Deal Stage → Channel Routing",
+      "fieldType": "text",
+      "toolAValue": "HubSpot deal stage name (e.g., 'closedwon')",
+      "toolBValue": "Slack channel ID (e.g., C0123456789)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "medium",
+      "notes": "Stage 'closedwon' → #closed-wins. Stage 'urgent-escalation' → #support-urgent. Mapping is custom per team.",
+      "fixStrategy": "Create mapping table: stageSlug → channelId in middleware config.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "rate-limit-flood",
+      "errorName": "Slack Rate Limit Flood from Webhook Batch",
+      "categoryId": "rate-limit",
+      "description": "Bulk webhook triggers exceed 1/sec Slack rate limit. Messages lost.",
+      "fixSummary": "Queue messages, send at 1/sec, or aggregate into summaries."
+    },
+    {
+      "errorSlug": "blockkit-break",
+      "errorName": "Block Kit Rendering Break",
+      "categoryId": "message-format",
+      "description": "Unescaped HubSpot text breaks Slack markdown formatting.",
+      "fixSummary": "Escape text fields before Block Kit insertion."
+    }
+  ]
+}

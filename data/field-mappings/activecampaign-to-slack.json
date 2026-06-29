@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "toolA": "activecampaign",
+    "toolB": "slack",
+    "integrationSlug": "activecampaign-to-slack",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 3
+  },
+  "categories": [
+    {
+      "id": "payload-variation",
+      "name": "Webhook Payload Variation",
+      "description": "AC webhook payload format changes per event type",
+      "severity": "high"
+    },
+    {
+      "id": "burst-rate-limit",
+      "name": "Burst Rate Limit",
+      "description": "AC webhook bursts vs Slack rate limit",
+      "severity": "critical"
+    },
+    {
+      "id": "webhook-durability",
+      "name": "Webhook Durability",
+      "description": "AC webhook retries and URL changes",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "payload-format-variation",
+      "categoryId": "payload-variation",
+      "fieldName": "Webhook Payload Format Per Event",
+      "fieldType": "object",
+      "toolAValue": "AC contact webhook: {'contact':{'id':1,'email':'...'}}",
+      "toolBValue": "AC deal webhook: {'deal':{'id':1,'title':'...','value':100}}",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Same middleware route handles both payload formats. One template breaks for the other event type.",
+      "fixStrategy": "Separate routes per webhook type. Or use conditional template in middleware.",
+      "mappedValues": []
+    },
+    {
+      "id": "burst-queuing",
+      "categoryId": "burst-rate-limit",
+      "fieldName": "Bulk Tag/List Webhook Burst",
+      "fieldType": "text",
+      "toolAValue": "AC bulk action: 100 webhooks in <1 second",
+      "toolBValue": "Slack: 1 req/sec per method per workspace",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "critical",
+      "notes": "Bulk tag addition triggers individual webhooks for each contact. All 100 fire within seconds.",
+      "fixStrategy": "Queue in middleware. Rate-limit to 1 req/sec. Aggregate when > 10 items.",
+      "mappedValues": []
+    },
+    {
+      "id": "webhook-retry-dedup",
+      "categoryId": "webhook-durability",
+      "fieldName": "Webhook Retry Dedup",
+      "fieldType": "text",
+      "toolAValue": "AC webhook retry (same event, different delivery ID)",
+      "toolBValue": "Slack: duplicate message if not deduped",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "medium",
+      "notes": "AC retries webhook if first response takes > 5s. Middleware processes both, sends 2 identical Slack messages.",
+      "fixStrategy": "Dedup by AC webhook event ID in middleware. Use in-memory cache of processed IDs.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "webhook-format-breakage",
+      "errorName": "AC Webhook Format Breaks Slack Template",
+      "categoryId": "payload-variation",
+      "description": "Contact webhook payload differs from deal webhook. Same template fails.",
+      "fixSummary": "Separate routes per webhook event type."
+    },
+    {
+      "errorSlug": "burst-slack-429",
+      "errorName": "Bulk Tag Burst Exceeds Slack Rate Limit",
+      "categoryId": "burst-rate-limit",
+      "description": "100 simultaneous webhooks → 99 Slack 429 errors.",
+      "fixSummary": "Queue + rate-limit to 1 req/sec. Aggregate."
+    }
+  ]
+}

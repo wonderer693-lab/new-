@@ -1,0 +1,129 @@
+{
+  "integration_id": "activecampaign-to-slack",
+  "integration_name": "ActiveCampaign ↔ Slack Integration",
+  "tool_a": {
+    "tool_id": "activecampaign",
+    "tool_name": "ActiveCampaign"
+  },
+  "tool_b": {
+    "tool_id": "slack",
+    "tool_name": "Slack"
+  },
+  "sync_type": "Unidirectional (ActiveCampaign → Slack via ActiveCampaign's Slack integration, Zapier, or webhooks)",
+  "popularity": "medium — ActiveCampaign automation triggers Slack notifications for sales/marketing teams",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "activecampaign_side": "API Token (Api-Key header). Webhook scopes: contacts, deals, automations.",
+    "slack_side": "OAuth 2.0 Bot Token (xoxb-). Scopes: chat:write, channels:read."
+  },
+  "common_use_cases": [
+    "ActiveCampaign form submission → Slack new lead alert",
+    "ActiveCampaign deal 'Won' → Slack #closed-wins celebration message",
+    "ActiveCampaign automation error → Slack #tech-alerts notification",
+    "ActiveCampaign contact tag added → Slack assignee notification",
+    "ActiveCampaign email bounce → Slack #support lead cleanup alert"
+  ],
+  "endpoints_involved": {
+    "activecampaign_endpoints": [
+      {
+        "endpoint": "/webhooks",
+        "method": "POST",
+        "purpose": "Create webhook to trigger Slack on AC events"
+      },
+      {
+        "endpoint": "/contacts/{id}",
+        "method": "GET",
+        "purpose": "Fetch contact details for Slack message"
+      }
+    ],
+    "slack_endpoints": [
+      {
+        "endpoint": "/chat.postMessage",
+        "method": "POST",
+        "purpose": "Send message to Slack channel"
+      },
+      {
+        "endpoint": "/conversations.join",
+        "method": "POST",
+        "purpose": "Bot joins channel before posting"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "ActiveCampaign webhook payload format",
+      "tool": "ActiveCampaign",
+      "category": "WEBHOOK",
+      "cause": "ActiveCampaign webhook payloads vary by event type. Contact webhook format differs from deal webhook. Slack message template breaks.",
+      "solution": "Create separate Zapier/Make Zaps per webhook type. Each Zap has a Slack template matching the specific webhook payload."
+    },
+    {
+      "error_code": "Slack 1 req/sec vs ActiveCampaign webhook burst",
+      "tool": "Slack",
+      "category": "RATE_LIMIT",
+      "cause": "ActiveCampaign bulk tag update triggers webhooks for 100 contacts simultaneously. Middleware sends 100 Slack messages → 99 fail with 429.",
+      "solution": "Queue in middleware. Send at 1 req/sec. Or send aggregated summary: '100 contacts tagged as X in AC'."
+    },
+    {
+      "error_code": "ActiveCampaign API rate limit on webhook responses",
+      "tool": "ActiveCampaign",
+      "category": "RATE_LIMIT",
+      "cause": "ActiveCampaign expects 200 response within 5s for webhooks. Slack rate limit causes middleware to delay. AC retries webhook.",
+      "solution": "Acknowledge AC webhook immediately (200). Process Slack message asynchronously."
+    },
+    {
+      "error_code": "Slack message too long with AC deal data",
+      "tool": "Slack",
+      "category": "VALIDATION",
+      "cause": "ActiveCampaign deal with extensive notes and custom fields produces 10K+ character Slack message. Slack truncates at 4,000 chars per block.",
+      "solution": "Truncate AC deal description to 500 chars in Slack message. Add 'View in ActiveCampaign' link for full deal details."
+    },
+    {
+      "error_code": "AC webhook URL expires or changes",
+      "tool": "ActiveCampaign",
+      "category": "CONFIGURATION",
+      "cause": "ActiveCampaign webhook URL changes when middleware URL changes. Old webhooks silently stop delivering events.",
+      "solution": "Document all active webhook URLs in AC. Set up monitoring: if no Slack messages expected but not received, check webhook URLs."
+    },
+    {
+      "error_code": "Escaped HTML in AC contact data",
+      "tool": "ActiveCampaign",
+      "category": "DATA_FORMAT",
+      "cause": "ActiveCampaign stores certain fields with HTML entities (&amp; &lt; &gt;). Sent to Slack as raw text, rendering incorrectly.",
+      "solution": "Decode HTML entities in middleware before sending to Slack: &amp; → &, &lt; → <, &gt; → >."
+    },
+    {
+      "error_code": "Slack bot not in channel — silent drop",
+      "tool": "Slack",
+      "category": "PERMISSION",
+      "cause": "Slack bot removed from channel by admin. Middleware sends message but Slack silently drops it. No error returned (permissions).",
+      "solution": "Call conversations.join before each chat.postMessage. Or check bot channel membership periodically."
+    },
+    {
+      "error_code": "Duplicate Slack alerts from AC webhook retries",
+      "tool": "ActiveCampaign",
+      "category": "WEBHOOK",
+      "cause": "AC retries webhook delivery if first attempt not acknowledged quickly enough. Middleware receives duplicate events, sends duplicate Slack messages.",
+      "solution": "Dedup by webhook event ID in middleware. Track processed event IDs in memory/data store."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "AC webhook authentication header requirements",
+      "solution": "AC webhooks send a basic auth-like header. Ensure middleware validates the signature to reject fake webhook calls.",
+      "source": "ActiveCampaign webhook docs"
+    },
+    {
+      "problem": "Slack mentions (@here, @channel) from AC automation",
+      "solution": "ActiveCampaign deals with 'Urgent' tag → Slack @here notification. Risk of over-notification. Use @here only for 'Critical' severity.",
+      "source": "r/Slack Slack admin best practices"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "ActiveCampaign Slack integration",
+    "ActiveCampaign Slack notification",
+    "ActiveCampaign webhook Slack",
+    "ActiveCampaign automation Slack alert"
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "integration_id": "hubspot-to-activecampaign",
+  "integration_name": "HubSpot ↔ ActiveCampaign Integration",
+  "tool_a": {
+    "tool_id": "hubspot",
+    "tool_name": "HubSpot"
+  },
+  "tool_b": {
+    "tool_id": "activecampaign",
+    "tool_name": "ActiveCampaign"
+  },
+  "sync_type": "Custom integration (no native connector) — via API, Zapier, Make, or n8n",
+  "popularity": "medium_growing — ActiveCampaign is the fastest-growing marketing automation platform",
+  "last_updated": "2026-06-26",
+
+  "authentication_requirements": {
+    "hubspot_side": "OAuth 2.0 or Private App Token with CRM scopes (contacts, deals).",
+    "activecampaign_side": "API Token (Api-Token header) from Developer settings. Recommend dedicated service account."
+  },
+
+  "common_use_cases": [
+    "Sync HubSpot contacts to ActiveCampaign for advanced email automation sequences",
+    "Tag contacts in ActiveCampaign based on HubSpot lifecycle stage changes",
+    "Create ActiveCampaign deals from HubSpot deal stage updates",
+    "Sync unsubscribe/opt-out status bidirectionally",
+    "Trigger ActiveCampaign automations from HubSpot custom events"
+  ],
+
+  "endpoints_involved": {
+    "hubspot_endpoints": [
+      {"endpoint": "/crm/v3/objects/contacts", "method": "GET/POST/PATCH", "purpose": "Contact sync"},
+      {"endpoint": "/crm/v3/objects/contacts/search", "method": "POST", "purpose": "Search contacts"},
+      {"endpoint": "/crm/v3/objects/deals", "method": "GET", "purpose": "Read deal stages for automation triggers"}
+    ],
+    "activecampaign_endpoints": [
+      {"endpoint": "/api/3/contacts", "method": "GET/POST/PUT", "purpose": "Contact sync"},
+      {"endpoint": "/api/3/contactTags", "method": "POST", "purpose": "Tag contacts"},
+      {"endpoint": "/api/3/tags", "method": "GET/POST", "purpose": "Manage tags"},
+      {"endpoint": "/api/3/deals", "method": "GET/POST/PUT", "purpose": "Deal sync"},
+      {"endpoint": "/api/3/lists/{id}/contacts", "method": "POST", "purpose": "Add contact to list"}
+    ]
+  },
+
+  "edge_cases_and_errors": [
+    {
+      "error_code": "contactTags nested JSON format",
+      "tool": "ActiveCampaign",
+      "category": "API_DOCS_BUG",
+      "cause": "POST /api/3/contactTags expects {\"contactTag\":{\"contact\":\"1\",\"tag\":\"2\"}} but many developers send {\"contact\":\"1\",\"tag\":\"2\"} based on reading API docs",
+      "solution": "Always wrap resource data in the resource name key. Use {\"contactTag\":{\"contact\":id,\"tag\":id}} for contact tags. Similarly, {\"contact\":{...}} for contacts. Read the raw JSON schema not just the parameter list"
+    },
+    {
+      "error_code": "API key tied to individual user",
+      "tool": "ActiveCampaign",
+      "category": "AUTHENTICATION",
+      "cause": "ActiveCampaign only supports API key auth (no OAuth). Each key belongs to a user. If the user leaves or is deactivated, the integration breaks silently.",
+      "solution": "Create a dedicated API service user account (not a real person). Document which integrations use which API key. Regularly audit API key ownership"
+    },
+    {
+      "error_code": "403 Forbidden after API key reset",
+      "tool": "ActiveCampaign",
+      "category": "AUTHENTICATION",
+      "cause": "API key was reset from Developer settings but integration still uses old key. Python library crashes with KeyError on content-type header.",
+      "solution": "Implement proper HTTP error handling in integration code. Check response.status_code before parsing body. Update stored API key immediately after reset"
+    }
+  ],
+
+  "community_solutions": [
+    {
+      "problem": "ActiveCampaign doesn't return proper JSON on 403 error — causes library crash",
+      "solution": "Wrap API calls in try/except. Check response.status_code before accessing headers or body. Use a middleware integration layer (n8n, Make) instead of direct client library.",
+      "source": "GitHub GearPlug/activecampaign-python issue #11"
+    },
+    {
+      "problem": "No native connector — requires custom build or middleware",
+      "solution": "Use Make (Integromat) or n8n for visual workflow builder. ActiveCampaign and HubSpot both have well-supported modules on these platforms. Avoid building from scratch unless you need custom transformations.",
+      "source": "Developer best practices"
+    }
+  ],
+
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "HubSpot ActiveCampaign integration",
+    "HubSpot ActiveCampaign sync",
+    "ActiveCampaign HubSpot API connection",
+    "HubSpot to ActiveCampaign migration",
+    "ActiveCampaign HubSpot tags sync"
+  ]
+}

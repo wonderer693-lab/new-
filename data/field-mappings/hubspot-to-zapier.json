@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "toolA": "hubspot",
+    "toolB": "zapier",
+    "integrationSlug": "hubspot-to-zapier",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 4
+  },
+  "categories": [
+    {
+      "id": "trigger-timing",
+      "name": "Trigger Timing & Polling",
+      "description": "Zapier trigger delays vs HubSpot webhook real-time events",
+      "severity": "high"
+    },
+    {
+      "id": "field-passthrough",
+      "name": "Field Passthrough & Naming",
+      "description": "How HubSpot field names map to Zapier output field labels and how data types change",
+      "severity": "medium"
+    },
+    {
+      "id": "data-coercion",
+      "name": "Data Type Coercion",
+      "description": "Zapier coerces data types (numbers→strings, dates→formatted strings) before passing to downstream actions",
+      "severity": "high"
+    },
+    {
+      "id": "rate-limit",
+      "name": "Rate Limit Delegation",
+      "description": "Zapier rate limiting behavior when acting as middleware between HubSpot and other APIs",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "trigger-polling-delay",
+      "categoryId": "trigger-timing",
+      "fieldName": "Trigger Timing — Poll vs Webhook",
+      "fieldType": "text",
+      "toolAValue": "HubSpot webhook: real-time (sub-second)",
+      "toolBValue": "Zapier polling: every 1–15 minutes (Free: 15min, Pro: 2min, Team: 1min)",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Zapier uses polling triggers for HubSpot (except specific webhook-supported triggers). A contact created in HubSpot may take up to 15 minutes to appear in Zapier. Developers expecting real-time behavior get confused when downstream actions don't fire immediately. This delay is not documented in Zapier's UI — only in fine print.",
+      "fixStrategy": "Use HubSpot webhooks directly for real-time needs. Accept Zapier polling delay for non-time-sensitive flows. Use Zapier premium plan (1-min poll) for tighter requirements."
+    },
+    {
+      "id": "field-name-transformation",
+      "categoryId": "field-passthrough",
+      "fieldName": "HubSpot to Zapier Field Name Transformation",
+      "fieldType": "text",
+      "toolAValue": "HubSpot internal property name snake_case (e.g., 'firstname')",
+      "toolBValue": "Zapier output field (human-readable, e.g., 'First Name')",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "medium",
+      "notes": "Zapier transforms HubSpot property names to human-readable labels (firstname → 'First Name', hs_object_id → 'Object ID (hubspot)'). This is usually fine, but when using a 'Code by Zapier' or 'Webhooks by Zapier' step, the field naming can differ from the HubSpot API response format, causing confusion in downstream mapping.",
+      "fixStrategy": "Use 'Code by Zapier' with Run JavaScript to fetch raw HubSpot API response if you need original field names. Otherwise, use Zapier's field picker to map correctly."
+    },
+    {
+      "id": "data-type-coercion",
+      "categoryId": "data-coercion",
+      "fieldName": "Data Type Coercion by Zapier",
+      "fieldType": "text",
+      "toolAValue": "HubSpot types: number (int), datetime (ISO 8601), boolean (true/false), enumeration (string)",
+      "toolBValue": "Zapier output: all fields are strings (text) unless explicitly typed in Zapier schema",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Zapier converts most HubSpot values to strings before passing to downstream actions. A HubSpot number (e.g., 'amount': 1000) becomes '1000' (string) in Zapier. If the downstream action expects a number (like ActiveCampaign deal value), it may fail or produce wrong data. Boolean becomes 'true'/'false' (string). DateTime becomes a formatted string depending on Zapier's formatting.",
+      "fixStrategy": "In downstream actions that expect specific types, use Zapier's Formatter step to convert types explicitly. For Code by Zapier, use parseInt() or parseFloat() to restore numeric types."
+    },
+    {
+      "id": "rate-limit-delegation",
+      "categoryId": "rate-limit",
+      "fieldName": "Rate Limit Delegation",
+      "fieldType": "text",
+      "toolAValue": "HubSpot rate limit: 110 req/10s per account (public OAuth apps)",
+      "toolBValue": "Zapier rate limit: depends on plan (Free: 100 tasks/mo, Pro: 750 tasks/mo, Team: 2000 tasks/mo)",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "medium",
+      "notes": "Zapier's task limit is its own rate limiter — not HubSpot's. A single HubSpot trigger can create many Zapier tasks if multiple downstream actions are chained. HubSpot rate limits apply per-account: if multiple Zaps share the same HubSpot connection, they collectively consume the 110 req/10s limit. Zapier doesn't coordinate rate limit consumption across Zaps.",
+      "fixStrategy": "Monitor HubSpot API usage from Zapier connections. If hitting 429 errors in Zaps, throttle Zap frequency or upgrade HubSpot app limits."
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "zapier-polling-delay",
+      "errorName": "Zapier Polling Delay — Data Lag",
+      "categoryId": "trigger-timing",
+      "description": "Zapier polls HubSpot every 1-15 minutes. Real-time data is not possible via standard Zapier triggers.",
+      "fixSummary": "Use HubSpot webhooks directly for real-time. Accept polling delay for non-critical flows."
+    },
+    {
+      "errorSlug": "data-type-coercion-silent",
+      "errorName": "Zapier Data Type Coercion",
+      "categoryId": "data-coercion",
+      "description": "Zapier converts HubSpot numbers, booleans, and dates to strings. Downstream actions may fail or produce wrong data.",
+      "fixSummary": "Use Zapier Formatter step or Code by Zapier to restore original types."
+    },
+    {
+      "errorSlug": "zapier-field-name-confusion",
+      "errorName": "Field Name Transformation Confusion",
+      "categoryId": "field-passthrough",
+      "description": "Zapier renames HubSpot internal property names to human-readable labels, causing mapping confusion in advanced Zaps.",
+      "fixSummary": "Use Code by Zapier with raw API for original field names. Use field picker for standard flows."
+    }
+  ]
+}

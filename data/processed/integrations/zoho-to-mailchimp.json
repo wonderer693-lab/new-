@@ -1,0 +1,127 @@
+{
+  "integration_id": "zoho-to-mailchimp",
+  "integration_name": "Zoho CRM ↔ Mailchimp Integration",
+  "tool_a": {
+    "tool_id": "zoho",
+    "tool_name": "Zoho CRM"
+  },
+  "tool_b": {
+    "tool_id": "mailchimp",
+    "tool_name": "Mailchimp"
+  },
+  "sync_type": "Unidirectional (Zoho → Mailchimp via Zoho Flow, middleware, or native connector)",
+  "popularity": "medium — Zoho CRM users often pair with Mailchimp for email marketing at lower price point than HubSpot/Salesforce",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "zoho_side": "OAuth 2.0 with scopes for Zoho CRM modules (Leads, Contacts, Accounts). Refresh token required (1h expiry).",
+    "mailchimp_side": "OAuth 2.0 or API Key. Audience management scopes."
+  },
+  "common_use_cases": [
+    "Zoho Lead creation → Mailchimp subscriber add with lead score merge field",
+    "Zoho Contact stage change → Mailchimp tag update",
+    "Zoho Campaign member → Mailchimp segment membership",
+    "Bulk Zoho contact sync → Mailchimp audience (initial setup)",
+    "Zoho deal 'Closed Won' → Mailchimp list transfer + automation trigger"
+  ],
+  "endpoints_involved": {
+    "zoho_endpoints": [
+      {
+        "endpoint": "/crm/v7/Contacts",
+        "method": "GET/POST/PUT",
+        "purpose": "Read/write Contacts"
+      },
+      {
+        "endpoint": "/crm/v7/Leads",
+        "method": "GET/POST/PUT",
+        "purpose": "Read/write Leads"
+      },
+      {
+        "endpoint": "/crm/v7/Contacts/search",
+        "method": "POST",
+        "purpose": "Search by email for dedup"
+      }
+    ],
+    "mailchimp_endpoints": [
+      {
+        "endpoint": "/lists/{id}/members",
+        "method": "GET/POST/PUT",
+        "purpose": "Manage audience members"
+      },
+      {
+        "endpoint": "/lists/{id}/members/{subscriber_hash}",
+        "method": "GET/PATCH",
+        "purpose": "Update specific member"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Zoho OAuth token expires every hour",
+      "tool": "Zoho",
+      "category": "AUTH",
+      "cause": "Zoho CRM OAuth access token expires every 60 minutes. Middleware with stale token gets 401. Silent failure if not retried.",
+      "solution": "Implement token refresh in middleware (grant_type=refresh_token). Proactively refresh every 50 minutes. Retry with new token on 401."
+    },
+    {
+      "error_code": "Zoho contact duplicate detection differs from Mailchimp",
+      "tool": "Both",
+      "category": "DATA_QUALITY",
+      "cause": "Zoho dedup by email is optional (can have multiple contacts with same email). Mailchimp strictly dedups by email. Sync creates Mailchimp errors.",
+      "solution": "Before sync: enforce email dedup in Zoho or choose which Zoho contact wins for duplicate emails."
+    },
+    {
+      "error_code": "Zoho API rate limit (250 req/min)",
+      "tool": "Zoho",
+      "category": "RATE_LIMIT",
+      "cause": "Bulk sync of 10,000+ contacts hits Zoho 250 req/min limit. Sync pauses or fails midway.",
+      "solution": "Batch with 2-second delays between requests. Implement exponential backoff on 429."
+    },
+    {
+      "error_code": "Mailchimp plan subscriber limit",
+      "tool": "Mailchimp",
+      "category": "PLAN_LIMIT",
+      "cause": "Zoho CRM has unlimited contacts. Mailchimp free/paid plans have subscriber limits. Bulk sync exceeds plan and Mailchimp rejects contacts.",
+      "solution": "Apply Zoho CRM filter before sync (e.g., Lead Status = 'Warm'). Monitor Mailchimp audience count against plan limit."
+    },
+    {
+      "error_code": "Zoho multi-currency to Mailchimp number field",
+      "tool": "Both",
+      "category": "FIELD_TYPES",
+      "cause": "Zoho deal amount with currency symbol ($1,000.50) sent to Mailchimp number merge field fails because of non-numeric characters.",
+      "solution": "Strip currency symbols and commas before sending. Send numeric string to Mailchimp NUMBER merge tag."
+    },
+    {
+      "error_code": "Time zone offset in Zoho datetime fields",
+      "tool": "Zoho",
+      "category": "DATA_FORMAT",
+      "cause": "Zoho stores datetime in org timezone with offset. Mailchimp expects UTC or plain date. Mismatch shifts dates by hours.",
+      "solution": "Convert Zoho datetime to UTC before sending. Send only date part (YYYY-MM-DD) for Mailchimp date merge fields."
+    },
+    {
+      "error_code": "Zoho custom lookup fields as IDs, not values",
+      "tool": "Zoho",
+      "category": "FIELD_MAPPING",
+      "cause": "Zoho lookup fields to related records return record ID (e.g., 123456789), not the display name. Mailchimp displays the numeric ID instead of the actual value.",
+      "solution": "Resolve lookup field IDs to display values via Zoho API before sending to Mailchimp."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "Zoho API v2→v7 migration still catching users",
+      "solution": "Zoho CRM API v2 deprecated 2023, v7 current. Many middleware still uses old endpoints. Check your API version.",
+      "source": "Zoho CRM API docs"
+    },
+    {
+      "problem": "Mailchimp merge tag 80-field limit",
+      "solution": "Mailchimp max 80 merge tags per audience. Zoho has hundreds of fields. Prioritize 20-30 critical fields.",
+      "source": "Mailchimp developer forum"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "Zoho Mailchimp integration",
+    "Zoho CRM Mailchimp sync",
+    "Zoho Mailchimp API limits",
+    "Zoho OAuth token refresh Mailchimp"
+  ]
+}

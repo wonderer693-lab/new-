@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import { extractSteps } from '../../../utils/extractSteps';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map(entry => {
+    const slug = entry.id.replace(/^.*[\/\\]/, '').replace('.md', '');
+    return { params: { tool: entry.data.tool || 'unknown', slug }, props: { entry } };
+  });
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const steps = extractSteps(entry.body || '');
+---
+
+<Content />
+
+{steps.length > 0 && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: entry.data.title,
+    description: entry.data.description,
+    step: steps.map((step, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  })} />
+)}

@@ -1,0 +1,14 @@
+{
+  "integration_id": "hubspot-to-zapier",
+  "integration_name": "HubSpot ↔ Zapier Integration",
+  "tool_a": {"tool_id": "hubspot", "tool_name": "HubSpot"},
+  "tool_b": {"tool_id": "zapier", "tool_name": "Zapier"},
+  "sync_type": "Trigger → Action (Zapier orchestrates)",
+  "popularity": "very_high — most common way to connect HubSpot to 3000+ apps without code",
+  "edge_cases_and_errors": [
+    {"error_code": "HubSpot 429", "tool": "HubSpot", "category": "RATE_LIMIT", "cause": "Zapier triggers fire too many HubSpot API calls, hitting 110 req/10s limit", "solution": "Add delay between Zap steps. Use HubSpot batch endpoints. Reduce polling frequency."},
+    {"error_code": "OAuth token expiry", "tool": "HubSpot", "category": "AUTH", "cause": "HubSpot OAuth token expires after 30 minutes. Zapier auto-refreshes but stale connections fail.", "solution": "Reconnect HubSpot account in Zapier if connection shows 'expired'. Check that refresh token is still valid."},
+    {"error_code": "Zapier rate limit", "tool": "Zapier", "category": "RATE_LIMIT", "cause": "Zapier limits 60 req/min per IP, 150 req/min per partner", "solution": "Wait for cooldown. Free accounts have lower limits — upgrade if needed."}
+  ],
+  "search_volume_keywords": ["HubSpot Zapier integration", "HubSpot Zapier triggers", "HubSpot to Zapier webhook", "Zapier HubSpot connection expired", "HubSpot Zapier rate limit"]
+}

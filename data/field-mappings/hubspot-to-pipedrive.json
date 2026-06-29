@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "toolA": "hubspot",
+    "toolB": "pipedrive",
+    "integrationSlug": "hubspot-to-pipedrive",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 6
+  },
+  "categories": [
+    {
+      "id": "auth",
+      "name": "Authentication & API Version",
+      "description": "Pipedrive v2 authentication differences — hash key field IDs, x-api-token header, URL prefix changes",
+      "severity": "critical"
+    },
+    {
+      "id": "deal-field",
+      "name": "Deal Field Mapping",
+      "description": "Differences in deal data model: currency format, stage mapping, custom field IDs",
+      "severity": "high"
+    },
+    {
+      "id": "person-org",
+      "name": "Person & Organization Mapping",
+      "description": "How HubSpot contacts and companies map to Pipedrive persons and organizations",
+      "severity": "medium"
+    },
+    {
+      "id": "currency",
+      "name": "Currency Handling",
+      "description": "Currency format differences and Pipedrive's default_currency setting",
+      "severity": "medium"
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination & Batching",
+      "description": "Pipedrive v2 cursor-based pagination vs HubSpot offset-based pagination",
+      "severity": "low"
+    },
+    {
+      "id": "id",
+      "name": "ID Format — Hash Keys",
+      "description": "Pipedrive v2 uses hash key field IDs instead of numeric field IDs",
+      "severity": "high"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "auth-header-pipedrive-v2",
+      "categoryId": "auth",
+      "fieldName": "Authentication Header",
+      "fieldType": "text",
+      "toolAValue": "Authorization: Bearer {token}",
+      "toolBValue": "x-api-token: {api_token} (Pipedrive v2 non-OAuth) or Authorization: Bearer {oauth_token}",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "critical",
+      "notes": "Pipedrive v2 requires `x-api-token` header for API token auth (not Authorization: Bearer). OAuth uses Bearer but many migration guides get this wrong. The URL prefix changed from `/v1/` to `/api/v2/`. Combined, these are the most common 401 cause post-migration.",
+      "fixStrategy": "Use x-api-token header with API token. Use /api/v2/ prefix. Test against /api/v2/deals endpoint."
+    },
+    {
+      "id": "hash-key-field-ids",
+      "categoryId": "id",
+      "fieldName": "Custom Field ID Format — Hash Keys",
+      "fieldType": "id",
+      "toolAValue": "Numeric field ID (HubSpot property internal name like 'my_custom_field')",
+      "toolBValue": "Hash key field ID (Pipedrive v2: e.g., 'a1b2c3d4e5f6')",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Pipedrive v2 switched from numeric field IDs (v1) to hash key strings (v2). Custom field references in API calls must use the hash key, not the numeric ID. Many migration scripts still send numeric IDs — the API silently ignores them or returns wrong data. This is the #1 silent failure in Pipedrive v2 migration.",
+      "fixStrategy": "After migration to v2, fetch all custom field schemas via GET /api/v2/dealFields to get the hash keys. Update all API calls and middleware to use hash keys instead of numeric IDs."
+    },
+    {
+      "id": "deal-currency",
+      "categoryId": "currency",
+      "fieldName": "Deal Currency Format",
+      "fieldType": "currency",
+      "toolAValue": "HubSpot amount + currency_code (separate property, e.g., 'USD', 'EUR')",
+      "toolBValue": "Pipedrive deal.value + deal.currency (ISO code, string)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "medium",
+      "notes": "Both systems use ISO currency codes and separate amount fields. Pipedrive has a default_currency setting on the account. If HubSpot sends a currency not enabled in Pipedrive, Pipedrive auto-converts to default_currency. This can cause silent financial discrepancies.",
+      "fixStrategy": "Ensure all currencies used in HubSpot are enabled in Pipedrive under Settings > Currencies. Disable auto-conversion."
+    },
+    {
+      "id": "person-company-mapping",
+      "categoryId": "person-org",
+      "fieldName": "Contact ↔ Person / Company ↔ Organization",
+      "fieldType": "text",
+      "toolAValue": "HubSpot contact + company (separate objects, associated)",
+      "toolBValue": "Pipedrive person + organization (separate objects, person.org_id)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "medium",
+      "notes": "HubSpot contact → Pipedrive person. HubSpot company → Pipedrive organization. Association is via person.org_id. Works well but custom field mapping is manual — HubSpot contact custom properties don't auto-map to Pipedrive person custom fields.",
+      "fixStrategy": "Map custom fields explicitly. HubSpot company fields → Pipedrive organization fields. Use Pipedrive person label for segmenting."
+    },
+    {
+      "id": "stage-pipeline-mapping",
+      "categoryId": "deal-field",
+      "fieldName": "Deal Stage Mapping",
+      "fieldType": "picklist",
+      "toolAValue": "HubSpot deal stage (pipeline + stage)",
+      "toolBValue": "Pipedrive deal stage (pipeline_id + stage_id)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "high",
+      "notes": "HubSpot deal stages are per-pipeline. Pipedrive stages are per-pipeline with ordering (1-based). When mapping, HubSpot stage 'closedwon' → Pipedrive 'Won' stage. If the Pipedrive pipeline has different stage names, the sync fails. Pipedrive v2 requires stage_id (numeric or hash key depending on version).",
+      "fixStrategy": "Map stages by pipeline. Ensure stage names exist in target pipeline. Test with each stage transition."
+    },
+    {
+      "id": "pagination-cursor-vs-offset",
+      "categoryId": "pagination",
+      "fieldName": "Pagination Method",
+      "fieldType": "text",
+      "toolAValue": "HubSpot: offset-based (limit + after parameter)",
+      "toolBValue": "Pipedrive v2: cursor-based (cursor + limit parameter)",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "low",
+      "notes": "Pipedrive v1 used offset-based pagination. Pipedrive v2 uses cursor-based (like Stripe). Migration scripts that use `start=0` will either get stale data or fail. Response includes `next_cursor` field when more results exist.",
+      "fixStrategy": "Replace offset-based pagination with cursor-based in v2. Use the `next_cursor` value from response for subsequent requests."
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "hash-key-field-id-mismatch",
+      "errorName": "Hash Key Field ID Mismatch — Pipedrive v2 Silent Failure",
+      "categoryId": "id",
+      "description": "Pipedrive v2 uses hash key strings for custom field IDs. Sending numeric v1 IDs silently produces wrong data.",
+      "fixSummary": "Fetch all custom field schemas post-migration. Update API calls with hash keys."
+    },
+    {
+      "errorSlug": "v2-auth-header-error",
+      "errorName": "Pipedrive v2 Authentication Header Error",
+      "categoryId": "auth",
+      "description": "Pipedrive v2 requires x-api-token header (not Authorization: Bearer). URL prefix changed to /api/v2/.",
+      "fixSummary": "Use x-api-token header with /api/v2/ prefix. Test against a single endpoint first."
+    }
+  ]
+}

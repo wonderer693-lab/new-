@@ -1,0 +1,212 @@
+{
+  "tool_id": "salesforce",
+  "tool_name": "Salesforce",
+  "category": "CRM (Enterprise)",
+  "official_api_docs": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/",
+  "api_base_url": "https://{instance}.my.salesforce.com/services/data",
+  "api_version": "v66.0 (Spring '26)",
+  "last_updated": "2026-03-02",
+  "data_collected": "2026-06-26",
+  "data_sources": {
+    "official_docs": "https://developer.salesforce.com/",
+    "community": ["https://salesforce.stackexchange.com/", "https://stackoverflow.com/questions/tagged/salesforce"],
+    "github": "https://github.com/search?q=salesforce+rest+api"
+  },
+
+  "authentication": {
+    "mechanisms": [
+      {
+        "type": "OAuth 2.0 JWT Bearer",
+        "description": "Server-to-server, recommended for backend integrations",
+        "recommended": true,
+        "token_lifetime": "Session timeout (default 2h)",
+        "refresh": "No — issue new JWT per request (certificate-based)",
+        "requires": "Connected App + X.509 certificate",
+        "endpoints": {
+          "production": "https://{myDomain}.my.salesforce.com/services/oauth2/token",
+          "sandbox": "https://{myDomain}--uat.sandbox.my.salesforce.com/services/oauth2/token"
+        }
+      },
+      {
+        "type": "OAuth 2.0 Web Server",
+        "description": "User-context operations, interactive apps",
+        "token_lifetime": "Access: 2h; Refresh: until revoked or 90 days of non-use",
+        "refresh": "Yes — use refresh_token grant",
+        "requires": "Callback URL",
+        "endpoints": {
+          "production": "https://{myDomain}.my.salesforce.com/services/oauth2/{authorize,token}",
+          "sandbox": "https://{myDomain}--uat.sandbox.my.salesforce.com/services/oauth2/{authorize,token}"
+        }
+      },
+      {
+        "type": "OAuth 2.0 Client Credentials",
+        "description": "Server-to-server, Spring '23+, simpler than JWT",
+        "token_lifetime": "Session timeout",
+        "refresh": "No refresh token",
+        "notes": "No user context"
+      },
+      {
+        "type": "Username-Password (Legacy)",
+        "description": "Testing only — deprecated for production",
+        "deprecated": true,
+        "notes": "Do NOT use in production — no MFA support, less secure"
+      }
+    ],
+    "recommended_flow": "JWT Bearer for server-to-server; Web Server for user-context apps",
+    "my_domain": "Required for OAuth endpoints (Spring '26+), use My Domain–specific endpoints over legacy generic domains"
+  },
+
+  "rate_limits": {
+    "total_api_calls_daily": {
+      "developer_edition": 15000,
+      "professional": "100,000 + (1,000 per user license)",
+      "enterprise": "100,000 + (1,000 per user license)",
+      "unlimited_performance": "100,000 + (5,000 per user license)",
+      "notes": "Rolling 24-hour window. Shared across REST, SOAP, Bulk APIs. Monitor via /services/data/v66.0/limits"
+    },
+    "concurrent_long_running_requests": {
+      "production": 25,
+      "sandbox_developer": 5,
+      "definition": "Requests running >20 seconds count as long-running"
+    },
+    "bulk_api": {
+      "bulk_api_2_records_processed": {"limit": 100000000, "window": "24h"},
+      "bulk_api_batches": {"limit": 15000, "window": "24h", "shared": "Between Bulk API 1.0 and 2.0"}
+    },
+    "other_limits": {
+      "streaming_api_events": {"enterprise": 200000, "unlimited": 1000000, "window": "24h"},
+      "platform_events_publishes": {"limit": 250000, "window": "per hour"},
+      "sandbox_api_calls": {"limit": 5000000, "window": "24h"}
+    },
+    "uri_length_limit": "16,384 bytes combined URI + headers",
+    "error_on_exceed": "HTTP 429 REQUEST_LIMIT_EXCEEDED",
+    "timeout": {
+      "rest_soap": "10 minutes",
+      "query_calls": "Governed by SOQL limits (typically 2 minutes for large queries)"
+    }
+  },
+
+  "core_endpoints": [
+    {"endpoint": "/services/data/v66.0/sobjects/{ObjectName}", "method": "GET", "description": "Describe object metadata"},
+    {"endpoint": "/services/data/v66.0/sobjects/{ObjectName}/{Id}", "method": "GET", "description": "Get record by ID"},
+    {"endpoint": "/services/data/v66.0/sobjects/{ObjectName}", "method": "POST", "description": "Create record"},
+    {"endpoint": "/services/data/v66.0/sobjects/{ObjectName}/{Id}", "method": "PATCH", "description": "Update record"},
+    {"endpoint": "/services/data/v66.0/sobjects/{ObjectName}/{Id}", "method": "DELETE", "description": "Delete record"},
+    {"endpoint": "/services/data/v66.0/query?q={SOQL}", "method": "GET", "description": "SOQL query (max 2000 records per page)"},
+    {"endpoint": "/services/data/v66.0/query/{queryLocator}", "method": "GET", "description": "Query more (pagination)"},
+    {"endpoint": "/services/data/v66.0/composite", "method": "POST", "description": "Composite: up to 25 subrequests (counts as 1 API call)"},
+    {"endpoint": "/services/data/v66.0/composite/sobjects", "method": "POST", "description": "SObject Collections: up to 200 records per call"},
+    {"endpoint": "/services/data/v66.0/limits", "method": "GET", "description": "Get remaining API allocations for all limits"},
+    {"endpoint": "/services/data/v66.0/parameterizedSearch", "method": "GET", "description": "Search (SOSL) across objects"}
+  ],
+
+  "webhooks": {
+    "supported": true,
+    "type": "Platform Events + Change Data Capture (CDC)",
+    "events": ["All standard/custom object changes via CDC", "Custom Platform Events"],
+    "delivery": "CometD (Streaming API) or Pub/Sub API",
+    "limits": {
+      "platform_events_deliveries": {"standard": 50000, "with_addon": 100000, "window": "24h"},
+      "cdc_events": "Counts toward Platform Event delivery limit"
+    }
+  },
+
+  "error_dictionary": [
+    {
+      "error_code": "400 Bad Request",
+      "description": "Request body malformed, invalid JSON/XML, or invalid field values",
+      "causes": ["Invalid JSON body", "Wrong field type (e.g., text in date field)", "Missing required field", "Invalid grant (username-password flow issues)"],
+      "solution": "Log full request body and response. Validate payload against SObject describe. Check authentication payload format"
+    },
+    {
+      "error_code": "401 Unauthorized",
+      "description": "Session ID or OAuth token expired or invalid",
+      "error_code_detail": "INVALID_SESSION_ID",
+      "real_response": "{\"message\":\"Session expired or invalid\",\"errorCode\":\"INVALID_SESSION_ID\"}",
+      "causes": ["Access token expired (2h default)", "OAuth refresh token expired (>90 days non-use)", "User password changed", "User deactivated"],
+      "solution": "Re-authenticate. For JWT Bearer: issue new JWT. For Web Server: use refresh_token. Check user is active with API access enabled"
+    },
+    {
+      "error_code": "403 Forbidden",
+      "description": "Request refused — resource not accessible to user",
+      "error_codes": ["REQUEST_LIMIT_EXCEEDED", "INSUFFICIENT_ACCESS"],
+      "causes": ["API call limit exceeded", "Integration user lacks object/field permissions (FLS)", "Field-Level Security (FLS) blocking specific fields", "Profile permissions missing"],
+      "solution": "Check /limits endpoint for remaining allocations. Verify integration user has Read/Edit on all relevant objects and fields"
+    },
+    {
+      "error_code": "404 Not Found",
+      "description": "Resource does not exist",
+      "solution": "Verify record ID, API version, and endpoint path"
+    },
+    {
+      "error_code": "409 Conflict",
+      "description": "Conflict with current resource state (e.g., API version incompatibility)",
+      "solution": "Check API version compatibility with the resource being accessed"
+    },
+    {
+      "error_code": "414 URI Too Long",
+      "description": "Combined URI + headers exceed 16,384 bytes",
+      "solution": "Reduce SOQL query length, use composite/sobjects for batch operations instead of many query params"
+    },
+    {
+      "error_code": "420 Unknown",
+      "description": "Salesforce Edge routing information unavailable",
+      "solution": "Contact Salesforce Customer Support"
+    },
+    {
+      "error_code": "428 Precondition Required",
+      "description": "Request was not conditional — missing If-Match or similar header",
+      "solution": "Add Conditional Request Headers (e.g., If-Match) to the request"
+    },
+    {
+      "error_code": "429 REQUEST_LIMIT_EXCEEDED",
+      "description": "Daily API request limit or concurrent request limit exceeded",
+      "causes": ["Total daily API allocation exhausted", "Concurrent long-running request cap (25 production) reached"],
+      "solution": "Use Composite API to batch calls (counts as 1). Cache reference data. Move bulk to Bulk API 2.0. Reduce polling frequency. Implement exponential backoff with jitter"
+    },
+    {
+      "error_code": "503 Service Unavailable",
+      "description": "Salesforce temporarily throttling or server overload",
+      "solution": "Implement exponential backoff retry. Salesforce occasionally throttles — expect and handle 503s gracefully"
+    }
+  ],
+
+  "community_constraints": [
+    {
+      "issue": "Username-Password flow deprecated but still widely used in old integrations",
+      "frequency": "high",
+      "source": "StackOverflow / Salesforce Stack Exchange",
+      "detail": "Many legacy tutorials still use password flow; devs get 400 invalid_grant errors when passwords change or MFA is enabled",
+      "workaround": "Migrate to JWT Bearer flow for server-to-server. Use Web Server flow with refresh tokens for user-context apps"
+    },
+    {
+      "issue": "Hardcoding instance URLs instead of deriving from OAuth response",
+      "frequency": "high",
+      "source": "Salesforce developer forums",
+      "detail": "Instance URLs (e.g., na1.salesforce.com) can change. Hardcoding them breaks integrations after org migration or sandbox refresh",
+      "workaround": "Always use instance_url returned in OAuth token response as base for all API calls"
+    },
+    {
+      "issue": "Mixing API versions across a single integration",
+      "frequency": "medium",
+      "source": "Developer best practices",
+      "detail": "Different API versions may have different behaviors for the same endpoint",
+      "workaround": "Stick to one API version per integration; upgrade deliberately and test all endpoints"
+    },
+    {
+      "issue": "Bulk API 2.0 query job storage limit reached",
+      "frequency": "medium",
+      "source": "Salesforce docs / community",
+      "detail": "Daily storage for Bulk API 2.0 queries (measured in MB) can fill up with large result exports",
+      "workaround": "Export results promptly. Delete completed query jobs to free storage. Use filters to reduce result set size"
+    }
+  ],
+
+  "use_cases": [
+    "Sync Leads/Contacts/Accounts between Salesforce and external CRM",
+    "Automate campaign member creation from email marketing platform",
+    "Real-time push of opportunity updates to billing/ERP systems",
+    "Create Cases from external support tickets with bi-directional sync",
+    "Sync custom objects between Salesforce and external data warehouses"
+  ]
+}

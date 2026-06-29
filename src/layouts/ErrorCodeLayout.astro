@@ -1,0 +1,38 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+const { content } = Astro.props;
+const { tool, errorCode, errorName, httpStatus, severity, lastUpdated } = content;
+const toolDisplay = tool.charAt(0).toUpperCase() + tool.slice(1);
+---
+
+<BaseLayout frontmatter={content}>
+  <article>
+    <Breadcrumb
+      segments={[
+        { label: toolDisplay, href: `/${tool}` },
+        { label: 'Errors', href: `/${tool}/errors` },
+        { label: `${errorCode}${errorName ? ' — ' + errorName : ''}` },
+      ]}
+    />
+
+    <header>
+      <h1>{content.title}</h1>
+      <dl class="metadata">
+        {severity && <div><dt>Severity</dt><dd class={`badge badge-${severity}`}>{severity}</dd></div>}
+        {httpStatus && <div><dt>HTTP</dt><dd><code>{httpStatus}</code></dd></div>}
+        {lastUpdated && <div><dt>Updated</dt><dd><time datetime={lastUpdated}>{lastUpdated}</time></dd></div>}
+      </dl>
+    </header>
+
+    <slot />
+
+    <footer class="related">
+      <h2>Related Errors</h2>
+      <ul>
+        <li><a href={`/${tool}/errors/${errorCode}`}>More about {errorCode}</a></li>
+      </ul>
+    </footer>
+  </article>
+</BaseLayout>

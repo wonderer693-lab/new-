@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "toolA": "pipedrive",
+    "toolB": "mailchimp",
+    "integrationSlug": "pipedrive-to-mailchimp",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 3
+  },
+  "categories": [
+    {
+      "id": "email-required",
+      "name": "Email Field Required",
+      "description": "Pipedrive optional email vs Mailchimp required email",
+      "severity": "critical"
+    },
+    {
+      "id": "stage-trigger",
+      "name": "Deal Stage → List Action",
+      "description": "Mapping Pipedrive stage changes to Mailchimp actions",
+      "severity": "high"
+    },
+    {
+      "id": "v2-migration",
+      "name": "v2 Migration Field IDs",
+      "description": "Hash key field IDs breaking custom field mappings",
+      "severity": "high"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "email-null-skip",
+      "categoryId": "email-required",
+      "fieldName": "Email Not Required in Pipedrive",
+      "fieldType": "email",
+      "toolAValue": "Pipedrive person without email",
+      "toolBValue": "Mailchimp requires email for member",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "critical",
+      "notes": "Person without email is silently skipped. No error, no log.",
+      "fixStrategy": "Filter persons with email=null before sync. Log skipped for follow-up.",
+      "mappedValues": []
+    },
+    {
+      "id": "stage-to-list",
+      "categoryId": "stage-trigger",
+      "fieldName": "Deal Stage → Audience Action",
+      "fieldType": "picklist",
+      "toolAValue": "Pipedrive deal stage ('won', 'lost')",
+      "toolBValue": "Mailchimp action (add to list, tag, remove)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "high",
+      "notes": "'won' → add to 'Customers' list + tag 'customer'. 'lost' → tag 'lost-deal' but stay on list.",
+      "fixStrategy": "Define clear stage→action mapping. Handle edge stages (e.g., custom stages) explicitly.",
+      "mappedValues": []
+    },
+    {
+      "id": "hash-key-mapping",
+      "categoryId": "v2-migration",
+      "fieldName": "Custom Field Hash Key Mapping",
+      "fieldType": "id",
+      "toolAValue": "Pipedrive v2 hash key field ID",
+      "toolBValue": "Mailchimp merge tag name",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Post-v2 migration, numeric field IDs become hash keys. Middleware referencing old numeric keys reads empty.",
+      "fixStrategy": "After v2 migration, re-fetch all custom field schemas. Update mapping table with hash keys.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "person-no-email-skip",
+      "errorName": "Person Without Email Silently Skipped",
+      "categoryId": "email-required",
+      "description": "Pipedrive persons without email don't sync to Mailchimp.",
+      "fixSummary": "Filter + log. Enrich email data before sync."
+    },
+    {
+      "errorSlug": "v2-field-id-break",
+      "errorName": "v2 Migration Breaks Custom Field Mapping",
+      "categoryId": "v2-migration",
+      "description": "Hash key field IDs break existing custom data mapping.",
+      "fixSummary": "Rebuild mapping table after v2 migration."
+    }
+  ]
+}

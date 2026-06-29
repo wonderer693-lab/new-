@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "toolA": "salesforce",
+    "toolB": "activecampaign",
+    "integrationSlug": "salesforce-to-activecampaign",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 4
+  },
+  "categories": [
+    {
+      "id": "contacttag",
+      "name": "Contact & Tag Structure",
+      "description": "ContactTag wrapper bug and tag ID mapping",
+      "severity": "critical"
+    },
+    {
+      "id": "field-type",
+      "name": "Field Type Translation",
+      "description": "Salesforce picklist/boolean → AC dropdown/checkbox",
+      "severity": "high"
+    },
+    {
+      "id": "automation",
+      "name": "Automation Trigger Gaps",
+      "description": "How updates trigger or fail to trigger AC automations",
+      "severity": "medium"
+    },
+    {
+      "id": "phone",
+      "name": "Phone Number Formatting",
+      "description": "AC phone auto-format vs Salesforce raw format",
+      "severity": "low"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "contacttag-payload-ac",
+      "categoryId": "contacttag",
+      "fieldName": "ContactTag API Payload",
+      "fieldType": "object",
+      "toolAValue": "Contact ID from Salesforce",
+      "toolBValue": "Requires {'contactTag':{'contact':'1','tag':'2'}}",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "critical",
+      "notes": "Same bug as HubSpot→AC. Wrapper required. Check middleware payload format.",
+      "fixStrategy": "Wrap in contactTag object. Verify with curl before production.",
+      "mappedValues": []
+    },
+    {
+      "id": "picklist-to-dropdown",
+      "categoryId": "field-type",
+      "fieldName": "Picklist to Dropdown/Listbox",
+      "fieldType": "picklist",
+      "toolAValue": "Salesforce picklist value (e.g., 'Prospecting')",
+      "toolBValue": "ActiveCampaign dropdown option (must match exactly)",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Dropdown option values must match picklist values exactly. Mismatch silently drops the value.",
+      "fixStrategy": "Audit picklist options on both sides. Create AC dropdown options matching SF values.",
+      "mappedValues": []
+    },
+    {
+      "id": "automation-retrigger",
+      "categoryId": "automation",
+      "fieldName": "Automation Re-trigger on Update",
+      "fieldType": "text",
+      "toolAValue": "Contact updated in Salesforce (any field change)",
+      "toolBValue": "ActiveCampaign automation fires on 'contact updated'",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "medium",
+      "notes": "Unintended re-triggers send duplicate emails. Common issue with bidirectional sync.",
+      "fixStrategy": "Use 'contact added to list' trigger. Add metadata field to track sync version.",
+      "mappedValues": []
+    },
+    {
+      "id": "phone-format",
+      "categoryId": "phone",
+      "fieldName": "Phone Number Format",
+      "fieldType": "phone",
+      "toolAValue": "Raw format from Salesforce (e.g., (555) 123-4567)",
+      "toolBValue": "AC auto-formatted to E.164 (+15551234567)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "low",
+      "notes": "AC normalizes phone on write. Re-reading shows different format than sent.",
+      "fixStrategy": "Store phone as text field in AC to prevent normalization. Or accept AC format as canonical.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "contacttag-400-ac",
+      "errorName": "ContactTag 400 Payload Format",
+      "categoryId": "contacttag",
+      "description": "Missing contactTag wrapper produces 400 error.",
+      "fixSummary": "Wrap in contactTag object."
+    },
+    {
+      "errorSlug": "dropdown-value-dropped",
+      "errorName": "Picklist→Dropdown Silent Value Drop",
+      "categoryId": "field-type",
+      "description": "Mismatched dropdown option values silently dropped.",
+      "fixSummary": "Exact match audit between picklist options and dropdown options."
+    }
+  ]
+}

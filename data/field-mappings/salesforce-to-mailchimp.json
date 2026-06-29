@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "toolA": "salesforce",
+    "toolB": "mailchimp",
+    "integrationSlug": "salesforce-to-mailchimp",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 4
+  },
+  "categories": [
+    {
+      "id": "field-types",
+      "name": "Field Type Translation",
+      "description": "Salesforce field types vs Mailchimp merge tag types",
+      "severity": "high"
+    },
+    {
+      "id": "identity",
+      "name": "Identity & Email Changes",
+      "description": "Email change handling and subscriber identity",
+      "severity": "critical"
+    },
+    {
+      "id": "status",
+      "name": "Subscriber Status Sync",
+      "description": "Status transitions between Salesforce and Mailchimp",
+      "severity": "high"
+    },
+    {
+      "id": "campaign",
+      "name": "Campaign & Segment Mapping",
+      "description": "Campaign membership to Mailchimp segment/tag mapping",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "email-change-handling",
+      "categoryId": "identity",
+      "fieldName": "Email Address Change",
+      "fieldType": "email",
+      "toolAValue": "Contact.Email updated in Salesforce",
+      "toolBValue": "Mailchimp requires DELETE old + POST new",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "critical",
+      "notes": "PATCH does not support email changes. Old subscriber remains, new email is rejected as duplicate.",
+      "fixStrategy": "On email change: GET subscriber by old email, DELETE, POST with new email, re-apply merge tags.",
+      "mappedValues": []
+    },
+    {
+      "id": "date-format-difference",
+      "categoryId": "field-types",
+      "fieldName": "Date/DateTime Format",
+      "fieldType": "date",
+      "toolAValue": "ISO 8601 timestamp (e.g., 2026-06-26T14:30:00Z)",
+      "toolBValue": "YYYY-MM-DD (for date merge tags)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "high",
+      "notes": "Salesforce sends full datetime. Mailchimp date merge tag expects date-only. Datetime sent to date field stores incorrectly.",
+      "fixStrategy": "Cast Salesforce datetime to DATE before sending. Use Mailchimp BIRTHDAY merge type for birth dates.",
+      "mappedValues": []
+    },
+    {
+      "id": "resubscribe-gdpr",
+      "categoryId": "status",
+      "fieldName": "Unsubscribed Re-sync",
+      "fieldType": "picklist",
+      "toolAValue": "Contact Email_Opt_Out = false in Salesforce",
+      "toolBValue": "Mailchimp member status = 'subscribed'",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Syncing status='subscribed' to a Mailchimp unsubscribed member re-subscribes them. GDPR violation in EU.",
+      "fixStrategy": "Before PATCH: GET member status from Mailchimp. If status is 'unsubscribed' or 'cleaned', skip sync or require explicit opt-in.",
+      "mappedValues": []
+    },
+    {
+      "id": "campaign-member-tag",
+      "categoryId": "campaign",
+      "fieldName": "Campaign Member → Mailchimp Tag",
+      "fieldType": "text",
+      "toolAValue": "Salesforce Campaign Member (campaign ID + status)",
+      "toolBValue": "Mailchimp tag (string, multiple tags per member)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "medium",
+      "notes": "Campaign status ('Sent', 'Responded', 'Bounced') can map to Mailchimp tags. 'Bounced' should map to status change, not tag.",
+      "fixStrategy": "Map Salesforce campaign member status to Mailchimp tag add/remove. 'Bounced' → skip tag, update member status to 'cleaned'.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "email-change-loss",
+      "errorName": "Email Change Data Loss",
+      "categoryId": "identity",
+      "description": "PATCH doesn't allow email changes. Old subscriber persists with old email.",
+      "fixSummary": "DELETE old subscriber, POST new subscriber with preserved data."
+    },
+    {
+      "errorSlug": "gdpr-resubscribe",
+      "errorName": "Involuntary Re-subscription",
+      "categoryId": "status",
+      "description": "Syncing status=subscribed re-subscribes Mailchimp unsubscribes. GDPR risk.",
+      "fixSummary": "Check Mailchimp member status before syncing. Skip unsubscribed/cleaned."
+    },
+    {
+      "errorSlug": "date-format-corruption",
+      "errorName": "Date Format Corruption",
+      "categoryId": "field-types",
+      "description": "Salesforce datetime sent to Mailchimp date merge tag stores incorrectly.",
+      "fixSummary": "Cast datetime to DATE before sending."
+    }
+  ]
+}

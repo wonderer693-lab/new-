@@ -1,0 +1,63 @@
+{
+  "tool_id": "slack",
+  "tool_name": "Slack",
+  "category": "Team Communication",
+  "official_api_docs": "https://docs.slack.dev/apis/web-api/",
+  "api_base_url": "https://slack.com/api",
+  "api_version": "Web API",
+  "data_collected": "2026-06-26",
+  "authentication": {
+    "mechanisms": [
+      {"type": "OAuth 2.0 (Bot Token)", "description": "Bot user tokens start with xoxb. Used for bot actions in workspaces.", "token_type": "xoxb-*"},
+      {"type": "OAuth 2.0 (User Token)", "description": "User tokens for acting on behalf of a user.", "scopes": "Varies by app needs"},
+      {"type": "Incoming Webhook", "description": "Simple URL for posting messages to a channel"}
+    ],
+    "auth_header": "Authorization: Bearer {token}",
+    "notes": "Tokens cannot be sent as query parameters. Must be in Authorization header or POST body parameter named 'token'.",
+    "content_type_requirement": "Must set Content-type header to application/json explicitly."
+  },
+  "rate_limits": {
+    "system": "Per-method tiered rate limiting (per workspace per token)",
+    "tiers": [
+      {"tier": "Tier 1", "rate": "1+ per minute", "methods": ["conversations.history (non-marketplace apps after May 2025)", "conversations.replies (non-marketplace apps after May 2025)"]},
+      {"tier": "Tier 2", "rate": "20+ per minute", "methods": ["conversations.list", "users.list"]},
+      {"tier": "Tier 3", "rate": "50+ per minute", "methods": ["chat.postMessage (general)"]},
+      {"tier": "Tier 4", "rate": "100+ per minute", "methods": ["reactions.add", "emoji.list"]},
+      {"tier": "Special", "rate": "Method-specific", "methods": ["chat.postMessage: ~1 msg/sec/channel + workspace-wide limit", "users.profile.set: 10/min per profile, 30 profiles/min per token"]}
+    ],
+    "error_on_exceed": "HTTP 429 with Retry-After header (seconds)",
+    "notes": "May 2025: Non-Marketplace commercially distributed apps face stricter limits (1 req/min for conversations.history/replies, max 15 objects per response). Marketplace apps unaffected."
+  },
+  "core_endpoints": [
+    {"endpoint": "/api/conversations.list", "method": "GET", "description": "List channels (Tier 2)"},
+    {"endpoint": "/api/conversations.history", "method": "GET", "description": "Get channel history (Tier 1 — restricted for non-marketplace)"},
+    {"endpoint": "/api/conversations.replies", "method": "GET", "description": "Get thread replies (Tier 1 — restricted for non-marketplace)"},
+    {"endpoint": "/api/chat.postMessage", "method": "POST", "description": "Post message to channel (Tier 3)"},
+    {"endpoint": "/api/chat.postEphemeral", "method": "POST", "description": "Post ephemeral message"},
+    {"endpoint": "/api/users.list", "method": "GET", "description": "List users (Tier 2)"},
+    {"endpoint": "/api/users.profile.set", "method": "POST", "description": "Set user profile (Special: 10/min per profile)"},
+    {"endpoint": "/api/views.open", "method": "POST", "description": "Open a modal"},
+    {"endpoint": "/api/views.publish", "method": "POST", "description": "Publish a Home tab view"},
+    {"endpoint": "/api/oauth.v2.access", "method": "POST", "description": "Exchange OAuth code for token"}
+  ],
+  "webhooks": {
+    "supported": true,
+    "types": ["Incoming Webhooks (message only)", "Events API (subscribe to workspace events)", "Slash Commands", "Interactivity (actions, shortcuts, modals)"]
+  },
+  "error_dictionary": [
+    {"error_code": "account_inactive", "description": "OAuth token has been revoked", "solution": "Re-authorize the app with the workspace"},
+    {"error_code": "invalid_auth", "description": "Invalid auth credentials", "solution": "Check token format and validity. Token must start with xoxb- (bot) or xoxp- (user)"},
+    {"error_code": "token_revoked", "description": "Token has been revoked by user or workspace admin", "solution": "Notify user to re-install the app"},
+    {"error_code": "not_in_channel", "description": "Bot user is not a member of the channel", "solution": "Invite bot to the channel using conversations.invite"},
+    {"error_code": "is_archived", "description": "Channel is archived — cannot post", "solution": "Check channel status before posting. Notify user if channel is archived"},
+    {"error_code": "rate_limited", "description": "HTTP 429 with Retry-After header", "solution": "Respect Retry-After header value (seconds). Implement exponential backoff. For Tier 1 methods: max 1 req/min for non-marketplace apps"},
+    {"error_code": "too_many_requests", "description": "Rate limit exceeded without Retry-After", "solution": "Implement adaptive rate limiting. Monitor X-RateLimit-* headers"},
+    {"error_code": "user_is_bot", "description": "Bot user tried to access a method not available to bots", "solution": "Use user token instead of bot token for the specific method"}
+  ],
+  "community_constraints": [
+    {"issue": "May 2025 rate limit changes for non-Marketplace apps", "frequency": "very_high", "source": "Slack changelog", "detail": "conversations.history and conversations.replies limited to 1 req/min with max 15 objects for non-marketplace commercially distributed apps created after May 29, 2025", "workaround": "Submit app for Slack Marketplace approval. Or distribute as 'internal customer-built app' which retains 50+ req/min. Or minimize use of these methods."},
+    {"issue": "Content-Type header must be explicitly set to application/json", "frequency": "high", "source": "StackOverflow / Slack docs", "detail": "Many developers miss this requirement and get unexpected errors. Slack won't interpret POST body as JSON without explicit header", "workaround": "Always include 'Content-Type: application/json' header. Never send token as query parameter or in POST JSON body."},
+    {"issue": "Bot tokens limited to subset of methods", "frequency": "medium", "source": "Slack API docs", "detail": "Bot tokens return 'user_is_bot' error for methods not available to bots. This catches developers off guard.", "workaround": "Check method availability for bot tokens before implementing. Use user token (xoxp-) for methods that require user context."}
+  ],
+  "use_cases": ["Send automated notifications from CRM events to Slack channels", "Create Slack tickets from CRM deal updates", "Sync Slack user profiles with CRM contact data", "Log sales activities from Slack messages to CRM"]
+}

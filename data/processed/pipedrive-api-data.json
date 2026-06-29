@@ -1,0 +1,205 @@
+{
+  "tool_id": "pipedrive",
+  "tool_name": "Pipedrive",
+  "category": "Sales CRM (SMB)",
+  "official_api_docs": "https://developers.pipedrive.com/docs/api/v1",
+  "api_base_url": "https://{company_domain}.pipedrive.com/api/v1",
+  "api_version": "v1 (v2 endpoints moving out of beta in 2026)",
+  "last_updated": "2026-06-26",
+  "data_collected": "2026-06-26",
+  "data_sources": {
+    "official_docs": "https://developers.pipedrive.com/",
+    "community": ["https://devcommunity.pipedrive.com/", "https://stackoverflow.com/questions/tagged/pipedrive"],
+    "github": "https://github.com/search?q=pipedrive+api"
+  },
+
+  "authentication": {
+    "mechanisms": [
+      {
+        "type": "API Token",
+        "description": "Personal API token for single-account integrations",
+        "location": "Pipedrive app > Settings > Personal > API",
+        "usage": "Pass as query parameter: ?api_token={token}",
+        "notes": "Simpler but less secure. Token-based rate limits (TBRL) apply from 2025. Higher burst limits for OAuth."
+      },
+      {
+        "type": "OAuth 2.0",
+        "description": "Required for Pipedrive Marketplace apps and commercial integrations",
+        "authorize_url": "https://oauth.pipedrive.com/oauth/authorize",
+        "token_url": "https://oauth.pipedrive.com/oauth/token",
+        "fine_grained_scopes": true,
+        "recommended": true,
+        "notes": "OAuth apps get higher burst rate limits (e.g., 400/2s vs 100/2s for API tokens on Premium). Required for marketplace apps."
+      }
+    ],
+    "auth_header": "For OAuth: Authorization: Bearer {access_token}; For API token: query param api_token={token}",
+    "v2_oauth_endpoints": "New Pipedrive OAuth 2.0 flow updated for v2 endpoints"
+  },
+
+  "rate_limits": {
+    "type": "Token-Based Rate Limiting (TBRL) — rolled out fully by Dec 2025",
+    "daily_budget": "Company-level daily API token budget, shared across all users",
+    "burst_limits_per_user": {
+      "description": "Rolling 2-second window, per user level",
+      "by_plan_api_token": {
+        "Lite": {"requests_per_2s": 20},
+        "Growth": {"requests_per_2s": 40},
+        "Premium": {"requests_per_2s": 100},
+        "Ultimate": {"requests_per_2s": 120}
+      },
+      "by_plan_oauth": {
+        "Lite": {"requests_per_2s": 80},
+        "Growth": {"requests_per_2s": 160},
+        "Premium": {"requests_per_2s": 400},
+        "Ultimate": {"requests_per_2s": 480}
+      }
+    },
+    "search_api_burst_limits": {
+      "all_plans": {"requests_per_2s": 10}
+    },
+    "error_on_exceed": "HTTP 429 Too Many Requests",
+    "penalty": "After repeated 429s, Cloudflare returns HTTP 403 with HTML error page ('blocked')",
+    "response_headers": [
+      "X-RateLimit-Limit: requests allowed",
+      "X-RateLimit-Remaining: remaining requests",
+      "X-RateLimit-Reset: seconds until reset (set to 10s penalty when rate limit hit)"
+    ],
+    "retry_after_header": "Set to 10 seconds (penalty window) when rate limit exceeded",
+    "notes": "When rate limit is hit, x-ratelimit-reset is set to 10 (penalty). Even after waiting, if penalty mode is active, need to wait full penalty duration. Implement exponential backoff with jitter (start 2s, then 4s, then 8s +-500ms)."
+  },
+
+  "core_endpoints": [
+    {"endpoint": "/api/v1/deals", "method": "GET", "description": "List deals", "pagination": "offset-based (start, limit)"},
+    {"endpoint": "/api/v1/deals", "method": "POST", "description": "Create deal"},
+    {"endpoint": "/api/v1/deals/{id}", "method": "GET", "description": "Get deal details"},
+    {"endpoint": "/api/v1/deals/{id}", "method": "PUT", "description": "Update deal"},
+    {"endpoint": "/api/v1/deals/{id}", "method": "DELETE", "description": "Delete deal"},
+    {"endpoint": "/api/v1/persons", "method": "GET", "description": "List persons (contacts)"},
+    {"endpoint": "/api/v1/persons", "method": "POST", "description": "Create person"},
+    {"endpoint": "/api/v1/persons/{id}", "method": "GET", "description": "Get person"},
+    {"endpoint": "/api/v1/persons/{id}", "method": "PUT", "description": "Update person"},
+    {"endpoint": "/api/v1/organizations", "method": "GET", "description": "List organizations (companies)"},
+    {"endpoint": "/api/v1/organizations", "method": "POST", "description": "Create organization"},
+    {"endpoint": "/api/v1/activities", "method": "GET", "description": "List activities (deprecated in v1, use v2)"},
+    {"endpoint": "/api/v1/pipelines", "method": "GET", "description": "List pipelines"},
+    {"endpoint": "/api/v1/stages", "method": "GET", "description": "List stages"},
+    {"endpoint": "/api/v1/products", "method": "GET", "description": "List products"},
+    {"endpoint": "/api/v1/searchResults", "method": "GET", "description": "Search across all entities"},
+    {"endpoint": "/api/v2/deals", "method": "GET", "description": "List deals (v2, cursor-based pagination, 50% fewer tokens)"},
+    {"endpoint": "/api/v2/persons", "method": "GET", "description": "List persons (v2, cursor-based pagination)"}
+  ],
+  "pagination": {
+    "v1_standard": {"type": "offset", "params": "start, limit", "max_limit": 500, "next_signal": "additional_data.pagination.next_start"},
+    "v1_collection_and_v2": {"type": "cursor", "params": "cursor, limit", "next_signal": "additional_data.next_cursor"}
+  },
+
+  "webhooks": {
+    "supported": true,
+    "max_per_account": 5,
+    "events": ["deal.updated", "deal.added", "deal.deleted", "person.updated", "person.added", "person.deleted", "activity.updated", "activity.added"],
+    "notes": "Webhooks recommended to reduce API polling and avoid rate limits"
+  },
+
+  "error_dictionary": [
+    {
+      "error_code": "400 Bad Request",
+      "description": "Request not understood — malformed JSON or invalid parameters",
+      "solution": "Check JSON syntax, required field presence, and parameter types"
+    },
+    {
+      "error_code": "401 Unauthorized",
+      "description": "Invalid API token or OAuth access token",
+      "solution": "Verify api_token query parameter or OAuth Bearer token. For OAuth, check access token hasn't expired"
+    },
+    {
+      "error_code": "402 Payment Required",
+      "description": "Company account not open (trial expired, payment not entered)",
+      "solution": "Verify subscription status in Pipedrive account settings"
+    },
+    {
+      "error_code": "403 Forbidden",
+      "description": "Request not allowed — user reached entity limit or Cloudflare block after rate limit abuse",
+      "causes": ["User reached entity creation limit", "Account sent repeated 429 requests, triggering Cloudflare HTML block"],
+      "real_response": "HTML error page: 'This error is produced by Cloudflare. See troubleshooting guide here.'",
+      "solution": "For rate limit blocks: wait penalty period, fix misconfiguration causing excessive requests. For entity limits: upgrade plan or archive unused records"
+    },
+    {
+      "error_code": "404 Not Found",
+      "description": "Resource unavailable",
+      "solution": "Verify resource ID, endpoint path, and API version"
+    },
+    {
+      "error_code": "410 Gone",
+      "description": "Old resource permanently unavailable (deprecated v1 endpoints)",
+      "notes": "Several v1 endpoints deprecated as of April 2025, to be removed after Dec 31, 2025",
+      "solution": "Migrate to v2 equivalent endpoints. Check changelog for deprecated endpoint list"
+    },
+    {
+      "error_code": "415 Unsupported Media Type",
+      "description": "Feature is not enabled for the account",
+      "solution": "Check Pipedrive subscription plan for feature availability"
+    },
+    {
+      "error_code": "422 Unprocessable Entity",
+      "description": "Webhooks limit reached",
+      "cause": "Maximum 5 webhooks per account",
+      "solution": "Delete unused webhooks before creating new ones"
+    },
+    {
+      "error_code": "429 Too Many Requests",
+      "description": "Rate limit exceeded",
+      "real_headers": "X-RateLimit-Limit: 10, X-RateLimit-Remaining: 0, X-RateLimit-Reset: 10, Retry-After: 10",
+      "causes": ["Exceeded burst limit (2s window)", "Exceeded daily token budget"],
+      "solution": "Wait for Retry-After seconds (typically 10s penalty). Implement exponential backoff with jitter (2s -> 4s -> 8s + random). Use webhooks instead of polling. Migrate to OAuth for higher burst limits. Use v2 endpoints (50% fewer tokens). Use cursor-based pagination for efficiency"
+    },
+    {
+      "error_code": "500 Internal Server Error",
+      "description": "Generic server error",
+      "solution": "Retry with exponential backoff. If persistent, contact Pipedrive support"
+    },
+    {
+      "error_code": "503 Service Unavailable",
+      "description": "Scheduled maintenance",
+      "solution": "Check Pipedrive status page. Retry after maintenance window"
+    }
+  ],
+
+  "community_constraints": [
+    {
+      "issue": "Rate limit penalty (10s reset) confusing — retry-after doesn't match 2s burst window",
+      "frequency": "high",
+      "source": "Pipedrive Dev Community",
+      "detail": "When rate limit is hit, x-ratelimit-reset returns 10s (penalty), not the 2s burst window. Even waiting 10s may not clear the penalty without proper handling",
+      "workaround": "Always use exponential backoff with jitter. Don't rely solely on Retry-After. Start with 2s delay, then 4s, then 8s +-500ms. Avoid thundering herd with jitter"
+    },
+    {
+      "issue": "Multiple concurrent workers hitting rate limits independently",
+      "frequency": "high",
+      "source": "Pipedrive Dev Community",
+      "detail": "Multiple background workers or webhook handlers making API calls don't know about each other's rate limit consumption, causing collective 429s",
+      "workaround": "Use a distributed rate limit cache (Redis). Or use different API keys for different workers. Or serialize API calls through a single queue"
+    },
+    {
+      "issue": "API v1 endpoint deprecation — many still using deprecated endpoints",
+      "frequency": "high",
+      "source": "Pipedrive Changelog",
+      "detail": "Activities, persons, products, organizations v1 endpoints deprecated April 2025, guaranteed until Dec 31, 2025 only. Must migrate to v2",
+      "workaround": "Migrate to v2 endpoints NOW (2026). v2 uses cursor instead of offset pagination, consumes 50% fewer tokens. Update all integration code"
+    },
+    {
+      "issue": "Custom field mapping complexity in integrations",
+      "frequency": "medium",
+      "source": "Truto blog / Developer forums",
+      "detail": "Pipedrive allows custom fields per account. When integrating, field keys are numeric (e.g., custom_fields.12345) and differ across accounts",
+      "workaround": "Use API to discover custom fields dynamically. Map field keys by field name (not ID). Store field mappings per account"
+    }
+  ],
+
+  "use_cases": [
+    "Sync deals/persons between Pipedrive and external CRM or ERP",
+    "Automate activity logging from external platforms (calls, emails, meetings)",
+    "Push product data from e-commerce platforms into Pipedrive deals",
+    "Bi-directional contact sync with email marketing platforms",
+    "Create organizations and persons from web form submissions"
+  ]
+}

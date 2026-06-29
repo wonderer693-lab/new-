@@ -1,0 +1,41 @@
+{
+  "tool_id": "zapier",
+  "tool_name": "Zapier",
+  "category": "Automation / Integration Platform (iPaaS)",
+  "official_api_docs": "https://docs.zapier.com/powered-by-zapier/",
+  "api_base_url": "https://zapier.com/api/v1",
+  "api_version": "Workflow API v1",
+  "data_collected": "2026-06-26",
+  "authentication": {
+    "mechanisms": [
+      {"type": "OAuth 2.0 Authorization Code", "description": "For user-context operations — User Access Token", "token_url": "https://zapier.com/oauth/token/", "access_token_lifetime": "10 hours", "refresh_token": "Rotating — old refresh token invalidated on each refresh", "scopes": ["connection:read", "promotions:read", "promotions:write", "zap:read", "zap:write", "history:read"]},
+      {"type": "App Access Token (Client Credentials)", "description": "For app-level operations (promotions, etc.)", "requires": "Published public integration in Zapier App Directory", "token_url": "https://zapier.com/oauth/token/"}
+    ],
+    "auth_header": "Authorization: Bearer {token}"
+  },
+  "rate_limits": {
+    "ip_based": {"requests_per_minute": 60},
+    "partner_based": {"requests_per_minute": 150},
+    "error_on_exceed": "HTTP 429 Too Many Requests — 60 second cooldown",
+    "notes": "Rate limited by whichever occurs first: IP or Partner level"
+  },
+  "core_endpoints": [
+    {"endpoint": "/api/v1/apps", "method": "GET", "description": "List available apps in Zapier"},
+    {"endpoint": "/api/v1/authentications", "method": "GET", "description": "Get user's connected account authentications"},
+    {"endpoint": "/api/v1/zaps", "method": "GET", "description": "List Zaps"},
+    {"endpoint": "/api/v1/zaps/{id}", "method": "GET", "description": "Get Zap details"},
+    {"endpoint": "/api/v1/zap-runs", "method": "GET", "description": "Get Zap run history"},
+    {"endpoint": "/api/v1/zap-templates", "method": "GET", "description": "List Zap templates"}
+  ],
+  "error_dictionary": [
+    {"error_code": "400", "description": "Malformed request", "solution": "Check request body format and required parameters"},
+    {"error_code": "401", "description": "Invalid or expired access token", "solution": "Refresh token via /oauth/token. Access tokens expire after 10 hours. Refresh token is rotating — store new one each time"},
+    {"error_code": "429", "description": "Rate limit exceeded", "solution": "Wait 60 seconds (cooldown). Implement exponential backoff. Distribute requests across IPs if possible"},
+    {"error_code": "5XX", "description": "Server error", "solution": "Retry with backoff. Check status.zapier.com for outages"}
+  ],
+  "community_constraints": [
+    {"issue": "Rotating refresh tokens — old one invalidated after use", "frequency": "high", "source": "Zapier docs", "workaround": "Always store the NEW refresh token from each refresh response. Never reuse old refresh tokens"},
+    {"issue": "Only published apps can use App Access Token flow", "frequency": "medium", "source": "Zapier developer docs", "workaround": "Use User Access Token (OAuth) for development. Can't use App Access Token until app is published in Marketplace"}
+  ],
+  "use_cases": ["Trigger Zaps programmatically from external systems", "Monitor Zap run history for error handling", "Create and manage Zaps via API", "Manage connected account authentications"]
+}

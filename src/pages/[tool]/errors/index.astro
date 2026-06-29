@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const errors = await getCollection('errors');
+  const tools = [...new Set(errors.map(e => e.data.tool))];
+  return tools.map(tool => ({ params: { tool }, props: { tool } }));
+}
+
+const { tool } = Astro.props;
+const errors = (await getCollection('errors')).filter(e => e.data.tool === tool);
+const displayName = tool.charAt(0).toUpperCase() + tool.slice(1);
+
+const frontmatter = {
+  title: `${displayName} API Error Codes — Complete Reference & Fixes`,
+  description: `All ${displayName} API error codes with production fixes. ${errors.length} errors documented with retry strategies, code examples, and prevention.`,
+  keywords: [`${tool} api error codes`, `${tool} api errors reference`, `${tool} api troubleshooting`],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <nav aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
+        <li><a href={`/${tool}`}>{displayName}</a><span aria-hidden="true"> / </span></li>
+        <li><span>Errors</span></li>
+      </ol>
+    </nav>
+
+    <h1>{displayName} API Error Codes</h1>
+    <p>All documented {displayName} API errors with root cause, step-by-step fixes, and production retry strategies.</p>
+
+    <table>
+      <thead>
+        <tr><th>Code</th><th>Name</th><th>Severity</th><th>Category</th></tr>
+      </thead>
+      <tbody>
+        {errors.map(e => (
+          <tr>
+            <td><a href={`/${tool}/errors/${e.data.errorCode}`}><code>{e.data.errorCode}</code></a></td>
+            <td>{e.data.errorName}</td>
+            <td><span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span></td>
+            <td>{e.data.category}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </main>
+</BaseLayout>

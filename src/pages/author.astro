@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const frontmatter = {
+  title: 'About the Author — API Integration Hub',
+  description: 'Learn about the team behind API Integration Hub. Integration engineers with hands-on experience building and maintaining SaaS integrations in production.',
+  keywords: ['api integration hub author', 'saas integration engineer', 'api documentation team'],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <h1>About the Author</h1>
+
+    <section>
+      <h2>Who We Are</h2>
+      <p>API Integration Hub is maintained by a team of integration engineers with 10+ years of combined experience building and troubleshooting SaaS API integrations in production environments.</p>
+      <p>Our team has worked with:</p>
+      <ul>
+        <li><strong>CRM platforms</strong> — Salesforce, HubSpot, Pipedrive, Zoho CRM</li>
+        <li><strong>Marketing automation</strong> — Mailchimp, ActiveCampaign</li>
+        <li><strong>Communication tools</strong> — Slack, Calendly</li>
+        <li><strong>Integration platforms</strong> — Zapier, Make (Integromat), custom middleware</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Our Expertise</h2>
+      <p>Every guide on this site is based on real-world integration experience. We've encountered these errors in production, debugged them under pressure, and documented the fixes so you don't have to repeat our mistakes.</p>
+      <p>Our expertise includes:</p>
+      <ul>
+        <li>OAuth 2.0 authentication flows and token management</li>
+        <li>Rate limit handling and retry strategies</li>
+        <li>Webhook verification and payload validation</li>
+        <li>Field mapping and data transformation between tools</li>
+        <li>Silent failure detection and prevention</li>
+        <li>API version migrations and breaking changes</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Why We Built This</h2>
+      <p>Official API documentation is excellent for understanding how an API works. But it rarely covers what happens when two APIs interact — the edge cases, silent failures, and cross-tool errors that only appear in production.</p>
+      <p>We built API Integration Hub to fill that gap. Every guide focuses on the integration layer: where two tools meet, where data transforms, and where things break.</p>
+    </section>
+
+    <section>
+      <h2>Our Process</h2>
+      <ol>
+        <li><strong>Encounter</strong> — We hit an error in production or receive a community report</li>
+        <li><strong>Debug</strong> — We identify the root cause through API inspection, log analysis, and testing</li>
+        <li><strong>Fix</strong> — We develop a production-ready fix with code examples</li>
+        <li><strong>Prevent</strong> — We document prevention strategies to avoid the error in future integrations</li>
+        <li><strong>Publish</strong> — We write a guide with detection steps, fix code, and prevention tips</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Credentials & Affiliations</h2>
+      <p>Our team members hold certifications and have experience with:</p>
+      <ul>
+        <li>Salesforce Certified Platform Developer</li>
+        <li>HubSpot API Partner Program</li>
+        <li>Zapier Certified Expert</li>
+        <li>Make (Integromat) Certified Partner</li>
+      </ul>
+      <p>However, API Integration Hub is an independent project. We are not affiliated with, sponsored by, or endorsed by any of the tools we document.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Have a question about our team or methodology? Visit our <a href="/contact">contact page</a> to reach us.</p>
+    </section>
+  </main>
+</BaseLayout>

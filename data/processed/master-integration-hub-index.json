@@ -1,0 +1,283 @@
+﻿{
+    "schema_version":  "1.0.0",
+    "total_error_solutions":  162,
+    "integration_pairs":  [
+                              {
+                                  "id":  "activecampaign-to-slack",
+                                  "name":  "ActiveCampaign â†” Slack Integration",
+                                  "sync_type":  "Unidirectional (ActiveCampaign â†’ Slack via ActiveCampaign\u0027s Slack integration, Zapier, or webhooks)",
+                                  "errors":  8,
+                                  "data_file":  "integrations/activecampaign-to-slack.json",
+                                  "top_keywords":  [
+                                                       "ActiveCampaign Slack integration",
+                                                       "ActiveCampaign Slack notification",
+                                                       "ActiveCampaign webhook Slack"
+                                                   ]
+                              },
+                              {
+                                  "id":  "hubspot-to-activecampaign",
+                                  "name":  "HubSpot â†” ActiveCampaign Integration",
+                                  "sync_type":  "Custom integration (no native connector) â€” via API, Zapier, Make, or n8n",
+                                  "errors":  3,
+                                  "data_file":  "integrations/hubspot-to-activecampaign.json",
+                                  "top_keywords":  [
+                                                       "HubSpot ActiveCampaign integration",
+                                                       "HubSpot ActiveCampaign sync",
+                                                       "ActiveCampaign HubSpot API connection"
+                                                   ]
+                              },
+                              {
+                                  "id":  "hubspot-to-mailchimp",
+                                  "name":  "HubSpot â†” Mailchimp Integration",
+                                  "sync_type":  "Unidirectional (HubSpot â†’ Mailchimp) via native connector; Bi-directional via middleware (Zapier/n8n/Make)",
+                                  "errors":  7,
+                                  "data_file":  "integrations/hubspot-to-mailchimp.json",
+                                  "top_keywords":  [
+                                                       "HubSpot Mailchimp integration",
+                                                       "HubSpot Mailchimp sync not working",
+                                                       "HubSpot Mailchimp duplicate contacts"
+                                                   ]
+                              },
+                              {
+                                  "id":  "hubspot-to-pipedrive",
+                                  "name":  "HubSpot â†” Pipedrive Integration",
+                                  "sync_type":  "Custom integration via API or middleware (Zapier, Make, n8n)",
+                                  "errors":  3,
+                                  "data_file":  "integrations/hubspot-to-pipedrive.json",
+                                  "top_keywords":  [
+                                                       "HubSpot Pipedrive integration",
+                                                       "Pipedrive to HubSpot migration",
+                                                       "HubSpot Pipedrive sync"
+                                                   ]
+                              },
+                              {
+                                  "id":  "hubspot-to-salesforce",
+                                  "name":  "HubSpot â†” Salesforce Integration",
+                                  "sync_type":  "Bi-directional (native connector by HubSpot)",
+                                  "errors":  10,
+                                  "data_file":  "integrations/hubspot-to-salesforce.json",
+                                  "top_keywords":  [
+                                                       "HubSpot Salesforce integration",
+                                                       "HubSpot Salesforce sync errors",
+                                                       "HubSpot Salesforce duplicate contacts"
+                                                   ]
+                              },
+                              {
+                                  "id":  "hubspot-to-slack",
+                                  "name":  "HubSpot â†” Slack Integration",
+                                  "sync_type":  "Unidirectional (HubSpot â†’ Slack via webhook/connector) or bidirectional (via Slack Workflow Builder)",
+                                  "errors":  8,
+                                  "data_file":  "integrations/hubspot-to-slack.json",
+                                  "top_keywords":  [
+                                                       "HubSpot Slack integration",
+                                                       "HubSpot to Slack notification setup",
+                                                       "Slack API rate limit 429"
+                                                   ]
+                              },
+                              {
+                                  "id":  "hubspot-to-zapier",
+                                  "name":  "HubSpot â†” Zapier Integration",
+                                  "sync_type":  "Trigger â†’ Action (Zapier orchestrates)",
+                                  "errors":  3,
+                                  "data_file":  "integrations/hubspot-to-zapier.json",
+                                  "top_keywords":  [
+                                                       "HubSpot Zapier integration",
+                                                       "HubSpot Zapier triggers",
+                                                       "HubSpot to Zapier webhook"
+                                                   ]
+                              },
+                              {
+                                  "id":  "make-to-slack",
+                                  "name":  "Make (Integromat) â†” Slack Integration",
+                                  "sync_type":  "Unidirectional (Make â†’ Slack via Slack module in Make scenarios)",
+                                  "errors":  8,
+                                  "data_file":  "integrations/make-to-slack.json",
+                                  "top_keywords":  [
+                                                       "Make Slack integration",
+                                                       "Make Integromat Slack notification",
+                                                       "Make Slack rate limit"
+                                                   ]
+                              },
+                              {
+                                  "id":  "pipedrive-to-mailchimp",
+                                  "name":  "Pipedrive â†” Mailchimp Integration",
+                                  "sync_type":  "Unidirectional (Pipedrive â†’ Mailchimp, typically via middleware)",
+                                  "errors":  7,
+                                  "data_file":  "integrations/pipedrive-to-mailchimp.json",
+                                  "top_keywords":  [
+                                                       "Pipedrive Mailchimp integration",
+                                                       "Pipedrive to Mailchimp sync",
+                                                       "Pipedrive Mailchimp v2 migration"
+                                                   ]
+                              },
+                              {
+                                  "id":  "salesforce-to-activecampaign",
+                                  "name":  "Salesforce â†” ActiveCampaign Integration",
+                                  "sync_type":  "Unidirectional or bidirectional (via middleware or native Zapier/Make)",
+                                  "errors":  8,
+                                  "data_file":  "integrations/salesforce-to-activecampaign.json",
+                                  "top_keywords":  [
+                                                       "Salesforce ActiveCampaign integration",
+                                                       "Salesforce ActiveCampaign sync errors",
+                                                       "ActiveCampaign Salesforce field mapping"
+                                                   ]
+                              },
+                              {
+                                  "id":  "salesforce-to-mailchimp",
+                                  "name":  "Salesforce â†” Mailchimp Integration",
+                                  "sync_type":  "Unidirectional (Salesforce â†’ Mailchimp, typically via connector or middleware)",
+                                  "errors":  8,
+                                  "data_file":  "integrations/salesforce-to-mailchimp.json",
+                                  "top_keywords":  [
+                                                       "Salesforce Mailchimp integration",
+                                                       "Salesforce to Mailchimp sync errors",
+                                                       "Mailchimp Salesforce field mapping"
+                                                   ]
+                              },
+                              {
+                                  "id":  "zapier-to-calendly",
+                                  "name":  "Zapier â†” Calendly Integration",
+                                  "sync_type":  "Bidirectional (Zapier acts as middleware reacting to Calendly events and triggering actions in other tools)",
+                                  "errors":  8,
+                                  "data_file":  "integrations/zapier-to-calendly.json",
+                                  "top_keywords":  [
+                                                       "Zapier Calendly integration",
+                                                       "Calendly webhook Zapier setup",
+                                                       "Calendly Zapier duplicate contacts"
+                                                   ]
+                              },
+                              {
+                                  "id":  "zoho-to-mailchimp",
+                                  "name":  "Zoho CRM â†” Mailchimp Integration",
+                                  "sync_type":  "Unidirectional (Zoho â†’ Mailchimp via Zoho Flow, middleware, or native connector)",
+                                  "errors":  7,
+                                  "data_file":  "integrations/zoho-to-mailchimp.json",
+                                  "top_keywords":  [
+                                                       "Zoho Mailchimp integration",
+                                                       "Zoho CRM Mailchimp sync",
+                                                       "Zoho Mailchimp API limits"
+                                                   ]
+                              }
+                          ],
+    "project":  "Hyper-Vertical API Integrations Hub",
+    "total_tools":  10,
+    "total_community_mining":  32,
+    "generated":  "2026-06-26",
+    "total_integration_pairs":  13,
+    "tools":  [
+                  {
+                      "id":  "activecampaign",
+                      "errors":  7,
+                      "auth_type":  "API Token (Header)",
+                      "category":  "Marketing Automation \u0026 CRM",
+                      "rate_limits":  "HTTP 429 Too Many Requests",
+                      "community_issues":  4,
+                      "name":  "ActiveCampaign",
+                      "data_file":  "activecampaign-api-data.json",
+                      "api_version":  "v3"
+                  },
+                  {
+                      "id":  "calendly",
+                      "errors":  6,
+                      "auth_type":  "Personal Access Token",
+                      "category":  "Scheduling / Appointment",
+                      "rate_limits":  "HTTP 429 Too Many Requests",
+                      "community_issues":  2,
+                      "name":  "Calendly",
+                      "data_file":  "calendly-api-data.json",
+                      "api_version":  "v2"
+                  },
+                  {
+                      "id":  "hubspot",
+                      "errors":  9,
+                      "auth_type":  "OAuth 2.0 Authorization Code",
+                      "category":  "CRM \u0026 Marketing Automation",
+                      "rate_limits":  "HTTP 429 Too Many Requests",
+                      "community_issues":  4,
+                      "name":  "HubSpot",
+                      "data_file":  "hubspot-api-data.json",
+                      "api_version":  "2026-03 (date-versioned), legacy v3"
+                  },
+                  {
+                      "id":  "mailchimp",
+                      "errors":  5,
+                      "auth_type":  "API Key (Basic Auth / Bearer)",
+                      "category":  "Email Marketing",
+                      "rate_limits":  "HTTP 429 (or 403 without JSON body at very high volumes)",
+                      "community_issues":  4,
+                      "name":  "Mailchimp",
+                      "data_file":  "mailchimp-api-data.json",
+                      "api_version":  "3.0"
+                  },
+                  {
+                      "id":  "make",
+                      "errors":  7,
+                      "auth_type":  "See file",
+                      "category":  "Automation / Integration Platform (iPaaS)",
+                      "rate_limits":  "HTTP 429 â€” \u0027Requests limit for organization exceeded, please try again later.\u0027",
+                      "community_issues":  2,
+                      "name":  "Make (Integromat)",
+                      "data_file":  "make-api-data.json",
+                      "api_version":  "v2"
+                  },
+                  {
+                      "id":  "pipedrive",
+                      "errors":  11,
+                      "auth_type":  "API Token",
+                      "category":  "Sales CRM (SMB)",
+                      "rate_limits":  "HTTP 429 Too Many Requests",
+                      "community_issues":  4,
+                      "name":  "Pipedrive",
+                      "data_file":  "pipedrive-api-data.json",
+                      "api_version":  "v1 (v2 endpoints moving out of beta in 2026)"
+                  },
+                  {
+                      "id":  "salesforce",
+                      "errors":  10,
+                      "auth_type":  "OAuth 2.0 JWT Bearer",
+                      "category":  "CRM (Enterprise)",
+                      "rate_limits":  "HTTP 429 REQUEST_LIMIT_EXCEEDED",
+                      "community_issues":  4,
+                      "name":  "Salesforce",
+                      "data_file":  "salesforce-api-data.json",
+                      "api_version":  "v66.0 (Spring \u002726)"
+                  },
+                  {
+                      "id":  "slack",
+                      "errors":  8,
+                      "auth_type":  "OAuth 2.0 (Bot Token)",
+                      "category":  "Team Communication",
+                      "rate_limits":  "HTTP 429 with Retry-After header (seconds)",
+                      "community_issues":  3,
+                      "name":  "Slack",
+                      "data_file":  "slack-api-data.json",
+                      "api_version":  "Web API"
+                  },
+                  {
+                      "id":  "zapier",
+                      "errors":  4,
+                      "auth_type":  "OAuth 2.0 Authorization Code",
+                      "category":  "Automation / Integration Platform (iPaaS)",
+                      "rate_limits":  "HTTP 429 Too Many Requests â€” 60 second cooldown",
+                      "community_issues":  2,
+                      "name":  "Zapier",
+                      "data_file":  "zapier-api-data.json",
+                      "api_version":  "Workflow API v1"
+                  },
+                  {
+                      "id":  "zoho",
+                      "errors":  7,
+                      "auth_type":  "OAuth 2.0 Authorization Code (Server-based)",
+                      "category":  "CRM",
+                      "rate_limits":  {
+                                          "credit":  "TOO_MANY_REQUESTS",
+                                          "concurrency":  "TOO_MANY_CONCURRENT_REQUESTS"
+                                      },
+                      "community_issues":  3,
+                      "name":  "Zoho CRM",
+                      "data_file":  "zoho-api-data.json",
+                      "api_version":  "v8"
+                  }
+              ],
+    "niche":  "CRM \u0026 Sales Automation"
+}

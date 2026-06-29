@@ -1,0 +1,135 @@
+{
+  "integration_id": "zapier-to-calendly",
+  "integration_name": "Zapier ↔ Calendly Integration",
+  "tool_a": {
+    "tool_id": "zapier",
+    "tool_name": "Zapier"
+  },
+  "tool_b": {
+    "tool_id": "calendly",
+    "tool_name": "Calendly"
+  },
+  "sync_type": "Bidirectional (Zapier acts as middleware reacting to Calendly events and triggering actions in other tools)",
+  "popularity": "very high — most common Calendly integration pattern: booking triggers CRM/HubSpot contact creation via Zapier",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "zapier_side": "OAuth 2.0 per connected app. Zapier manages auth on behalf of the user.",
+    "calendly_side": "OAuth 2.0 or Personal Access Token (PAT). Webhook subscriptions scope required."
+  },
+  "common_use_cases": [
+    "Calendly event booked → Zapier creates HubSpot/Salesforce contact",
+    "Calendly event rescheduled/canceled → Zapier updates CRM status",
+    "Calendly invitee questions → Zapier creates deal with custom fields",
+    "Calendly event type → Zapier routing to different CRM pipelines",
+    "Calendly webhook → Zapier sends Slack notification to sales rep"
+  ],
+  "endpoints_involved": {
+    "zapier_endpoints": [
+      {
+        "endpoint": "/zapier/api/v1 (managed by Zapier)",
+        "method": "N/A",
+        "purpose": "Zapier internal API; user doesn't call directly"
+      }
+    ],
+    "calendly_endpoints": [
+      {
+        "endpoint": "/webhook_subscriptions",
+        "method": "POST",
+        "purpose": "Create webhook subscription for event types"
+      },
+      {
+        "endpoint": "/scheduled_events/{uuid}",
+        "method": "GET",
+        "purpose": "Get event details with invitee, guest info"
+      },
+      {
+        "endpoint": "/invitees/{uuid}",
+        "method": "GET",
+        "purpose": "Get invitee details including questions/answers"
+      },
+      {
+        "endpoint": "/event_types/{uuid}",
+        "method": "GET",
+        "purpose": "Get event type configuration"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Calendly webhook verification header missing",
+      "tool": "Calendly",
+      "category": "WEBHOOK",
+      "cause": "Calendly sends webhook signature header for verification. Zapier's built-in Calendly trigger handles this, but custom webhook trigger doesn't.",
+      "solution": "Use Zapier's Calendly integration (handles verification). If using Webhooks by Zapier, verify the signature manually using Calendly's webhook signing secret."
+    },
+    {
+      "error_code": "Calendly webhook delivery delays",
+      "tool": "Calendly",
+      "category": "WEBHOOK",
+      "cause": "Calendly delivers webhooks asynchronously. High-traffic events may have 30-120 second delays. Zapier scheduled poll adds 1-15 min more.",
+      "solution": "For real-time needs, use Calendly webhook (instant) → Zapier Catch Hook trigger (instant). Avoid Zapier polling triggers."
+    },
+    {
+      "error_code": "Calendly API rate limit on webhook subscriptions",
+      "tool": "Calendly",
+      "category": "RATE_LIMIT",
+      "cause": "Calendly enforces rate limits on API calls. Frequent webhook subscription creation/deletion triggers 429.",
+      "solution": "Reuse webhook subscriptions. Monitor rate limit headers (X-RateLimit-Remaining). Cache subscription IDs."
+    },
+    {
+      "error_code": "Multiple Calendly event types — single Zap limitation",
+      "tool": "Zapier",
+      "category": "CONFIGURATION",
+      "cause": "One Calendly trigger in Zapier watches 'all event types' by default. Users need different actions per event type (e.g., discovery call → Salesforce lead, demo → HubSpot contact).",
+      "solution": "Use 'Filter by Zapier' step to route based on event type name. Or create separate Zaps per event type."
+    },
+    {
+      "error_code": "Calendly invitee time zone not passed to CRM",
+      "tool": "Calendly",
+      "category": "FIELD_MAPPING",
+      "cause": "Calendly collects invitee timezone during booking. If Zapier step doesn't map timezone field to CRM, the timezone data is lost.",
+      "solution": "Map 'invitee timezone' field from Calendly trigger to CRM custom 'Timezone' field. Don't rely on automatically detected timezone."
+    },
+    {
+      "error_code": "Rescheduled events create duplicates",
+      "tool": "Calendly",
+      "category": "DATA_QUALITY",
+      "cause": "Calendly sends 'event.created' on initial booking and another 'event.created' (not 'event.rescheduled') on reschedule. Zapier creates duplicate CRM records.",
+      "solution": "Use Calendly 'event.created' but check for existing contact/lead by email before creating. Add dedup logic in Zapier step."
+    },
+    {
+      "error_code": "Cancelled events not cleaned up",
+      "tool": "Calendly",
+      "category": "DATA_QUALITY",
+      "cause": "Calendly send 'event.canceled' webhook. Many Zaps process 'event.created' only, missing the cancel event. CRM shows appointments that were cancelled.",
+      "solution": "Add a Zap that listens for 'event.canceled' and updates CRM record status to 'No Show' or 'Cancelled'."
+    },
+    {
+      "error_code": "Calendly OAuth token expiration",
+      "tool": "Calendly",
+      "category": "AUTH",
+      "cause": "Calendly OAuth access tokens expire. Zapier handles this automatically, but custom setup connecting Calendly API directly via Webhooks by Zapier needs manual token refresh.",
+      "solution": "Use Zapier's built-in Calendly integration (managed OAuth). If using Webhooks by Zapier, implement token refresh logic."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "Calendly webhook payload size limit",
+      "solution": "Calendly caps webhook payloads. Large invitee question sets may be truncated. Send invitee UUID and fetch full details via API.",
+      "source": "Calendly developer docs"
+    },
+    {
+      "problem": "Duplicate webhook delivery from Calendly",
+      "solution": "Calendly delivers 'at least once.' Add idempotency check in Zapier using webhook UUID.",
+      "source": "Calendly status page"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "Zapier Calendly integration",
+    "Calendly webhook Zapier setup",
+    "Calendly Zapier duplicate contacts",
+    "Calendly webhook to CRM",
+    "Calendly API rate limits"
+  ]
+}

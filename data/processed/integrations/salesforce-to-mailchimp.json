@@ -1,0 +1,160 @@
+{
+  "integration_id": "salesforce-to-mailchimp",
+  "integration_name": "Salesforce ↔ Mailchimp Integration",
+  "tool_a": {
+    "tool_id": "salesforce",
+    "tool_name": "Salesforce"
+  },
+  "tool_b": {
+    "tool_id": "mailchimp",
+    "tool_name": "Mailchimp"
+  },
+  "sync_type": "Unidirectional (Salesforce → Mailchimp, typically via connector or middleware)",
+  "popularity": "high — common setup: Salesforce as CRM of record + Mailchimp for email marketing automation",
+  "last_updated": "2026-06-26",
+  "authentication_requirements": {
+    "salesforce_side": "OAuth 2.0 JWT Bearer flow. Dedicated integration user with API Enabled permission, Read on Contact, Lead, Campaign.",
+    "mailchimp_side": "OAuth 2.0 or API Key. Audience manager permissions required for list/segment management."
+  },
+  "common_use_cases": [
+    "Sync Salesforce Leads/Contacts to Mailchimp audiences for email campaigns",
+    "Salesforce Campaign Members → Mailchimp segment/tag for targeted sends",
+    "Lead status changes trigger Mailchimp automation entry (e.g., new lead → welcome email)",
+    "Salesforce Opportunity won → Mailchimp list tag 'customer' + automation exit",
+    "Synced Salesforce reports with Mailchimp campaign performance metrics"
+  ],
+  "endpoints_involved": {
+    "salesforce_endpoints": [
+      {
+        "endpoint": "/services/data/v66.0/sobjects/Contact",
+        "method": "GET/POST/PATCH",
+        "purpose": "Read/write Contacts"
+      },
+      {
+        "endpoint": "/services/data/v66.0/sobjects/Lead",
+        "method": "GET/POST/PATCH",
+        "purpose": "Read/write Leads"
+      },
+      {
+        "endpoint": "/services/data/v66.0/query?q={SOQL}",
+        "method": "GET",
+        "purpose": "SOQL to fetch recently modified records"
+      },
+      {
+        "endpoint": "/services/data/v66.0/limits",
+        "method": "GET",
+        "purpose": "Monitor daily API call consumption"
+      }
+    ],
+    "mailchimp_endpoints": [
+      {
+        "endpoint": "/lists/{id}/members",
+        "method": "GET/POST/PATCH",
+        "purpose": "Add/update audience members"
+      },
+      {
+        "endpoint": "/lists/{id}/members/{subscriber_hash}",
+        "method": "GET/PATCH/DELETE",
+        "purpose": "Manage specific member"
+      },
+      {
+        "endpoint": "/lists/{id}/segments/{id}",
+        "method": "GET/POST/PATCH",
+        "purpose": "Manage segments/tags"
+      },
+      {
+        "endpoint": "/lists/{id}/members/search?query={email}",
+        "method": "GET",
+        "purpose": "Search member by email"
+      },
+      {
+        "endpoint": "/automations/{id}/emails/{id}/queue",
+        "method": "POST",
+        "purpose": "Trigger automation email"
+      }
+    ]
+  },
+  "edge_cases_and_errors": [
+    {
+      "error_code": "Email field mismatch",
+      "tool": "Both",
+      "category": "FIELD_MAPPING",
+      "cause": "Salesforce Email field is the primary key in Mailchimp. If Email field not mapped or empty, sync silently fails.",
+      "solution": "Ensure Email field is mapped. Use Salesforce formula to coalesce fields: BLANKVALUE(Email, Alternate_Email__c). Set email as required on sync."
+    },
+    {
+      "error_code": "Mailchimp unsubscribes re-synced",
+      "tool": "Mailchimp",
+      "category": "DATA_QUALITY",
+      "cause": "Salesforce sends a contact update for a person who unsubscribed in Mailchimp. Mailchimp re-subscribes them against their will. GDPR violation risk.",
+      "solution": "Do NOT sync status='subscribed' to Mailchimp if member status is 'unsubscribed' or 'cleaned'. Check Mailchimp member status before PATCH. Better: remove unsubscribed members from Salesforce sync list."
+    },
+    {
+      "error_code": "Custom field type mismatch",
+      "tool": "Mailchimp",
+      "category": "FIELD_TYPES",
+      "cause": "Salesforce date fields sent as full ISO timestamps; Mailchimp merge tags expect 'MM/DD/YYYY' or 'YYYY-MM-DD'. Number fields sent as strings.",
+      "solution": "Format dates as YYYY-MM-DD before sending to Mailchimp. Use NUMBER merge tag type for numeric fields. Test with one record first."
+    },
+    {
+      "error_code": "Mailchimp audience limit exceeded",
+      "tool": "Mailchimp",
+      "category": "RATE_LIMIT",
+      "cause": "Free Mailchimp plan has 500 contacts limit. Syncing all Salesforce contacts exceeds this. Mailchimp rejects the batch.",
+      "solution": "Segment Salesforce contacts into a synced report that filters contacts to be within Mailchimp plan limit. Monitor audience size in Mailchimp dashboard."
+    },
+    {
+      "error_code": "Salesforce Campaign → Mailchimp segment mapping",
+      "tool": "Both",
+      "category": "SEGMENTATION",
+      "cause": "Salesforce Campaign Members don't map 1:1 to Mailchimp segments/tags. A contact can be in multiple campaigns but Mailchimp tracking differs.",
+      "solution": "Use Mailchimp tags (not segments) to mirror campaign membership. Add/remove tags based on Campaign Member status."
+    },
+    {
+      "error_code": "Email address changed in Salesforce",
+      "tool": "Both",
+      "category": "IDENTITY",
+      "cause": "Contact email changes in Salesforce. Mailchimp requires DELETE + re-POST to change subscriber email (PATCH doesn't allow email change).",
+      "solution": "On email change: DELETE old subscriber, POST new subscriber with new email. Preserve merge field data in migration."
+    },
+    {
+      "error_code": "API call limit overlap",
+      "tool": "Salesforce",
+      "category": "RATE_LIMIT",
+      "cause": "Salesforce daily API call limit is consumed by Mailchimp sync plus all other integrations. High-volume sync exhausts allocation before end of day.",
+      "solution": "Use Salesforce CRON to schedule sync during off-peak hours. Use Bulk API 2.0 for large initial syncs. Set per-sync batch sizes to 200 records."
+    },
+    {
+      "error_code": "Field-level security (FLS) blocking email",
+      "tool": "Salesforce",
+      "category": "PERMISSION",
+      "cause": "Integration user profile has Read on Contact but FLS on Email field is not visible. Sync sends empty email → Mailchimp rejects.",
+      "solution": "Verify FLS for integration user: Email, FirstName, LastName, and all mapped custom fields must be Read/Edit visible."
+    }
+  ],
+  "community_solutions": [
+    {
+      "problem": "Batch subscribe errors with 'member already exists'",
+      "solution": "Use PUT (upsert) instead of POST for batch member operations. POST returns 400 if member exists.",
+      "source": "Mailchimp API docs"
+    },
+    {
+      "problem": "Field length limits in Mailchimp merge tags",
+      "solution": "Mailchimp text merge tags max 255 characters. Salesforce long text fields must be truncated. Use Mailchimp address merge tag type for structured address data.",
+      "source": "Mailchimp developer forum"
+    },
+    {
+      "problem": "Time zone differences in date sync",
+      "solution": "Salesforce stores dates in UTC; Mailchimp uses account timezone. Convert to Mailchimp's timezone before sync.",
+      "source": "Salesforce StackExchange"
+    }
+  ],
+  "data_quality_score": null,
+  "search_volume_keywords": [
+    "Salesforce Mailchimp integration",
+    "Salesforce to Mailchimp sync errors",
+    "Mailchimp Salesforce field mapping",
+    "Salesforce Mailchimp unsubscribe sync",
+    "Salesforce Mailchimp API limits"
+  ]
+}

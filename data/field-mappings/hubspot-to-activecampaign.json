@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "toolA": "hubspot",
+    "toolB": "activecampaign",
+    "integrationSlug": "hubspot-to-activecampaign",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 5
+  },
+  "categories": [
+    {
+      "id": "contact-tag",
+      "name": "Contact & Tag API Structure",
+      "description": "Differences in how contacts and tags are created, including the known contactTags endpoint bug",
+      "severity": "critical"
+    },
+    {
+      "id": "custom-field",
+      "name": "Custom Field Mapping",
+      "description": "HubSpot property type differences vs ActiveCampaign field types (text, date, listbox, checkbox)",
+      "severity": "high"
+    },
+    {
+      "id": "list",
+      "name": "List & Automation Mapping",
+      "description": "Differences in list management and automation triggers between the two platforms",
+      "severity": "medium"
+    },
+    {
+      "id": "deal",
+      "name": "Deal / Opportunity Sync",
+      "description": "How HubSpot deals map to ActiveCampaign deals (different data models)",
+      "severity": "medium"
+    },
+    {
+      "id": "webhook",
+      "name": "Webhook & Automation Sync",
+      "description": "Webhook payload differences when triggering automations across platforms",
+      "severity": "low"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "contacttag-endpoint-bug",
+      "categoryId": "contact-tag",
+      "fieldName": "Contact Tag API Payload Structure",
+      "fieldType": "object",
+      "toolAValue": "Expected by many devs: {\"contact\":\"1\",\"tag\":\"2\"}",
+      "toolBValue": "Required by API: {\"contactTag\":{\"contact\":\"1\",\"tag\":\"2\"}}",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "critical",
+      "notes": "ActiveCampaign's POST /api/3/contactTags endpoint requires the payload wrapped in a `contactTag` object. The official docs example is ambiguous — many developers send the flat object and get a 400 error. Custom integration middleware often gets this wrong. Confirmed by developer reports 2025-2026.",
+      "fixStrategy": "Wrap all contactTag payloads in {'contactTag': {...}} object. If using Zapier or Make, check that the outbound payload structure matches ActiveCampaign's expected format."
+    },
+    {
+      "id": "tag-id-prefix",
+      "categoryId": "contact-tag",
+      "fieldName": "Tag ID Handling",
+      "fieldType": "id",
+      "toolAValue": "HubSpot tag ID (numeric, no prefix)",
+      "toolBValue": "ActiveCampaign tag ID (numeric, referenced by 'tag' key in contactTag)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert",
+      "severity": "low",
+      "notes": "Both systems use numeric tag IDs. Mapping is straightforward but requires a cross-reference table: HubSpot tag 'newsletter' (ID 12345) → ActiveCampaign tag 'Newsletter Subscribers' (ID 67890)."
+    },
+    {
+      "id": "custom-field-types",
+      "categoryId": "custom-field",
+      "fieldName": "Custom Field Type Translation",
+      "fieldType": "text",
+      "toolAValue": "HubSpot property types: string, number, date, datetime, boolean, enumeration, phone",
+      "toolBValue": "ActiveCampaign field types: text, textarea, date, datetime, dropdown, listbox, checkbox, radio, hidden, currency",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "high",
+      "notes": "HubSpot enumeration → ActiveCampaign dropdown/listbox: values must be mapped individually. HubSpot boolean → ActiveCampaign checkbox: may not translate correctly. HubSpot phone → ActiveCampaign text: fine, but ActiveCampaign has no dedicated phone field type. HubSpot datetime → ActiveCampaign datetime: timezone may differ (ActiveCampaign stores in account timezone).",
+      "fixStrategy": "Map HubSpot enumeration values to ActiveCampaign dropdown options explicitly. Prefer ActiveCampaign text fields for phone. Set timezone explicitly on ActiveCampaign account."
+    },
+    {
+      "id": "list-member-webhook",
+      "categoryId": "list",
+      "fieldName": "List Membership — Automation Trigger",
+      "fieldType": "text",
+      "toolAValue": "HubSpot list: contact added to/removed from list (webhook)",
+      "toolBValue": "ActiveCampaign list: contact added to/removed from list (automation trigger)",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "medium",
+      "notes": "HubSpot list membership changes don't automatically trigger ActiveCampaign automations. ActiveCampaign automations trigger on list add/remove, but when syncing from HubSpot, the automation must be triggered via ActiveCampaign API's `/api/3/automation/{id}/contact/add` endpoint — not by list membership change.",
+      "fixStrategy": "After syncing contact to ActiveCampaign list, explicitly trigger automation via ActiveCampaign API. Don't rely on list membership alone to start automation."
+    },
+    {
+      "id": "deal-custom-field-mapping",
+      "categoryId": "deal",
+      "fieldName": "Deal Custom Field Sync",
+      "fieldType": "text",
+      "toolAValue": "HubSpot deal properties (custom per pipeline)",
+      "toolBValue": "ActiveCampaign deal fields (custom per pipeline)",
+      "direction": "A-to-B",
+      "behavior": "auto-convert-partial",
+      "severity": "medium",
+      "notes": "ActiveCampaign has a simpler deal model than HubSpot. HubSpot deals have many standard properties (amount, dealstage, pipeline, closedate, createdate, hs_analytics_source, etc.) plus custom properties. ActiveCampaign deals have title, description, value, currency, owner, pipeline, and custom fields. Mapping HubSpot deal properties to ActiveCampaign deal fields often requires dropping less common fields.",
+      "fixStrategy": "Identify must-have deal properties for sync. Map HubSpot deal amount → ActiveCampaign deal value. Map deal stage carefully — ActiveCampaign stages may differ."
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "contacttag-payload-format",
+      "errorName": "ContactTag Endpoint Payload Format Bug",
+      "categoryId": "contact-tag",
+      "description": "ActiveCampaign contactTags endpoint requires {'contactTag': {...}} wrapper. Flat payload produces 400 error.",
+      "fixSummary": "Wrap payload in 'contactTag' object. Test with single contact first."
+    },
+    {
+      "errorSlug": "custom-field-type-mismatch",
+      "errorName": "Custom Field Type Mismatch — Enumeration to Dropdown",
+      "categoryId": "custom-field",
+      "description": "HubSpot enumeration values don't auto-map to ActiveCampaign dropdown options. Values silently dropped.",
+      "fixSummary": "Explicit option mapping for HubSpot enumeration → ActiveCampaign dropdown/listbox fields."
+    },
+    {
+      "errorSlug": "automation-trigger-gap",
+      "errorName": "List-Triggered Automation Gap",
+      "categoryId": "list",
+      "description": "HubSpot list sync doesn't trigger ActiveCampaign automations. Automation must be triggered via API.",
+      "fixSummary": "Call ActiveCampaign automation trigger API endpoint after list sync."
+    },
+    {
+      "errorSlug": "deal-field-drop",
+      "errorName": "Deal Custom Field Data Loss",
+      "categoryId": "deal",
+      "description": "HubSpot deal custom properties with no ActiveCampaign equivalent are silently dropped during sync.",
+      "fixSummary": "Audit HubSpot deal properties against ActiveCampaign fields. Document dropped fields."
+    }
+  ]
+}

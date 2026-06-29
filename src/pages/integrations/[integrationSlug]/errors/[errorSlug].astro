@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import { extractFaq } from '../../../../utils/extractFaq';
+
+export async function getStaticPaths() {
+  const integrations = await getCollection('integrations');
+  return integrations.map(entry => ({
+    params: { integrationSlug: entry.data.integrationSlug, errorSlug: entry.data.errorSlug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const faqItems = extractFaq(entry.body || '');
+---
+
+<Content />
+
+{faqItems.length > 0 && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(item => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  })} />
+)}

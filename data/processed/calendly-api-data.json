@@ -1,0 +1,52 @@
+{
+  "tool_id": "calendly",
+  "tool_name": "Calendly",
+  "category": "Scheduling / Appointment",
+  "official_api_docs": "https://developer.calendly.com/api-docs",
+  "api_base_url": "https://api.calendly.com",
+  "api_version": "v2",
+  "data_collected": "2026-06-26",
+  "authentication": {
+    "mechanisms": [
+      {"type": "Personal Access Token", "description": "For internal/single-team integrations", "usage": "Generate from Calendly developer settings"},
+      {"type": "OAuth 2.1", "description": "For public apps used by multiple Calendly users", "authorize_url": "https://auth.calendly.com/oauth/authorize", "token_url": "https://auth.calendly.com/oauth/token", "access_token_lifetime": "2 hours", "refresh_token": "Rotating — does not expire until used", "authorization_code_validity": "10 minutes"}
+    ],
+    "auth_header": "Authorization: Bearer {token}",
+    "subscription_requirements": "Webhook API requires paid premium subscription and above. API access tied to user role (Owner/Admin)."
+  },
+  "rate_limits": {
+    "description": "Rate limits applied per token. Specific limits not publicly documented (refer to API docs for current values).",
+    "error_on_exceed": "HTTP 429 Too Many Requests",
+    "notes": "Calendly has recently introduced a Scheduling API (no redirects/iframes) with its own rate limits."
+  },
+  "core_endpoints": [
+    {"endpoint": "/scheduled_events", "method": "GET", "description": "List scheduled events"},
+    {"endpoint": "/scheduled_events/{uuid}", "method": "GET", "description": "Get event details"},
+    {"endpoint": "/scheduled_events/{uuid}/invitees", "method": "GET", "description": "List event invitees"},
+    {"endpoint": "/invitees/{uuid}", "method": "GET", "description": "Get invitee details"},
+    {"endpoint": "/event_types", "method": "GET", "description": "List event types"},
+    {"endpoint": "/event_types/{uuid}", "method": "GET", "description": "Get event type details"},
+    {"endpoint": "/users/me", "method": "GET", "description": "Get current user info"},
+    {"endpoint": "/organizations/{uuid}/invitations", "method": "GET", "description": "List organization invitations"},
+    {"endpoint": "/webhook_subscriptions", "method": "POST", "description": "Create webhook subscription"},
+    {"endpoint": "/webhook_subscriptions", "method": "GET", "description": "List webhook subscriptions"}
+  ],
+  "webhooks": {
+    "supported": true,
+    "events": ["invitee.created", "invitee.canceled", "invitee.rescheduled", "invitee.no_show"],
+    "requires": "Paid premium subscription or above. Owner/Admin role."
+  },
+  "error_dictionary": [
+    {"error_code": "401", "description": "Invalid or missing token", "solution": "Verify token is valid. Personal access tokens: check developer settings. OAuth: token expires after 2 hours, use refresh token."},
+    {"error_code": "403", "description": "Insufficient permissions or subscription level", "causes": ["User role too low (need Owner/Admin)", "Subscription doesn't include webhooks", "Trying to access data outside user's organization"], "solution": "Check user role and subscription. Webhooks require paid premium subscription."},
+    {"error_code": "404", "description": "Resource not found", "solution": "Verify UUID format and resource existence. Check that event is within accessible date range."},
+    {"error_code": "409", "description": "Conflict — resource already exists", "solution": "Check for existing resources before creating duplicates."},
+    {"error_code": "422", "description": "Validation error — invalid request body", "solution": "Check required fields and data types. Event type UUIDs must be valid."},
+    {"error_code": "429", "description": "Rate limit exceeded", "solution": "Implement exponential backoff. Check Retry-After header if provided."}
+  ],
+  "community_constraints": [
+    {"issue": "Webhook API requires paid subscription — not available for free tier", "frequency": "high", "source": "Calendly developer docs", "workaround": "Use polling with GET /scheduled_events for free tier. But polling increases API consumption. Upgrade to premium for webhook access."},
+    {"issue": "No public rate limit documentation", "frequency": "medium", "source": "Calendly community", "workaround": "Implement conservative client-side rate limiting. Start with 10 req/min and adjust based on 429 responses. Use exponential backoff with jitter."}
+  ],
+  "use_cases": ["Sync scheduled meetings to CRM events", "Create HubSpot contacts/leads from Calendly invitees", "Send Slack notifications when meetings are booked/canceled", "Automate follow-up sequences after scheduled events"]
+}

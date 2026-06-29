@@ -1,0 +1,28 @@
+---
+export interface Props {
+  segments: { label: string; href?: string }[];
+}
+const { segments } = Astro.props;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: segments.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.label,
+    ...(s.href ? { item: new URL(s.href, Astro.url.origin).href } : {}),
+  })),
+};
+---
+
+<nav aria-label="Breadcrumb">
+  <ol>
+    {segments.map((s, i) => (
+      <li>
+        {s.href ? <a href={s.href}>{s.label}</a> : <span>{s.label}</span>}
+        {i < segments.length - 1 && <span aria-hidden="true">/</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

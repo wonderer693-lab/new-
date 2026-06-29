@@ -1,0 +1,71 @@
+{
+  "tool_id": "zoho",
+  "tool_name": "Zoho CRM",
+  "category": "CRM",
+  "official_api_docs": "https://www.zoho.com/crm/developer/docs/api/v8/",
+  "api_base_url": "https://www.zohoapis.com/crm/v8",
+  "api_version": "v8",
+  "data_collected": "2026-06-26",
+  "authentication": {
+    "mechanisms": [
+      {"type": "OAuth 2.0 Authorization Code (Server-based)", "description": "For web apps with redirect URL"},
+      {"type": "OAuth 2.0 Self-Client", "description": "For server-to-server with no UI — simplest for integrations", "grant_token_validity": "3 minutes (default, extendable)", "max_grant_tokens": "10 per 10 minutes per client ID"},
+      {"type": "OAuth 2.0 PKCE (Mobile/Native)", "description": "For mobile apps"}
+    ],
+    "access_token_lifetime": "1 hour",
+    "max_active_access_tokens": "15 per refresh token (16th invalidates oldest)",
+    "access_token_generation_limit": "10 per 10 minutes per refresh token",
+    "refresh_token_lifetime": "Never expires until revoked by user",
+    "max_refresh_tokens": "20 per user (21st invalidates oldest)",
+    "auth_header": "Authorization: Zoho-oauthtoken {access_token}",
+    "scopes": "ZohoCRM.modules.ALL, ZohoCRM.settings.ALL, ZohoCRM.users.ALL",
+    "data_centers": ["us (zohoapis.com)", "eu (zohoapis.eu)", "in (zohoapis.in)", "au (zohoapis.com.au)", "jp (zohoapis.jp)", "cn (zohoapis.com.cn)"]
+  },
+  "rate_limits": {
+    "system": "Credit-based + Concurrency-based (dual system)",
+    "credits_daily_by_edition": {
+      "free": 5000,
+      "standard_starter": {"base": 50000, "per_user": 250, "max": 100000},
+      "professional": {"base": 50000, "per_user": 500, "max": 3000000},
+      "enterprise_zoho_one": {"base": 50000, "per_user": 1000, "max": 5000000},
+      "ultimate_crm_plus": {"base": 50000, "per_user": 2000, "max": "Unlimited"}
+    },
+    "concurrency_limits": {
+      "free": 5,
+      "standard_starter": 10,
+      "professional": 15,
+      "enterprise_zoho_one": 20,
+      "ultimate_crm_plus": 25,
+      "notes": "Per org per app. Additionally, sub-concurrency limit of 10 for heavy APIs (Convert Lead, Import, etc.)"
+    },
+    "record_limits": "Max 100 records per Insert/Update/Upsert call. Max 500 records per Tag/Untag call",
+    "window": "Rolling 24-hour window",
+    "error_on_exceed": {"credit": "TOO_MANY_REQUESTS", "concurrency": "TOO_MANY_CONCURRENT_REQUESTS"}
+  },
+  "core_endpoints": [
+    {"endpoint": "/crm/v8/Leads", "method": "GET/POST", "description": "Manage Leads"},
+    {"endpoint": "/crm/v8/Contacts", "method": "GET/POST/PUT/DELETE", "description": "Manage Contacts"},
+    {"endpoint": "/crm/v8/Accounts", "method": "GET/POST/PUT", "description": "Manage Accounts"},
+    {"endpoint": "/crm/v8/Deals", "method": "GET/POST/PUT", "description": "Manage Deals"},
+    {"endpoint": "/crm/v8/Tasks", "method": "GET/POST/PUT", "description": "Manage Tasks"},
+    {"endpoint": "/crm/v8/Events", "method": "GET/POST/PUT", "description": "Manage Events"},
+    {"endpoint": "/crm/v8/Users", "method": "GET", "description": "Get users"},
+    {"endpoint": "/crm/v8/org", "method": "GET", "description": "Get organization details"},
+    {"endpoint": "/crm/v8/modules", "method": "GET", "description": "Get all modules metadata"}
+  ],
+  "error_dictionary": [
+    {"error_code": "INVALID_OAUTHTOKEN", "description": "Access token is invalid or expired", "solution": "Refresh access token using refresh token. Access tokens valid for 1 hour. Max 15 active tokens per refresh token."},
+    {"error_code": "Access Denied (OAuth throttle)", "description": "Made too many OAuth token requests continuously", "real_response": "{\"error_description\":\"You have made too many requests continuously. Please try again after some time.\",\"error\":\"Access Denied\",\"status\":\"failure\"}", "solution": "Wait before generating more tokens. Max 10 grant tokens per 10 min per client ID. Max 10 access tokens per 10 min per refresh token."},
+    {"error_code": "TOO_MANY_REQUESTS", "description": "Daily credit limit exceeded", "solution": "Check remaining credits via API. Optimize operations — use UPSERT instead of separate INSERT/UPDATE. Wait for rolling 24h window reset."},
+    {"error_code": "TOO_MANY_CONCURRENT_REQUESTS", "description": "Exceeded concurrency limit for org/app", "solution": "Implement request queuing. Reduce parallel requests. Sub-concurrency limit of 10 for heavy operations (Convert Lead, etc.)"},
+    {"error_code": "LIMIT_EXCEEDED", "description": "General limit exceeded", "solution": "Implement exponential backoff. Check edition limits. Consider upgrading plan for higher limits."},
+    {"error_code": "MANDATORY_NOT_FOUND", "description": "Required field missing in request", "solution": "Check module metadata for mandatory fields. Ensure all required fields are provided."},
+    {"error_code": "DUPLICATE_DATA", "description": "Record with same unique field value already exists", "solution": "Use UPSERT with duplicate check field parameter instead of INSERT."}
+  ],
+  "community_constraints": [
+    {"issue": "Data center mismatch causes mysterious auth failures", "frequency": "high", "source": "Zoho developer forums", "detail": "Zoho has 6 data centers (us, eu, in, au, jp, cn). Using wrong domain (e.g., zohoapis.com for EU accounts) causes silent auth failures", "workaround": "Derive API domain from user's Zoho Accounts API location. Never hardcode the domain. Use /crm/v8/org to verify."},
+    {"issue": "Self-Client grant token only valid for 3 minutes", "frequency": "high", "source": "Zoho docs", "workaround": "Generate grant token and exchange for access token immediately within 3 minutes. Automate the full flow in script."},
+    {"issue": "Max 15 active access tokens per refresh token is easy to hit", "frequency": "medium", "source": "Zoho developer forums", "workaround": "Reuse active access tokens instead of generating new ones for each request. Track token expiration (1 hour) and proactively refresh."}
+  ],
+  "use_cases": ["CRM data sync between Zoho and other platforms", "Lead enrichment and automated assignment", "Bulk import/export of records via APIs", "Custom module data management"]
+}

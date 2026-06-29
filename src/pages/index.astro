@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const errors = await getCollection('errors');
+const integrations = await getCollection('integrations');
+const guides = await getCollection('guides');
+const tools = [...new Set(errors.map(e => e.data.tool))].sort();
+
+const frontmatter = {
+  title: 'API Integration Hub — Error Fixes & Troubleshooting Guides',
+  description: 'Production-tested fixes for API integration errors between Salesforce, HubSpot, Mailchimp, ActiveCampaign, Slack, Zoho, Pipedrive, Calendly, Make, and Zapier.',
+  keywords: [
+    'api integration troubleshooting', 'saas integration error fixes',
+    'salesforce api errors', 'hubspot api errors', 'mailchimp integration errors',
+  ],
+};
+---
+
+<BaseLayout {frontmatter}>
+  <main>
+    <h1>API Integration Hub</h1>
+    <p>Production-tested troubleshooting guides for SaaS API integration errors. Each guide includes root cause analysis, detection steps, copy-paste-ready code fixes, and prevention strategies.</p>
+
+    <section>
+      <h2>Tools ({tools.length})</h2>
+      <div class="tool-grid">
+        {tools.map(tool => {
+          const toolErrors = errors.filter(e => e.data.tool === tool);
+          const toolIntegrations = integrations.filter(e => e.data.toolA === tool || e.data.toolB === tool);
+          const toolGuides = guides.filter(e => e.data.tool === tool);
+          const displayName = tool.charAt(0).toUpperCase() + tool.slice(1);
+          return (
+            <a href={`/${tool}`} class="tool-card">
+              <h3>{displayName}</h3>
+              <p>{toolErrors.length} errors{toolIntegrations.length ? ` · ${toolIntegrations.length} integrations` : ''}{toolGuides.length ? ` · ${toolGuides.length} guides` : ''}</p>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <section>
+      <h2>Latest Error Guides</h2>
+      <ul>
+        {errors.slice(0, 10).map(e => (
+          <li><a href={`/${e.data.tool}/errors/${e.data.errorCode}`}>{e.data.title}</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>Latest Integration Guides</h2>
+      <ul>
+        {integrations.slice(0, 10).map(e => (
+          <li><a href={`/integrations/${e.data.integrationSlug}/errors/${e.data.errorSlug}`}>{e.data.title}</a></li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</BaseLayout>

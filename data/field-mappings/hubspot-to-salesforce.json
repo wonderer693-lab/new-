@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "toolA": "hubspot",
+    "toolB": "salesforce",
+    "integrationSlug": "hubspot-to-salesforce",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 6
+  },
+  "categories": [
+    {
+      "id": "picklist",
+      "name": "Picklist/Enum Mapping",
+      "description": "Differences in how picklist values are stored, sent, and received between HubSpot and Salesforce APIs",
+      "severity": "high"
+    },
+    {
+      "id": "deal-stage",
+      "name": "Deal Stage Mapping",
+      "description": "Deal pipeline stage mismatches between HubSpot deal stages and Salesforce opportunity stages",
+      "severity": "critical"
+    },
+    {
+      "id": "owner",
+      "name": "Record Owner Sync",
+      "description": "Owner/user assignment differences and the resulting sync loops",
+      "severity": "high"
+    },
+    {
+      "id": "duplicate",
+      "name": "Duplicate Detection",
+      "description": "Different matching rules and dedup logic between the two CRMs",
+      "severity": "medium"
+    },
+    {
+      "id": "currency",
+      "name": "Currency Format",
+      "description": "Currency field format differences (ISO code vs symbol, multi-currency handling)",
+      "severity": "medium"
+    },
+    {
+      "id": "id",
+      "name": "ID & Reference Fields",
+      "description": "Object ID format and reference field differences",
+      "severity": "low"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "picklist-value-vs-label",
+      "categoryId": "picklist",
+      "fieldName": "Picklist Value vs Label",
+      "fieldType": "picklist",
+      "toolAValue": "Internal value (e.g., \"customer\")",
+      "toolBValue": "Label (e.g., \"Closed Won\")",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "HubSpot API returns picklist values via the `value` field (internal name). Salesforce expects the `label` field (display name). Native connector partially translates known values but fails silently on unmapped ones. Field is set to blank with no error log.",
+      "fixStrategy": "Maintain explicit translation table in middleware. Map every HubSpot value to correct Salesforce label. Add blank-field monitoring post-sync.",
+      "mappedValues": [
+        { "toolA": "new", "toolB": "New", "mapsCorrectly": true },
+        { "toolA": "qualified", "toolB": "Qualified", "mapsCorrectly": true },
+        { "toolA": "contacted", "toolB": "Contacted", "mapsCorrectly": true },
+        { "toolA": "customer", "toolB": "Closed Won", "mapsCorrectly": true },
+        { "toolA": "closed_lost", "toolB": "Closed Lost", "mapsCorrectly": true },
+        { "toolA": "junk", "toolB": "Junk", "mapsCorrectly": true },
+        { "toolA": "unqualified", "toolB": null, "mapsCorrectly": false, "notes": "No Salesforce equivalent — creates mapping error" },
+        { "toolA": "attempt", "toolB": null, "mapsCorrectly": false, "notes": "No Salesforce equivalent — creates mapping error" }
+      ]
+    },
+    {
+      "id": "deal-stage-mapping",
+      "categoryId": "deal-stage",
+      "fieldName": "Deal Stage / Opportunity Stage",
+      "fieldType": "picklist",
+      "toolAValue": "Pipeline stages (custom per pipeline)",
+      "toolBValue": "Opportunity stages (custom per record type)",
+      "direction": "bidirectional",
+      "behavior": "auto-convert-partial",
+      "severity": "critical",
+      "notes": "HubSpot pipelines and Salesforce opportunity stages rarely map 1:1. Each CRM allows custom stages. Native connector creates a default mapping that often doesn't match actual business process. When stages don't map, sync fails or data is dropped.",
+      "fixStrategy": "Map stages explicitly before enabling sync. Test with all pipeline stages. Add fallback stage for unmapped values.",
+      "mappedValues": [
+        { "toolA": "appointmentscheduled", "toolB": "Prospecting", "mapsCorrectly": false, "notes": "Partial match — HubSpot implies scheduled meeting, Salesforce is prospecting" },
+        { "toolA": "qualifiedto buy", "toolB": "Qualification", "mapsCorrectly": true },
+        { "toolA": "presentationscheduled", "toolB": "Needs Analysis", "mapsCorrectly": false, "notes": "Different sales methodology stages" },
+        { "toolA": "decisionmakerboughtin", "toolB": "Value Proposition", "mapsCorrectly": false },
+        { "toolA": "contractsent", "toolB": "Negotiation", "mapsCorrectly": true },
+        { "toolA": "closedwon", "toolB": "Closed Won", "mapsCorrectly": true },
+        { "toolA": "closedlost", "toolB": "Closed Lost", "mapsCorrectly": true }
+      ]
+    },
+    {
+      "id": "owner-sync-loop",
+      "categoryId": "owner",
+      "fieldName": "Record Owner Sync",
+      "fieldType": "id",
+      "toolAValue": "HubSpot owner ID (numeric)",
+      "toolBValue": "Salesforce owner ID (18-char ref)",
+      "direction": "bidirectional",
+      "behavior": "silent-failure",
+      "severity": "high",
+      "notes": "Sync loop scenario: HubSpot creates contact with owner A. Sync to Salesforce sets owner B (different user). Salesforce syncs back to HubSpot, updating owner. HubSpot syncs again, creating infinite loop. Native connector lacks loop detection.",
+      "fixStrategy": "Set one-directional owner sync. Or add last-sync-source field to detect and block loopback updates."
+    },
+    {
+      "id": "duplicate-matching",
+      "categoryId": "duplicate",
+      "fieldName": "Duplicate Detection Rules",
+      "fieldType": "text",
+      "toolAValue": "Email-based matching (configurable)",
+      "toolBValue": "Custom matching rules (configurable)",
+      "direction": "bidirectional",
+      "behavior": "auto-convert-partial",
+      "severity": "medium",
+      "notes": "HubSpot dedup uses email + custom rules. Salesforce uses its own matching rules. When rules disagree, duplicates are created in one system. Common with contacts where email differs slightly (e.g., john@example.com vs john.doe@example.com).",
+      "fixStrategy": "Align matching rules before sync. Use external dedup service (e.g., Insycle) for clean data."
+    },
+    {
+      "id": "currency-format",
+      "categoryId": "currency",
+      "fieldName": "Currency Field Format",
+      "fieldType": "currency",
+      "toolAValue": "Amount with currency code (e.g., \"USD 1000\")",
+      "toolBValue": "Amount + Currency ISO code in separate field",
+      "direction": "bidirectional",
+      "behavior": "auto-convert",
+      "severity": "medium",
+      "notes": "HubSpot stores currency as amount + currency property. Salesforce stores as CurrencyIsoCode on the record + amount field. Multi-currency orgs: both systems must have multi-currency enabled and same ISO codes.",
+      "fixStrategy": "Enable multi-currency in both systems. Ensure all ISO codes match."
+    },
+    {
+      "id": "id-format-difference",
+      "categoryId": "id",
+      "fieldName": "Object ID Format",
+      "fieldType": "id",
+      "toolAValue": "Numeric ID (e.g., 123456789)",
+      "toolBValue": "18-char ref ID (e.g., 001xx000003DGbBAAW)",
+      "direction": "bidirectional",
+      "behavior": "auto-convert",
+      "severity": "low",
+      "notes": "IDs are auto-converted by native connector. Custom middleware must handle mapping table: HubSpot numeric IDs to Salesforce 18-char refs. Salesforce 15-char IDs must be converted to 18-char."
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "field-mapping-mismatch",
+      "errorName": "Field Mapping Mismatch — Integration Value vs Label",
+      "categoryId": "picklist",
+      "description": "HubSpot sends internal picklist value, Salesforce expects display label. Unmapped values silently blank.",
+      "fixSummary": "Explicit translation table in middleware + blank-field monitoring"
+    },
+    {
+      "errorSlug": "deal-stage-mismatch",
+      "errorName": "Deal Stage Mapping Mismatch",
+      "categoryId": "deal-stage",
+      "description": "HubSpot pipeline stages and Salesforce opportunity stages don't map 1:1, causing sync failures or data loss.",
+      "fixSummary": "Explicit stage mapping before enabling sync. Test all pipeline stages."
+    },
+    {
+      "errorSlug": "owner-sync-loop",
+      "errorName": "Record Owner Sync Loop",
+      "categoryId": "owner",
+      "description": "Bidirectional owner sync creates infinite update loop between the two CRMs.",
+      "fixSummary": "One-directional owner sync or add last-sync-source field for loop detection"
+    },
+    {
+      "errorSlug": "duplicate-detection-mismatch",
+      "errorName": "Duplicate Detection Mismatch",
+      "categoryId": "duplicate",
+      "description": "Different dedup rules between HubSpot and Salesforce create duplicate records during sync.",
+      "fixSummary": "Align matching rules before sync. Use external dedup service."
+    }
+  ]
+}

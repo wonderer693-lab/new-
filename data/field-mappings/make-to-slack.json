@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "toolA": "make",
+    "toolB": "slack",
+    "integrationSlug": "make-to-slack",
+    "lastUpdated": "2026-06-26",
+    "totalMappings": 3
+  },
+  "categories": [
+    {
+      "id": "loop-rate-limit",
+      "name": "Loop Rate Limit",
+      "description": "Make loop processing vs Slack 1 req/sec per method",
+      "severity": "critical"
+    },
+    {
+      "id": "blockkit-json",
+      "name": "Block Kit JSON in Make",
+      "description": "Make's JSON generation for Slack Block Kit",
+      "severity": "high"
+    },
+    {
+      "id": "connection-health",
+      "name": "Connection Health & Re-auth",
+      "description": "Make Slack connection expiry and monitoring",
+      "severity": "medium"
+    }
+  ],
+  "mappings": [
+    {
+      "id": "throttle-before-slack",
+      "categoryId": "loop-rate-limit",
+      "fieldName": "Slack Request Throttling in Loops",
+      "fieldType": "text",
+      "toolAValue": "Make loop: processes items as fast as possible",
+      "toolBValue": "Slack: 1 req/sec per method per workspace",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "critical",
+      "notes": "Loop of 50 items sends 50 Slack requests in <1s. All after first get 429.",
+      "fixStrategy": "Add Make 'Throttle' module set to 1 req/sec before Slack module. Or aggregate into one message.",
+      "mappedValues": []
+    },
+    {
+      "id": "json-array-format",
+      "categoryId": "blockkit-json",
+      "fieldName": "Block Kit JSON Array Construction",
+      "fieldType": "object",
+      "toolAValue": "Make JSON module outputs (may have trailing commas, mismatched brackets)",
+      "toolBValue": "Slack Block Kit: strict JSON with no trailing commas",
+      "direction": "A-to-B",
+      "behavior": "warning",
+      "severity": "high",
+      "notes": "Make's JSON modules frequently produce invalid JSON for nested Block Kit structures.",
+      "fixStrategy": "Build Block Kit as single text string. Validate JSON in Make before sending. Use Slack Block Kit Builder.",
+      "mappedValues": []
+    },
+    {
+      "id": "connection-monitoring",
+      "categoryId": "connection-health",
+      "fieldName": "Make Slack Connection Health",
+      "fieldType": "text",
+      "toolAValue": "Make Slack connection (OAuth, has expiry status)",
+      "toolBValue": "Slack API: 401 on revoked token",
+      "direction": "A-to-B",
+      "behavior": "silent-failure",
+      "severity": "medium",
+      "notes": "Connection revoked → scenario silently stops processing Slack messages. No alert to user.",
+      "fixStrategy": "Add Make error handler route that sends email/alternative notification on connection failure.",
+      "mappedValues": []
+    }
+  ],
+  "errors": [
+    {
+      "errorSlug": "loop-429-flood",
+      "errorName": "Scenario Loop Floods Slack Rate Limit",
+      "categoryId": "loop-rate-limit",
+      "description": "Make loop without throttle exceeds Slack 1 req/sec.",
+      "fixSummary": "Add Throttle module set to 1 second between requests."
+    },
+    {
+      "errorSlug": "blockkit-json-invalid",
+      "errorName": "Make JSON Module Produces Invalid Block Kit",
+      "categoryId": "blockkit-json",
+      "description": "Nested JSON arrays in Make have syntax errors.",
+      "fixSummary": "Build as text string. Validate externally."
+    }
+  ]
+}
