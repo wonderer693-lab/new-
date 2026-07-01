@@ -11,6 +11,13 @@ export async function getStaticPaths() {
 const { tool } = Astro.props;
 const errors = (await getCollection('errors')).filter(e => e.data.tool === tool);
 const displayName = tool.charAt(0).toUpperCase() + tool.slice(1);
+const categories = [...new Set(errors.map(e => e.data.category))].sort();
+const severityCounts = {
+  critical: errors.filter(e => e.data.severity === 'critical').length,
+  high: errors.filter(e => e.data.severity === 'high').length,
+  medium: errors.filter(e => e.data.severity === 'medium').length,
+  low: errors.filter(e => e.data.severity === 'low').length,
+};
 
 const frontmatter = {
   title: `${displayName} API Error Codes — Complete Reference & Fixes`,
@@ -30,27 +37,55 @@ const frontmatter = {
     </nav>
 
     <h1>{displayName} API Error Codes</h1>
-    <p>{errors.length} errors documented with root cause analysis, step-by-step fixes, and production retry strategies.</p>
+    <p>{errors.length} errors documented with root cause analysis, step-by-step fixes, and production retry strategies. Each guide includes code examples in Python, JavaScript, and curl.</p>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Name</th>
-          <th>Severity</th>
-          <th>Category</th>
-        </tr>
-      </thead>
-      <tbody>
-        {errors.map(e => (
+    <section>
+      <h2>Complete Error Reference</h2>
+      <table>
+        <thead>
           <tr>
-            <td><a href={`/${tool}/errors/${e.data.errorCode}`}><code>{e.data.errorCode}</code></a></td>
-            <td>{e.data.errorName}</td>
-            <td><span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span></td>
-            <td>{e.data.category}</td>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Severity</th>
+            <th>Category</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {errors.map(e => (
+            <tr>
+              <td><a href={`/${tool}/errors/${e.data.errorCode}`}><code>{e.data.errorCode}</code></a></td>
+              <td>{e.data.errorName}</td>
+              <td><span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span></td>
+              <td>{e.data.category}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Severity Breakdown</h2>
+      <ul>
+        {severityCounts.critical > 0 && <li><strong>Critical</strong> — {severityCounts.critical} error{severityCounts.critical !== 1 ? 's' : ''} causing complete integration failure</li>}
+        {severityCounts.high > 0 && <li><strong>High</strong> — {severityCounts.high} error{severityCounts.high !== 1 ? 's' : ''} requiring immediate attention</li>}
+        {severityCounts.medium > 0 && <li><strong>Medium</strong> — {severityCounts.medium} error{severityCounts.medium !== 1 ? 's' : ''} affecting specific operations</li>}
+        {severityCounts.low > 0 && <li><strong>Low</strong> — {severityCounts.low} error{severityCounts.low !== 1 ? 's' : ''} with workarounds available</li>}
+      </ul>
+    </section>
+
+    <section>
+      <h2>Categories</h2>
+      <p>{displayName} API errors span {categories.length} categories: {categories.join(', ')}.</p>
+    </section>
+
+    <section>
+      <h2>How to Use This Reference</h2>
+      <ol>
+        <li><strong>Find your error code</strong> — Check the HTTP status code or error name returned by the {displayName} API</li>
+        <li><strong>Read the root cause</strong> — Each guide explains why the error occurs at the technical level</li>
+        <li><strong>Follow the fix</strong> — Copy-paste-ready code examples in Python, JavaScript, and curl</li>
+        <li><strong>Implement prevention</strong> — Strategies to avoid the error in future integrations</li>
+      </ol>
+    </section>
   </main>
 </BaseLayout>

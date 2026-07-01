@@ -132,6 +132,6 @@ if "invalid_code" in resp.text:
 
 ## Related Errors
 
-- [Zoho Access Denied (OAuth throttle)](/zoho/errors/Access-Denied-OAuth-throttle) — Too many OAuth token requests
+- [Zoho Access Denied (OAuth throttle)](/zoho/errors/access-denied-oauth-throttle) — Too many OAuth token requests
 - [Zoho TOO_MANY_REQUESTS](/zoho/errors/TOO_MANY_REQUESTS) — Daily credit limit exceeded
 - [Zoho LIMIT_EXCEEDED](/zoho/errors/LIMIT_EXCEEDED) — General API limit reached

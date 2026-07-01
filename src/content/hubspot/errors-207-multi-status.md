@@ -3,7 +3,7 @@ layout: "../../layouts/ErrorCodeLayout.astro"
 title: "HubSpot API 207 Multi-Status: Partial success for batch endpoints when multi-status err..."
 description: "Fix HubSpot API 207 Multi-Status error. Partial success for batch endpoints when multi-status error handling is enabled. Check individual status entries in response body for per-item errors."
 tool: "hubspot"
-errorCode: "207 Multi-Status"
+errorCode: "207-multi-status"
 errorName: "207 Multi-Status"
 httpStatus: 0
 category: "unknown"

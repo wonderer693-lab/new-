@@ -4,6 +4,8 @@ import { getCollection } from 'astro:content';
 
 const integrations = await getCollection('integrations');
 const pairs = [...new Map(integrations.map(e => [e.data.integrationSlug, e.data]))];
+const tools = [...new Set(integrations.flatMap(e => [e.data.toolA, e.data.toolB]))].sort();
+const silentFailures = integrations.filter(e => e.data.errorType === 'silent-failure');
 
 const frontmatter = {
   title: 'Integration Error Guides — SaaS API Troubleshooting',
@@ -22,20 +24,51 @@ const frontmatter = {
     </nav>
 
     <h1>Integration Error Guides</h1>
-    <p>Cross-tool integration errors — the silent failure layer most docs don't cover. Each guide includes root cause, detection, and production-ready fixes.</p>
+    <p>Cross-tool integration errors — the silent failure layer most docs don't cover. Each guide includes root cause analysis, detection steps, and production-ready fixes for errors that occur when two SaaS APIs interact.</p>
 
-    <div class="tool-grid">
-      {[...pairs].map(([slug, data]) => {
-        const count = integrations.filter(e => e.data.integrationSlug === slug).length;
-        return (
-          <a href={`/integrations/${slug}`} class="tool-card">
-            <h3>{data.toolA} &harr; {data.toolB}</h3>
-            <div class="tool-card-count">
-              <span>{count} error{count !== 1 ? 's' : ''}</span>
-            </div>
-          </a>
-        );
-      })}
-    </div>
+    <section>
+      <h2>Why Integration Errors Are Different</h2>
+      <p>Official API documentation covers individual tools, but integration errors happen at the boundary between two APIs. These errors include rate limit conflicts, data format mismatches, OAuth token lifecycle differences, and silent failures where data is corrupted without any HTTP error code.</p>
+      <p>Our integration guides cover {pairs.length} tool pairs across {tools.length} platforms, with {integrations.length} documented errors including {silentFailures.length} silent failures.</p>
+    </section>
+
+    <section>
+      <h2>Browse by Tool Pair</h2>
+      <div class="tool-grid">
+        {[...pairs].map(([slug, data]) => {
+          const count = integrations.filter(e => e.data.integrationSlug === slug).length;
+          return (
+            <a href={`/integrations/${slug}`} class="tool-card">
+              <h3>{data.toolA} &harr; {data.toolB}</h3>
+              <div class="tool-card-count">
+                <span>{count} error{count !== 1 ? 's' : ''}</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <section>
+      <h2>Tools Covered</h2>
+      <p>{tools.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(', ')}</p>
+    </section>
+
+    {silentFailures.length > 0 && (
+      <section>
+        <h2>Silent Failures</h2>
+        <p>Errors that produce no HTTP error code but corrupt data silently. These are the most dangerous integration issues because your integration appears to work while data is being lost or corrupted.</p>
+        <ul class="error-list">
+          {silentFailures.map(e => (
+            <li>
+              <a href={`/integrations/${e.data.integrationSlug}/errors/${e.data.errorSlug}`}>
+                <span class="badge" style="background: var(--color-warning);">silent</span>
+                <span>{e.data.toolA} &harr; {e.data.toolB}: {e.data.errorName}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
   </main>
 </BaseLayout>

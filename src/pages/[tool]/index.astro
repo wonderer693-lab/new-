@@ -13,6 +13,9 @@ const { tool } = Astro.props;
 const errors = (await getCollection('errors')).filter(e => e.data.tool === tool);
 const integrations = (await getCollection('integrations')).filter(e => e.data.toolA === tool || e.data.toolB === tool);
 const displayName = tool.charAt(0).toUpperCase() + tool.slice(1);
+const categories = [...new Set(errors.map(e => e.data.category))].sort();
+const criticalErrors = errors.filter(e => e.data.severity === 'critical' || e.data.severity === 'high');
+
 const frontmatter = {
   title: `${displayName} API Integration Guide — Error Codes & Fixes`,
   description: `Complete ${displayName} API integration reference. ${errors.length} error codes with production fixes, ${integrations.length} integration guides, and best practices.`,
@@ -50,12 +53,39 @@ const frontmatter = {
     {integrations.length > 0 && (
       <section>
         <h2>Integration Guides</h2>
+        <p>Cross-tool errors that occur when {displayName} is integrated with other SaaS platforms. These include silent failures, rate limit conflicts, and data mapping issues.</p>
         <ul class="error-list">
           {integrations.map(e => (
             <li>
               <a href={`/integrations/${e.data.integrationSlug}/errors/${e.data.errorSlug}`}>
                 <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
                 <span>{e.data.toolA} &harr; {e.data.toolB}: {e.data.errorName}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section>
+      <h2>Error Categories</h2>
+      <p>{displayName} API errors fall into {categories.length} categories: {categories.join(', ')}.</p>
+      <ul>
+        {categories.map(cat => <li><strong>{cat}</strong> — {errors.filter(e => e.data.category === cat).length} error{errors.filter(e => e.data.category === cat).length !== 1 ? 's' : ''}</li>)}
+      </ul>
+    </section>
+
+    {criticalErrors.length > 0 && (
+      <section>
+        <h2>Critical Errors</h2>
+        <p>{criticalErrors.length} high-severity {displayName} API errors that require immediate attention. These errors typically cause data loss, authentication failures, or complete integration breakdown.</p>
+        <ul class="error-list">
+          {criticalErrors.map(e => (
+            <li>
+              <a href={`/${tool}/errors/${e.data.errorCode}`}>
+                <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
+                <strong>{e.data.errorCode}</strong>
+                <span>{e.data.errorName}</span>
               </a>
             </li>
           ))}

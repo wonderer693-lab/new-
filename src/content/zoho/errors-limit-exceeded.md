@@ -106,4 +106,4 @@ If you consistently hit limits with normal usage, your plan may be undersized. F
 
 - [Zoho TOO_MANY_REQUESTS](/zoho/errors/TOO_MANY_REQUESTS) — Daily credit limit exceeded
 - [Zoho TOO_MANY_CONCURRENT_REQUESTS](/zoho/errors/TOO_MANY_CONCURRENT_REQUESTS) — Exceeded parallel request limit
-- [Zoho Access Denied (OAuth throttle)](/zoho/errors/Access-Denied-OAuth-throttle) — OAuth token request throttled
+- [Zoho Access Denied (OAuth throttle)](/zoho/errors/access-denied-oauth-throttle) — OAuth token request throttled

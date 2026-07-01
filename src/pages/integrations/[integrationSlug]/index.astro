@@ -13,6 +13,8 @@ const integrations = (await getCollection('integrations')).filter(e => e.data.in
 const first = integrations[0];
 const toolA = first.data.toolA.charAt(0).toUpperCase() + first.data.toolA.slice(1);
 const toolB = first.data.toolB.charAt(0).toUpperCase() + first.data.toolB.slice(1);
+const categories = [...new Set(integrations.map(e => e.data.category))].sort();
+const silentCount = integrations.filter(e => e.data.errorType === 'silent-failure').length;
 
 const frontmatter = {
   title: `${toolA} ↔ ${toolB} Integration Errors — Fixes & Troubleshooting`,
@@ -32,18 +34,43 @@ const frontmatter = {
     </nav>
 
     <h1>{toolA} &harr; {toolB} Integration Errors</h1>
-    <p>All known errors when integrating {toolA} with {toolB}. Each guide includes root cause, detection steps, and production-ready fixes.</p>
+    <p>{integrations.length} documented errors when integrating {toolA} with {toolB}. Each guide includes root cause analysis, detection steps, and production-ready code fixes.</p>
 
-    <ul class="error-list">
-      {integrations.map(e => (
-        <li>
-          <a href={`/integrations/${slug}/errors/${e.data.errorSlug}`}>
-            <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
-            <span>{e.data.errorName}</span>
-            {e.data.errorType === 'silent-failure' && <span class="badge" style="background: var(--color-warning);">silent</span>}
-          </a>
-        </li>
-      ))}
-    </ul>
+    {silentCount > 0 && (
+      <div class="urgency-banner">
+        <strong>Warning:</strong> {silentCount} silent failure{silentCount !== 1 ? 's' : ''} documented for this integration pair. These errors produce no HTTP error code but may corrupt data.
+      </div>
+    )}
+
+    <section>
+      <h2>All Errors</h2>
+      <ul class="error-list">
+        {integrations.map(e => (
+          <li>
+            <a href={`/integrations/${slug}/errors/${e.data.errorSlug}`}>
+              <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
+              <span>{e.data.errorName}</span>
+              {e.data.errorType === 'silent-failure' && <span class="badge" style="background: var(--color-warning);">silent</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>Error Categories</h2>
+      <p>{toolA} &harr; {toolB} integration errors fall into {categories.length} categories: {categories.join(', ')}.</p>
+    </section>
+
+    <section>
+      <h2>Common Integration Challenges</h2>
+      <p>When {toolA} and {toolB} are integrated, errors typically occur at the data mapping layer, authentication layer, or rate limit layer. Each guide below documents the specific failure point and provides a production-tested fix.</p>
+      <ul>
+        <li><strong>Rate limit conflicts</strong> — {toolA} and {toolB} may have different rate limit tiers, causing one to throttle while the other waits</li>
+        <li><strong>Data format mismatches</strong> — Field types, date formats, and encoding differences between the two APIs</li>
+        <li><strong>OAuth token lifecycle</strong> — Token expiry and refresh cycles that differ between platforms</li>
+        <li><strong>Silent failures</strong> — Data that passes validation but is semantically wrong, producing no error</li>
+      </ul>
+    </section>
   </main>
 </BaseLayout>

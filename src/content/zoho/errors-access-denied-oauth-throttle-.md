@@ -3,7 +3,7 @@ layout: "../../layouts/ErrorCodeLayout.astro"
 title: "Zoho API Access Denied (OAuth throttle): Made too many OAuth token requests continuously"
 description: "Fix Zoho API Access Denied (OAuth throttle) error. Made too many OAuth token requests continuously. Wait before generating more tokens."
 tool: "zoho"
-errorCode: "Access Denied (OAuth throttle)"
+errorCode: "access-denied-oauth-throttle"
 errorName: "Access Denied (OAuth throttle)"
 httpStatus: 0
 category: "unknown"
