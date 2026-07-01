@@ -20,6 +20,95 @@ keywords:
   - "mailchimp http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You're sending too many requests to the Mailchimp API at once, and Mailchimp is telling you to slow down.
+
+**The fix:**
+1. Wait for the number of seconds shown in the `Retry-After` header (usually 10 seconds)
+2. Don't send more than 10 requests at the same time — Mailchimp blocks you after that
+3. If you're doing a bulk import, use Mailchimp's batch endpoint instead of individual calls
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(url, headers={"Authorization": f"apikey {API_KEY}"})
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 10))
+    time.sleep(wait)
+    resp = requests.get(url, headers={"Authorization": f"apikey {API_KEY}"})
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from the Mailchimp API.
+> The error message is: "Your request count is too high"
+> I'm running a bulk sync that adds subscribers to a Mailchimp list.
+> Please give me a step-by-step fix with working Python code that handles rate limiting and uses the batch endpoint.
+
+**What to expect:** The AI should give you a retry function with delays and show you how to use Mailchimp's batch API to send many operations in a single call.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 429 errors. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Mailchimp rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Mailchimp action step
+2. Enable "Auto-retry on error" in the step settings — Zapier automatically retries 429 errors up to 3 times
+3. If you're hitting limits often, add a "Delay by Zapier" step before the Mailchimp action (set to 10 seconds)
+
+### Make (Integromat)
+1. Open your scenario → right-click the Mailchimp module → "Add error handler"
+2. Choose "Retry" → set interval to 10 seconds, max retries to 3
+3. For bulk operations, add a "Sleep" module (10 seconds) between Mailchimp calls
+
+### n8n
+1. Open your workflow → click the Mailchimp node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 10000ms, "Max Tries" to 3
+3. For bulk operations, add a "Wait" node (10 seconds) between Mailchimp nodes
+
+### Power Automate
+1. Open your flow → click the Mailchimp action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. For bulk operations, add a "Delay" action (10 seconds) before the Mailchimp action
+
+**Which tool should you use?** Zapier has the best built-in retry for Mailchimp — it handles 429 errors automatically without any configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"rate limit exceeded"`
+- `"too many requests"`
+- `"Your request count is too high"`
+
+**What it means in plain English:** Mailchimp is telling you to slow down. You're making too many API calls at the same time or too quickly. Wait a few seconds and try again.
+
+**Most common cause:** Bulk imports or sync jobs that fire too many requests at once without pausing between them, or running more than 10 parallel connections to the API.
+
+</div>
+
 ## What Causes Mailchimp 429
 
 Mailchimp's API enforces two types of rate limits: a maximum of 10 simultaneous connections per API key, and a per-second request cap (typically 10 req/s for standard plans, lower for free plans). Exceeding either returns HTTP 429 with a `Retry-After` header. Mailchimp also applies a 120-second timeout on individual requests — long-running operations must use the batch endpoint.

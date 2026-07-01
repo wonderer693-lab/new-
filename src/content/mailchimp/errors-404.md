@@ -20,6 +20,95 @@ keywords:
   - "mailchimp http 404"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** The Mailchimp list, campaign, or subscriber you're looking for doesn't exist — or you're using the wrong ID to find it.
+
+**The fix:**
+1. Double-check your list ID — find it in Mailchimp under Audience > Settings > Audience name and defaults
+2. If looking up a subscriber, make sure you lowercase the email before creating the MD5 hash
+3. Check your data center suffix (like `us1`, `us2`) matches your Mailchimp account
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import hashlib, requests
+
+email = "user@example.com"
+subscriber_hash = hashlib.md5(email.lower().encode()).hexdigest()
+resp = requests.get(f"https://usX.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}",
+    headers={"Authorization": f"apikey {API_KEY}"})
+print(resp.status_code)  # 200 = found, 404 = not found
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 404 Not Found error from the Mailchimp API.
+> The error message is: "Resource Not Found" or "list not found"
+> I'm trying to look up a subscriber in a Mailchimp list using their API.
+> Please give me a step-by-step fix with working Python code that generates the correct subscriber hash and verifies the list ID.
+
+**What to expect:** The AI should show you how to lowercase the email before hashing, verify your list ID exists, and confirm you're using the right data center suffix.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 404 errors. My list ID is [paste ID] and my data center is [paste suffix]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining hash generation), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to avoid Mailchimp 404 errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Mailchimp action step
+2. In the "List" dropdown, select your list from the menu — don't type the ID manually (Zapier fetches valid IDs for you)
+3. If looking up a subscriber, use the "Find Subscriber" action and search by email instead of by hash
+
+### Make (Integromat)
+1. Open your scenario → click the Mailchimp module
+2. In the "List ID" field, choose from the dropdown — Make pulls valid lists from your account automatically
+3. Add an error handler: right-click the module → "Add error handler" → "Resume" to skip missing subscribers gracefully
+
+### n8n
+1. Open your workflow → click the Mailchimp node
+2. Use the "Get All" operation first to fetch valid list IDs, then filter for the one you need
+3. In the Mailchimp node settings → enable "Continue on Fail" so missing subscribers don't stop your workflow
+
+### Power Automate
+1. Open your flow → click the Mailchimp action
+2. Use the "Get contacts" action with the list name selected from the dropdown — don't paste raw IDs
+3. Add a "Condition" step after the action to check if the result is empty before processing
+
+**Which tool should you use?** Zapier's dropdown selectors prevent 404 errors by only showing valid list IDs from your account.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"404 Not Found"`
+- `"Resource Not Found"`
+- `"list not found"`
+- `"The requested resource could not be found"`
+
+**What it means in plain English:** Mailchimp can't find what you're looking for. The list ID, subscriber, or campaign you asked about either doesn't exist, was deleted, or you typed the ID wrong.
+
+**Most common cause:** Using the wrong list ID, or not lowercasing the email address before creating the subscriber hash that Mailchimp uses as an ID.
+
+</div>
+
 ## What Causes Mailchimp 404
 
 Mailchimp returns HTTP 404 when the requested resource does not exist — an invalid list ID, a subscriber hash that doesn't match any member, or a campaign ID that was never created. Mailchimp uses MD5 hashes of lowercase email addresses as subscriber IDs, so using the wrong hash format is a very common cause.
