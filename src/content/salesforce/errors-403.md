@@ -20,6 +20,95 @@ keywords:
   - "salesforce http 403"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Salesforce user doesn't have permission for this operation — the session is valid, but you're not allowed to do what you're trying to do.
+
+**The fix:**
+1. Check the `errorCode` in the response — `INSUFFICIENT_ACCESS` means permission issue, `API_DISABLED_FOR_ORG` means API isn't enabled
+2. Ask your Salesforce admin to grant your user API access and the right object permissions
+3. Make sure "API Enabled" is checked on your user's profile
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.get(f"{instance_url}/services/data/v60.0/limits", headers=headers)
+if resp.status_code == 403:
+    print("Permission denied — ask your admin to enable API access")
+else:
+    print(f"API calls remaining: {resp.json()['DailyApiRequests']['Remaining']}")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 403 Forbidden error from the Salesforce API.
+> The error message is: "INSUFFICIENT_ACCESS" or "API_DISABLED_FOR_ORG"
+> My session is valid (I can log in to Salesforce) but API calls are blocked.
+> Please give me a step-by-step guide to fix this, including what to tell my Salesforce admin.
+
+**What to expect:** The AI should give you a checklist of Salesforce admin settings to enable (API Enabled, object permissions, field-level security) and code to verify access.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. My admin says permissions are set correctly but I still get 403. Here's the full error response: [paste response]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Salesforce permissions), ChatGPT-4 (good admin step-by-step guides), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Salesforce permission errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Salesforce action step
+2. Check which Salesforce user is connected — click the account name to see the username
+3. Ask your Salesforce admin to go to Setup → Users → find that user → make sure "API Enabled" and "Modify All Data" are checked
+
+### Make (Integromat)
+1. Open your scenario → click the Salesforce module
+2. Check the connected account username in the module settings
+3. Ask your admin to go to Setup → Permission Sets → create one with "API Enabled" + object access → assign it to that user
+
+### n8n
+1. Open your workflow → click the Salesforce node → check the credential username
+2. Ask your admin to verify the user has "API Enabled" on their profile
+3. If using a custom object, ask your admin to add the object to the user's permission set
+
+### Power Automate
+1. Open your flow → click the Salesforce action → check the connected account
+2. Ask your admin to go to Setup → Profiles → find the user's profile → enable "API Enabled"
+3. For field-level errors, ask your admin to check Setup → Object Manager → [Object] → Fields → Field-Level Security
+
+**Which tool should you use?** This is a Salesforce admin issue, not a tool issue. Any tool will work once your admin grants the right permissions.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"403 Forbidden"`
+- `"INSUFFICIENT_ACCESS"`
+- `"API_DISABLED_FOR_ORG"`
+- `"INSUFFICIENT_ACCESS_OR_READONLY"` in your integration logs
+
+**What it means in plain English:** You're logged in, but Salesforce won't let you do what you're trying to do. Your user account doesn't have the right permissions — like trying to edit a file you only have read access to.
+
+**Most common cause:** The integration user's profile doesn't have "API Enabled" checked, or the user doesn't have write access to the object they're trying to modify.
+
+</div>
+
 ## What Causes Salesforce 403
 
 Salesforce returns HTTP 403 when the authenticated user does not have permission to access the requested resource or when an API limit has been exhausted. The response includes an `errorCode` that distinguishes between permission issues (`REQUEST_NOT_AUTHORIZED`, `INSUFFICIENT_ACCESS`) and limit issues (`API_LIMIT_EXCEEDED`, `STORAGE_LIMIT_EXCEEDED`).

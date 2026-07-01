@@ -20,6 +20,95 @@ keywords:
   - "salesforce http 428"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Salesforce requires a precondition header (like `If-Match`) before it will process your request — usually for update operations.
+
+**The fix:**
+1. First, GET the record to retrieve its `ETag` header value
+2. Add `If-Match` header with that ETag value to your PATCH/PUT request
+3. If you get a 412 error, the record changed since you read it — re-read and retry
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+get_resp = requests.get(f"{instance_url}/services/data/v60.0/sobjects/Contact/003ID", headers=headers)
+etag = get_resp.headers.get("ETag")
+headers["If-Match"] = etag
+resp = requests.patch(f"{instance_url}/services/data/v60.0/sobjects/Contact/003ID",
+    headers=headers, json={"LastName": "Updated"})
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 428 Precondition Required error from the Salesforce API.
+> The error message is: "Precondition Required" or "PRECONDITION_REQUIRED"
+> I'm trying to update a Salesforce record with a PATCH request.
+> Please give me a step-by-step fix with working Python code that reads the ETag and adds the If-Match header.
+
+**What to expect:** The AI should give you a read-then-update pattern that fetches the ETag first and includes it in the update request headers.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I added the If-Match header but now I'm getting 412 Precondition Failed. Here's my code: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining HTTP conditional requests), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce precondition errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Salesforce "Update Record" step
+2. Zapier handles conditional headers automatically — if you're getting 428, switch from a custom API call to Zapier's built-in "Update Record" action
+3. If using "Create or Update", make sure you're mapping a valid record ID from a previous "Find" step
+
+### Make (Integromat)
+1. Open your scenario → click the Salesforce "Update Record" module
+2. Make's Salesforce module handles ETags automatically — if getting 428, switch from "Make an API Call" to the built-in "Update a Record" module
+3. If you must use "Make an API Call", add a "Get a Record" module first and map the ETag to the `If-Match` header
+
+### n8n
+1. Open your workflow → click the Salesforce node set to "Update"
+2. n8n's Salesforce node handles conditional headers automatically — use the "Update" operation instead of a raw HTTP request
+3. If using the "HTTP Request" node, add a preceding Salesforce "Get" node and map the ETag header
+
+### Power Automate
+1. Open your flow → click the Salesforce "Update record" action
+2. Power Automate's built-in Salesforce connector handles preconditions — use it instead of a generic HTTP action
+3. If using "Send an HTTP request", add a "Get record" action first and include the ETag in custom headers
+
+**Which tool should you use?** All major tools handle this automatically with their built-in Salesforce "Update" actions. Only custom API calls need manual ETag handling.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"428 Precondition Required"`
+- `"Precondition failed"`
+- `"PRECONDITION_REQUIRED"`
+- `"Missing If-Match header"` in your integration logs
+
+**What it means in plain English:** Salesforce wants proof that you've read the latest version of the record before changing it. It's a safety check to prevent overwriting someone else's changes.
+
+**Most common cause:** Using a raw HTTP request (custom API call) to update a record without including the required `If-Match` header with the record's ETag.
+
+</div>
+
 ## What Causes Salesforce 428
 
 Salesforce returns HTTP 428 when a request requires conditional headers (like `If-Match` or `If-None-Match`) but they are missing. This is part of Salesforce's support for HTTP conditional requests, primarily used with the REST API's composite resources and some SObject endpoints that support optimistic concurrency.

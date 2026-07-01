@@ -19,6 +19,98 @@ keywords:
   - "salesforce instance url hardcoding"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Salesforce session token is no longer valid — it expired, was revoked, or your password changed.
+
+**The fix:**
+1. Refresh your OAuth token using the refresh token from your initial login
+2. If the refresh token is also invalid, re-authenticate through the Salesforce login page
+3. Make sure you're using the instance URL from the OAuth response (not a hardcoded URL)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://login.salesforce.com/services/oauth2/token", data={
+    "grant_type": "refresh_token",
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "refresh_token": REFRESH_TOKEN,
+})
+new_token = resp.json()["access_token"]
+instance_url = resp.json()["instance_url"]
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting an INVALID_SESSION_ID error from the Salesforce API.
+> The error message is: "Session expired or invalid"
+> My integration was working fine but suddenly started failing on every request.
+> Please give me a step-by-step fix with working Python code that auto-detects INVALID_SESSION_ID and refreshes the OAuth token automatically.
+
+**What to expect:** The AI should give you a wrapper function that catches INVALID_SESSION_ID errors, refreshes the token, and retries the original request — all automatically.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. The refresh token is also returning an error. Here's the error: [paste error]. Please help me re-authenticate.
+
+**Best AI tools for this:** Claude (best at explaining Salesforce session management), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Salesforce session errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click any Salesforce step
+2. Click "Reconnect" on the Salesforce account — this refreshes the OAuth token
+3. If reconnecting doesn't work, disconnect completely and add a fresh Salesforce connection
+
+### Make (Integromat)
+1. Open your scenario → click any Salesforce module
+2. Go to "Connection" → click "Reauthorize" to refresh the OAuth token
+3. If that fails, create a new connection from scratch and update all modules to use it
+
+### n8n
+1. Open your workflow → click any Salesforce node
+2. In "Credentials" → click "Reconnect" to refresh the OAuth session
+3. If the credential is completely broken, delete it and create a new one with fresh OAuth
+
+### Power Automate
+1. Open your flow → click any Salesforce action
+2. Go to the three dots menu → "My connections" → click the refresh icon next to your Salesforce connection
+3. If that fails, click "Add new connection" and sign in again
+
+**Which tool should you use?** Zapier makes re-authentication the easiest — one click to reconnect. All tools require you to log in again if the refresh token is expired.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"INVALID_SESSION_ID"`
+- `"Session expired or invalid"`
+- `"Session expired"`
+- `"INVALID_SESSION_ID"` with HTTP 401 in your integration logs
+
+**What it means in plain English:** Your Salesforce login session ran out. It's like a website logging you out after being idle too long — you need to sign in again.
+
+**Most common cause:** Session timeout (default 2 hours), a password change that killed all sessions, or your integration's IP address being outside Salesforce's trusted IP ranges.
+
+</div>
+
 ## What Causes INVALID_SESSION_ID
 
 

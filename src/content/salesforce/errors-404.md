@@ -20,6 +20,94 @@ keywords:
   - "salesforce http 404"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** The Salesforce record doesn't exist — wrong ID, deleted record, or typo in the URL.
+
+**The fix:**
+1. Double-check the record ID — Salesforce IDs are 15 or 18 characters (use 18-character IDs)
+2. Search for the record in Salesforce to confirm it hasn't been deleted
+3. Make sure you're using the right API endpoint path (e.g., `sobjects` not `sobject`)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+record_id = "0035x000007ABCdEAO"
+resp = requests.get(f"{instance_url}/services/data/v60.0/sobjects/Contact/{record_id}", headers=headers)
+if resp.status_code == 404:
+    print("Record not found — it may have been deleted or the ID is wrong")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 404 Not Found error from the Salesforce API.
+> The error message is: "NOT_FOUND" — "The requested resource does not exist"
+> I'm trying to read a Contact record by its ID.
+> Please give me a step-by-step fix with working Python code that checks if a record exists before accessing it.
+
+**What to expect:** The AI should give you a lookup function that queries for the record first using SOQL, validates the ID format, and handles the case where the record was deleted.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. The record definitely exists in Salesforce but I still get 404. Here's the ID I'm using: [paste ID]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Salesforce ID formats), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce "not found" errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → add a "Find Record" step before your main Salesforce action
+2. In the Find step, search by email or name instead of ID — this confirms the record exists
+3. Add a "Filter" step after Find: only continue if the Find step returned a result
+
+### Make (Integromat)
+1. Open your scenario → add a "Search Records" module before your main Salesforce action
+2. Search by a unique field (email, name) to find the record's ID first
+3. Add a "Router" after Search: one path for "record found" → proceed, another for "not found" → skip or log
+
+### n8n
+1. Open your workflow → add a "Salesforce" node set to "Search" before your main action
+2. Use SOQL query: `SELECT Id FROM Contact WHERE Email = 'test@example.com'`
+3. Add an "IF" node: if search returns results → proceed, if empty → handle gracefully
+
+### Power Automate
+1. Open your flow → add a "List records" action before your main Salesforce action
+2. Set a filter query to search by a known field (e.g., email)
+3. Add a "Condition" action: if records found → use the ID from results, if not → skip or send alert
+
+**Which tool should you use?** Zapier has the simplest "Find Record" step — it searches and returns the ID in one click, so you never hit a 404.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"404 Not Found"`
+- `"NOT_FOUND"`
+- `"The requested resource does not exist"`
+- `"Could not find resource"` in your integration logs
+
+**What it means in plain English:** Salesforce can't find the record you're looking for. The ID is wrong, the record was deleted, or you're looking in the wrong place.
+
+**Most common cause:** Using a 15-character Salesforce ID instead of the 18-character version, or referencing a record that was deleted and emptied from the Recycle Bin.
+
+</div>
+
 ## What Causes Salesforce 404
 
 Salesforce returns HTTP 404 when the requested resource does not exist at the specified URL. This can be caused by an invalid record ID, a wrong API version, a mistyped endpoint path, or referencing a record that has been deleted or whose ID format is incorrect.

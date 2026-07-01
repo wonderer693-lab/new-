@@ -20,6 +20,95 @@ keywords:
   - "salesforce http 420"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Salesforce is throttling your API calls — the Edge network can't route your request right now.
+
+**The fix:**
+1. Wait 30-60 seconds and try again — this is usually a temporary routing issue
+2. Check Salesforce Trust (trust.salesforce.com) for ongoing incidents or maintenance
+3. Add delays between your API calls to avoid triggering the throttle
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(url, headers=headers)
+if resp.status_code == 420:
+    print("Salesforce Edge routing issue — waiting 30 seconds")
+    time.sleep(30)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 420 "Enhance Your Calm" error from the Salesforce API.
+> The error message mentions concurrent API request limits or Edge routing issues.
+> My integration makes frequent API calls to Salesforce.
+> Please give me a step-by-step fix with working Python code that adds delays and retries for 420 errors.
+
+**What to expect:** The AI should give you a retry function with exponential backoff and explain how to space out API calls to avoid Salesforce throttling.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 420 errors even with delays. Here's my retry code: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Salesforce throttling), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce throttling in popular automation tools:
+
+### Zapier
+1. Open your Zap → add a "Delay by Zapier" step before each Salesforce action
+2. Set the delay to 5-10 seconds between Salesforce calls
+3. Enable "Auto-retry on error" in each Salesforce step's settings
+
+### Make (Integromat)
+1. Open your scenario → add a "Sleep" module (5-10 seconds) between Salesforce modules
+2. Right-click each Salesforce module → "Add error handler" → choose "Retry" with 10-second interval
+3. In scenario settings, reduce the number of operations per execution to spread calls over time
+
+### n8n
+1. Open your workflow → add a "Wait" node (5000-10000ms) between Salesforce nodes
+2. In each Salesforce node's "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 10000ms
+3. For bulk operations, use the "SplitInBatches" node with a pause between batches
+
+### Power Automate
+1. Open your flow → add a "Delay" action (5-10 seconds) before each Salesforce action
+2. In each Salesforce action's "Settings" → enable "Retry Policy" → set to "Exponential interval"
+3. For loops, add a "Delay" action inside the loop to space out calls
+
+**Which tool should you use?** Make has the best built-in retry for Salesforce — you can set custom retry intervals per module without extra steps.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"420 Enhance Your Calm"`
+- `"Concurrent API request limit"`
+- `"420 Unknown"`
+- `"Edge routing information unavailable"` in your integration logs
+
+**What it means in plain English:** Salesforce is telling you to slow down. You're sending too many requests at once, or their network is having a temporary routing issue.
+
+**Most common cause:** Too many API calls firing at the same time without any pauses between them, or a temporary Salesforce Edge network issue.
+
+</div>
+
 ## What Causes Salesforce 420
 
 Salesforce returns HTTP 420 when the Salesforce Edge network cannot route the request to the correct instance. This is an infrastructure-level error that indicates a problem with Salesforce's global load balancing and routing layer — not an issue with the request itself.

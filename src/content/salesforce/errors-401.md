@@ -20,6 +20,97 @@ keywords:
   - "salesforce http 401"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Salesforce session or OAuth token expired. Salesforce no longer trusts your login.
+
+**The fix:**
+1. Refresh your OAuth token using the refresh token you saved during login
+2. If the refresh token is also expired, re-authenticate through the Salesforce login page
+3. Make sure you're using the correct instance URL (not a hardcoded one like `na1.salesforce.com`)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://login.salesforce.com/services/oauth2/token", data={
+    "grant_type": "refresh_token",
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "refresh_token": REFRESH_TOKEN,
+})
+access_token = resp.json()["access_token"]
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 401 Unauthorized error from the Salesforce API.
+> The error message is: "INVALID_SESSION_ID" — "Session expired or invalid"
+> I'm using OAuth to authenticate with Salesforce.
+> Please give me a step-by-step fix with working Python code that auto-refreshes the token when it expires.
+
+**What to expect:** The AI should give you a token refresh function with auto-retry logic that detects 401 errors and refreshes the token automatically.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 401 errors after refreshing. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Salesforce authentication errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Salesforce action step
+2. Click "Reconnect" on the Salesforce account connection
+3. Log in with your Salesforce credentials and re-authorize Zapier
+
+### Make (Integromat)
+1. Open your scenario → click the Salesforce module
+2. Go to "Connection" → click "Reauthorize"
+3. Log in with your Salesforce credentials and approve the connection
+
+### n8n
+1. Open your workflow → click the Salesforce node
+2. In "Credentials" → click "Reconnect" or create a new credential
+3. Complete the OAuth flow in the popup window
+
+### Power Automate
+1. Open your flow → click the Salesforce action
+2. Click the three dots menu → "My connections" → click "Add new connection"
+3. Sign in with your Salesforce credentials and authorize
+
+**Which tool should you use?** Zapier handles Salesforce re-auth the easiest — one click to reconnect. All tools require you to log in again.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"401 Unauthorized"`
+- `"INVALID_SESSION_ID"`
+- `"Session expired or invalid"`
+- `"Session expired"` in your integration logs
+
+**What it means in plain English:** Your login to Salesforce timed out. It's like being logged out of a website — you need to log back in (or have your app do it automatically).
+
+**Most common cause:** Session timeout (default 2 hours) or a password change that invalidated all active sessions.
+
+</div>
+
 ## What Causes Salesforce 401
 
 Salesforce returns HTTP 401 when the session ID or OAuth token used for authentication is invalid or expired. This is the most common Salesforce API error. The error code is typically `INVALID_SESSION_ID` with the message "Session expired or invalid".

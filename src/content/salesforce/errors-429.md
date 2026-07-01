@@ -20,6 +20,95 @@ keywords:
   - "salesforce http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Too many API calls to Salesforce in a short period — you've hit the daily or concurrent request limit.
+
+**The fix:**
+1. Check your remaining API calls at the `/limits` endpoint
+2. Use the Composite API to batch up to 25 requests into a single API call
+3. For bulk operations, switch to Bulk API 2.0 instead of individual REST calls
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+limits = requests.get(f"{instance_url}/services/data/v60.0/limits", headers=headers).json()
+remaining = limits["DailyApiRequests"]["Remaining"]
+print(f"API calls remaining today: {remaining}")
+if remaining < 100:
+    print("Warning: running low — switch to Composite or Bulk API")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 REQUEST_LIMIT_EXCEEDED error from the Salesforce API.
+> The error message is: "API limit exceeded"
+> My integration makes many API calls to Salesforce throughout the day.
+> Please give me a step-by-step fix with working Python code that uses Composite API batching and monitors remaining API calls.
+
+**What to expect:** The AI should give you code that batches requests using the Composite API, monitors your daily limit, and implements backoff when you're running low.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still hitting the daily limit even with batching. Here's my usage pattern: [describe how many calls per day]. Please suggest a better strategy.
+
+**Best AI tools for this:** Claude (best at explaining Salesforce API limits), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → enable "Auto-retry on error" in each Salesforce step's settings
+2. Add a "Delay by Zapier" step (10-30 seconds) between Salesforce actions to spread out calls
+3. If running bulk operations, schedule the Zap to run during off-peak hours (evenings/weekends)
+
+### Make (Integromat)
+1. Open your scenario → right-click each Salesforce module → "Add error handler" → choose "Retry"
+2. Set retry interval to 60 seconds with max 3 retries
+3. In scenario settings, reduce "Maximum number of operations" to spread API calls across multiple executions
+
+### n8n
+1. Open your workflow → in each Salesforce node's "Settings" → enable "Retry on Fail"
+2. Set "Wait Between Tries" to 60000ms (60 seconds), "Max Tries" to 3
+3. For bulk operations, use "SplitInBatches" node with a "Wait" node between batches
+
+### Power Automate
+1. Open your flow → in each Salesforce action's "Settings" → enable "Retry Policy"
+2. Set to "Exponential interval" with count 3 (waits get longer between retries)
+3. Add a "Delay" action (30-60 seconds) between Salesforce actions in loops
+
+**Which tool should you use?** Zapier has the simplest auto-retry — it handles 429 errors automatically. For heavy usage, Make gives you the most control over retry timing.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"REQUEST_LIMIT_EXCEEDED"`
+- `"API limit exceeded"`
+- `"Concurrent API request limit exceeded"` in your integration logs
+
+**What it means in plain English:** You've used up your Salesforce API allowance for the day, or too many requests are running at the same time. It's like hitting a daily spending limit on a credit card.
+
+**Most common cause:** Bulk data syncs or integrations that make individual API calls for every record instead of batching them together.
+
+</div>
+
 ## What Causes Salesforce 429
 
 Salesforce returns HTTP 429 when the daily API request limit or concurrent request limit is exceeded. The error code is `REQUEST_LIMIT_EXCEEDED` for daily limits. Salesforce enforces two types of limits: daily API calls per org (e.g., 15,000–1,000,000+ depending on edition) and concurrent request limits (typically 25–100 simultaneous long-running requests).

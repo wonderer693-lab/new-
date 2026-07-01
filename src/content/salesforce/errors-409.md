@@ -20,6 +20,95 @@ keywords:
   - "salesforce http 409"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You're trying to create a record that conflicts with an existing one — Salesforce's duplicate rules caught it.
+
+**The fix:**
+1. Search for the existing record before creating a new one (use SOQL to check for duplicates)
+2. If you want to update instead of create, use the existing record's ID with a PATCH request
+3. To bypass duplicate rules, add the header `Sforce-Duplicate-Rule-Header: allowSave=true`
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+query = "SELECT Id FROM Account WHERE Name='Acme Corp'"
+resp = requests.get(f"{instance_url}/services/data/v60.0/query", headers=headers, params={"q": query})
+if resp.json()["totalSize"] > 0:
+    record_id = resp.json()["records"][0]["Id"]
+    print(f"Record exists: {record_id} — use PATCH to update instead")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 409 Conflict error from the Salesforce API.
+> The error message is: "DUPLICATE_VALUE" — a record with this value already exists.
+> I'm trying to create new Account records but duplicate rules are blocking me.
+> Please give me a step-by-step fix with working Python code that checks for duplicates before creating records.
+
+**What to expect:** The AI should give you a "find or create" pattern — search for existing records first, update if found, create if not.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 409 errors. Here's my code: [paste your code]. The duplicate rule seems to match on fuzzy logic. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining duplicate rule logic), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce duplicate conflicts in popular automation tools:
+
+### Zapier
+1. Open your Zap → add a "Find Record" step before your "Create Record" step
+2. Search by the unique field (e.g., email for Contacts, name for Accounts)
+3. Add a "Paths" step: Path A (found) → "Update Record", Path B (not found) → "Create Record"
+
+### Make (Integromat)
+1. Open your scenario → add a "Search Records" module before your "Create Record" module
+2. Search by the field that's causing the duplicate conflict
+3. Add a "Router": if found → "Update Record" module, if not found → "Create Record" module
+
+### n8n
+1. Open your workflow → add a Salesforce "Search" node before your "Create" node
+2. Query: `SELECT Id FROM Account WHERE Name = '{{$json.name}}'`
+3. Add an "IF" node: if results exist → route to "Update" node, if empty → route to "Create" node
+
+### Power Automate
+1. Open your flow → add a "List records" action before "Create record"
+2. Set filter query to check for existing records by the unique field
+3. Add a "Condition": if records found → "Update record" action, if not → "Create record" action
+
+**Which tool should you use?** Zapier Paths make "find or create" logic the easiest — it handles both cases in one step without extra modules.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"409 Conflict"`
+- `"DUPLICATE_VALUE"`
+- `"duplicate id"`
+- `"API_VERSION_NOT_SUPPORTED"` in your integration logs
+
+**What it means in plain English:** Salesforce already has a record that matches what you're trying to create. It's like trying to add a contact with an email that's already in the system.
+
+**Most common cause:** Running the same integration twice, or two different integrations creating the same record at the same time.
+
+</div>
+
 ## What Causes Salesforce 409
 
 Salesforce returns HTTP 409 when the request conflicts with the current state of the resource. The most common cause is an API version incompatibility — attempting to use an API feature that isn't available in the specified version. It can also occur with duplicate detection rules, where creating a record would create a duplicate that violates an org's duplicate rule.

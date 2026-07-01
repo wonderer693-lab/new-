@@ -20,6 +20,97 @@ keywords:
   - "salesforce http 503"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Salesforce is temporarily unavailable — server overload, maintenance, or throttling. This is their problem, not yours.
+
+**The fix:**
+1. Wait 30-60 seconds and try again — 503 errors are almost always temporary
+2. Check Salesforce Trust (trust.salesforce.com) for planned maintenance or outages
+3. Add retry logic with increasing wait times (exponential backoff)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+for attempt in range(5):
+    resp = requests.get(url, headers=headers)
+    if resp.status_code != 503:
+        break
+    wait = 2 ** attempt
+    print(f"Salesforce unavailable — retrying in {wait}s")
+    time.sleep(wait)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 503 Service Unavailable error from the Salesforce API.
+> The error message is: "SERVER_UNAVAILABLE" or the response has no JSON body.
+> This happens intermittently — sometimes requests work, sometimes they don't.
+> Please give me a step-by-step fix with working Python code that implements exponential backoff retry and a circuit breaker pattern.
+
+**What to expect:** The AI should give you a retry function with exponential backoff and jitter, plus a circuit breaker that stops sending requests after repeated failures.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm getting 503 errors consistently for hours. Here's my retry code: [paste your code]. Is this a Salesforce outage?
+
+**Best AI tools for this:** Claude (best at explaining retry patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce server unavailability in popular automation tools:
+
+### Zapier
+1. Open your Zap → enable "Auto-retry on error" in each Salesforce step's settings
+2. Zapier will automatically retry 503 errors up to 3 times with increasing delays
+3. If errors persist for hours, check trust.salesforce.com — it may be a Salesforce outage
+
+### Make (Integromat)
+1. Open your scenario → right-click each Salesforce module → "Add error handler"
+2. Choose "Retry" → set interval to 60 seconds, max retries to 5
+3. Add a "Break" error handler as fallback — pauses the scenario and sends you a notification
+
+### n8n
+1. Open your workflow → in each Salesforce node's "Settings" → enable "Retry on Fail"
+2. Set "Wait Between Tries" to 30000ms (30 seconds), "Max Tries" to 5
+3. Add an "Error Trigger" node to get notified when all retries fail
+
+### Power Automate
+1. Open your flow → in each Salesforce action's "Settings" → enable "Retry Policy"
+2. Set to "Exponential interval" with count 5 (Salesforce usually recovers within minutes)
+3. Add a "Configure run after" on a follow-up action to send an alert email if the Salesforce action fails
+
+**Which tool should you use?** Zapier has the best built-in retry for 503 errors — it handles transient failures automatically without any configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"503 Service Unavailable"`
+- `"SERVER_UNAVAILABLE"`
+- `"maintenance"`
+- A raw HTTP 503 with no JSON body in your integration logs
+
+**What it means in plain English:** Salesforce's servers are temporarily down or overloaded. It's like calling a business and getting a busy signal — try again in a minute.
+
+**Most common cause:** Salesforce scheduled maintenance (usually Friday nights), server overload during peak hours, or temporary throttling by Salesforce's load balancers.
+
+</div>
+
 ## What Causes Salesforce 503
 
 Salesforce returns HTTP 503 when the server is temporarily unable to handle the request due to maintenance, overload, or throttling. This is a server-side error that indicates the Salesforce platform is under load or undergoing maintenance — not a problem with the request itself.

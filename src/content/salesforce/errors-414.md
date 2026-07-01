@@ -20,6 +20,94 @@ keywords:
   - "salesforce http 414"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your SOQL query or API URL is too long — Salesforce has a 16 KB limit on the total URL + headers.
+
+**The fix:**
+1. Switch from GET to POST — put your query in the request body instead of the URL
+2. If you have hundreds of IDs in an IN clause, split them into smaller batches (200 per query)
+3. Use the Composite API to batch multiple requests into one call
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+query = "SELECT Id, Name FROM Contact WHERE Id IN ('001...', '001...')"
+resp = requests.post(f"{instance_url}/services/data/v60.0/query",
+    headers=headers, data={"q": query})
+print(resp.json()["records"])
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 414 URI Too Long error from the Salesforce API.
+> The error message is: "Request-URI Too Large"
+> I'm running a SOQL query with hundreds of IDs in a WHERE IN clause using GET.
+> Please give me a step-by-step fix with working Python code that uses POST instead and chunks large queries.
+
+**What to expect:** The AI should give you code that switches to POST for the query endpoint and splits large IN clauses into batches of 200 IDs.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I switched to POST but I'm still getting errors with very large queries. Here's my query: [paste query]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining SOQL optimization), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Salesforce URL-too-long errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Salesforce "Find Record" step
+2. Instead of filtering by a long list of IDs, filter by a simpler field (e.g., date range, status)
+3. If you need many IDs, split into multiple Zap steps each searching a smaller batch
+
+### Make (Integromat)
+1. Open your scenario → click the Salesforce "Search Records" module
+2. Reduce the SOQL query complexity — use fewer fields in SELECT or fewer IDs in WHERE IN
+3. Add an "Iterator" module before Salesforce to process IDs in batches of 200
+
+### n8n
+1. Open your workflow → click the Salesforce node
+2. Switch the operation from "Get" (uses URL) to "Search" (uses body) for long queries
+3. Add a "SplitInBatches" node before Salesforce to chunk large ID lists into groups of 200
+
+### Power Automate
+1. Open your flow → click the Salesforce "List records" action
+2. Simplify the filter query — use date ranges or status fields instead of long ID lists
+3. Add an "Apply to each" loop with a batch of 200 IDs per iteration
+
+**Which tool should you use?** n8n handles this best — its "Search" operation uses POST by default, so you rarely hit URL length limits.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"414 URI Too Long"`
+- `"Request-URI Too Large"`
+- `"URI Too Long"`
+- A raw HTTP 414 with no JSON body in your integration logs
+
+**What it means in plain English:** The web address (URL) you're sending to Salesforce is too long. It's like writing a letter on the outside of an envelope — there's only so much space.
+
+**Most common cause:** A SOQL query with hundreds or thousands of IDs in a WHERE IN clause, sent as a GET request where the query goes in the URL.
+
+</div>
+
 ## What Causes Salesforce 414
 
 Salesforce returns HTTP 414 when the combined URI path and headers exceed 16,384 bytes (16 KB). This limit applies to the entire HTTP request line and header section — not just the URL. Long SOQL queries in the query string are the most common trigger, followed by oversized headers from authentication tokens or custom headers.
