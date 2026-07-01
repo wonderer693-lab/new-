@@ -20,6 +20,97 @@ keywords:
   - "calendly http 401"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Calendly access token is expired or invalid, so the API won't let you in.
+
+**The fix:**
+1. Check if you're using an OAuth token (expires after 2 hours) or a Personal Access Token
+2. If OAuth — refresh it using your refresh token
+3. If Personal Access Token — go to Calendly settings and generate a new one
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://auth.calendly.com/oauth/token", data={
+    "grant_type": "refresh_token",
+    "refresh_token": "YOUR_REFRESH_TOKEN",
+    "client_id": "YOUR_CLIENT_ID",
+    "client_secret": "YOUR_CLIENT_SECRET",
+})
+new_token = resp.json()["access_token"]
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 401 Unauthorized error from the Calendly API.
+> The error message is: "Invalid or missing token"
+> I'm using an OAuth integration that connects to Calendly.
+> Please give me a step-by-step fix with working Python code that handles token refresh.
+
+**What to expect:** The AI should give you a token refresh function and explain the difference between OAuth tokens and Personal Access Tokens.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 401 errors. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Calendly 401 errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Calendly action step
+2. Click "Reconnect" on the Calendly account — this refreshes the OAuth token automatically
+3. Test the step again to confirm it works
+
+### Make (Integromat)
+1. Open your scenario → click the Calendly module
+2. Go to "Connection" → click "Reauthorize" to get a fresh token
+3. Run the scenario once to verify the connection
+
+### n8n
+1. Open your workflow → click the Calendly node
+2. In "Credentials" → click "Reconnect" to refresh the OAuth token
+3. Execute the node to test the new connection
+
+### Power Automate
+1. Open your flow → click the Calendly action
+2. Click the three dots menu → "My connections" → sign in again to Calendly
+3. Save and test the flow
+
+**Which tool should you use?** Zapier handles Calendly re-auth the smoothest — one click and you're back in business.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"401 Unauthorized"`
+- `"Invalid or missing token"`
+- `"Unauthorized"` in your Calendly API logs
+- `"HTTP 401"` in your integration dashboard
+
+**What it means in plain English:** Calendly doesn't recognize your access token. It's like trying to open a door with the wrong key — you need a valid one.
+
+**Most common cause:** Using an OAuth token that expired (they only last 2 hours) without refreshing it first.
+
+</div>
+
 ## What Causes Calendly 401
 
 Calendly returns HTTP 401 when the request is missing a valid authorization token or the token has expired. Calendly supports two authentication methods: Personal Access Tokens (long-lived, managed in developer settings) and OAuth 2.0 Bearer tokens (short-lived, 2-hour expiry, requires refresh).

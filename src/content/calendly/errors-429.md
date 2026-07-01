@@ -20,6 +20,95 @@ keywords:
   - "calendly http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Too many API calls to Calendly — you've hit the rate limit and Calendly is telling you to slow down.
+
+**The fix:**
+1. Wait for the number of seconds shown in the `Retry-After` header
+2. Slow down your requests — add at least 500ms between each call
+3. If you're doing bulk operations, split them into smaller batches with pauses
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(url, headers=headers)
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 60))
+    time.sleep(wait)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from the Calendly API.
+> The error message is: "Rate limit exceeded"
+> I'm using an integration that makes multiple API calls to Calendly.
+> Please give me a step-by-step fix with working Python code that handles rate limiting with exponential backoff.
+
+**What to expect:** The AI should give you a retry function with exponential backoff and jitter, and explain Calendly's rate limit behavior.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 429 errors. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Calendly rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Calendly action step
+2. Enable "Auto-retry on error" in the step settings (Zapier auto-retries 429 errors)
+3. If you're hitting limits frequently, add a "Delay by Zapier" step before the Calendly action (set to 5-10 seconds)
+
+### Make (Integromat)
+1. Open your scenario → right-click the Calendly module → "Add error handler"
+2. Choose "Retry" → set interval to 10 seconds, max retries to 3
+3. For bulk operations, add a "Sleep" module (5-10 seconds) between Calendly calls
+
+### n8n
+1. Open your workflow → click the Calendly node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 10000ms, "Max Tries" to 3
+3. For bulk operations, add a "Wait" node (5-10 seconds) between Calendly nodes
+
+### Power Automate
+1. Open your flow → click the Calendly action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. For bulk operations, add a "Delay" action (5-10 seconds) before the Calendly action
+
+**Which tool should you use?** Zapier has the best built-in retry — it handles 429 errors automatically without extra configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"Rate limit exceeded"` in your Calendly API response
+- `"rate limit"` mentioned in your integration logs
+- `"HTTP 429"` with a `Retry-After` header
+
+**What it means in plain English:** Calendly is telling you to slow down. You're making too many API calls in a short time. Wait a few seconds and try again.
+
+**Most common cause:** Polling Calendly too frequently or running bulk operations that fire too many requests without pausing between them.
+
+</div>
+
 ## What Causes Calendly 429
 
 Calendly returns HTTP 429 when your API requests exceed the allowed rate limit. Calendly's API uses a sliding window rate limiter — limits apply per access token. Exceeding the limit returns 429 with a `Retry-After` header indicating how many seconds to wait.

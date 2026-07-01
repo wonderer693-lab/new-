@@ -20,6 +20,94 @@ keywords:
   - "calendly http 404"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** The Calendly event type or user you're looking for doesn't exist — the UUID is wrong or the resource was deleted.
+
+**The fix:**
+1. Double-check the UUID in your request URL — it should look like `550e8400-e29b-41d4-a716-446655440000`
+2. Fetch the list of event types to get valid UUIDs
+3. Make sure the resource hasn't been canceled or deleted
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+headers = {"Authorization": "Bearer YOUR_TOKEN"}
+resp = requests.get("https://api.calendly.com/event_types", headers=headers)
+for et in resp.json().get("collection", []):
+    print(et["uri"])
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 404 Not Found error from the Calendly API.
+> The error message is: "Resource not found"
+> I'm trying to access a Calendly event type or scheduled event by its UUID.
+> Please give me a step-by-step fix to verify the event type URI and handle missing resources.
+
+**What to expect:** The AI should show you how to list valid event types, validate UUIDs, and handle deleted resources gracefully.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 404 errors. Here's the UUID I'm using: [paste your UUID]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining UUID issues), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Calendly 404 errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Calendly action step
+2. In the event type dropdown, re-select the event type — don't use a hardcoded UUID
+3. Test the step to confirm it finds the event type
+
+### Make (Integromat)
+1. Open your scenario → click the Calendly module
+2. Replace any hardcoded event type URI with a dynamic value from a "List Event Types" module
+3. Add a filter to skip items where the event type is empty
+
+### n8n
+1. Open your workflow → add a "Calendly" node set to "Get Many Event Types"
+2. Use the output UUID in your next Calendly node instead of a hardcoded value
+3. Add an "IF" node to check the UUID exists before using it
+
+### Power Automate
+1. Open your flow → add a "List event types" Calendly action before your main action
+2. Use the dynamic UUID from the list output in your next step
+3. Add a "Condition" to check the event type exists before proceeding
+
+**Which tool should you use?** Always fetch event types dynamically instead of hardcoding UUIDs — this prevents 404 errors when event types change.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"404 Not Found"`
+- `"Resource not found"`
+- `"Not found"` in your Calendly API response
+- `"HTTP 404"` in your integration logs
+
+**What it means in plain English:** Calendly can't find what you're looking for. The event type, scheduled event, or user doesn't exist — it may have been deleted or the ID is wrong.
+
+**Most common cause:** Using a hardcoded UUID that was deleted, or copying a UUID from a different Calendly account.
+
+</div>
+
 ## What Causes Calendly 404
 
 Calendly returns HTTP 404 when the requested resource does not exist at the specified URI. Calendly uses UUIDs to identify resources like event types, scheduled events, and users. A 404 means the UUID doesn't match any existing resource or the resource is not accessible with the current token.

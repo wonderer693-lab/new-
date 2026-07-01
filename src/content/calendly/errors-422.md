@@ -20,6 +20,98 @@ keywords:
   - "calendly http 422"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Calendly rejected your booking data format — a required field is missing, a UUID is wrong, or a date is invalid.
+
+**The fix:**
+1. Check the `errors` array in the response — it tells you exactly which field failed
+2. Make sure all required fields are present: `event_type`, `start_time`, `end_time`, `invitee.email`
+3. Validate that UUIDs are in the correct format and dates are in the future
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+headers = {"Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json"}
+payload = {
+    "event_type": "https://api.calendly.com/event_types/YOUR_UUID",
+    "start_time": "2026-07-15T10:00:00Z",
+    "invitee": {"email": "guest@example.com"},
+}
+resp = requests.post("https://api.calendly.com/scheduled_events", headers=headers, json=payload)
+print(resp.json().get("errors", "Success"))
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 422 Unprocessable Entity error from the Calendly API.
+> The error message is: "validation error"
+> I'm trying to create a scheduled event in Calendly with a booking request.
+> Please give me a step-by-step fix to validate my invitee data and request payload before sending.
+
+**What to expect:** The AI should show you how to validate UUIDs, check required fields, and format dates correctly for Calendly bookings.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 422 errors. Here's my request payload: [paste your JSON]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining validation rules), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Calendly 422 errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Calendly booking step
+2. Check that all required fields are mapped — event type, start time, and invitee email
+3. Use Zapier's built-in date formatter to ensure dates are in ISO 8601 format
+
+### Make (Integromat)
+1. Open your scenario → click the Calendly module
+2. Verify the event type field uses a valid UUID from a "List Event Types" module
+3. Add a "Tools > Set multiple variables" module to format dates correctly before the Calendly call
+
+### n8n
+1. Open your workflow → click the Calendly node
+2. In the booking fields, make sure `event_type` uses the full URI (not just the UUID)
+3. Add a "Set" node before Calendly to validate and format all fields
+
+### Power Automate
+1. Open your flow → click the Calendly action
+2. Check that all required fields have values — use "Expression" to format dates as ISO 8601
+3. Add a "Compose" action before Calendly to build and validate the payload
+
+**Which tool should you use?** Zapier's field mapping UI makes it easiest to spot missing required fields for Calendly bookings.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"422 Unprocessable Entity"`
+- `"validation error"` in the Calendly response
+- `"Invalid request body"` or missing field errors
+- `"HTTP 422"` in your integration logs
+
+**What it means in plain English:** Your request reached Calendly, but the data inside doesn't pass its checks. It's like filling out a form but leaving required fields blank or writing the date wrong.
+
+**Most common cause:** Missing invitee email, invalid event type UUID, or dates that are in the past or in the wrong format.
+
+</div>
+
 ## What Causes Calendly 422
 
 Calendly returns HTTP 422 when the request body passes basic JSON parsing but fails business validation — missing required fields, invalid UUIDs, wrong date/time formats, or values outside allowed ranges. This is different from 400 (malformed JSON) — 422 means the request structure is valid but the content doesn't meet Calendly's business rules.

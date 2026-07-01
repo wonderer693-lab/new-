@@ -20,6 +20,94 @@ keywords:
   - "calendly http 403"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your token doesn't have permission for this Calendly action — your account plan or user role is too low.
+
+**The fix:**
+1. Check if the endpoint requires a Premium plan (webhooks always do)
+2. Make sure your token was created from an admin account
+3. If using OAuth, verify the scopes include the resource you're accessing
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+headers = {"Authorization": "Bearer YOUR_TOKEN"}
+resp = requests.get("https://api.calendly.com/users/me", headers=headers)
+user = resp.json()["resource"]
+print(f"Organization: {user['current_organization']}")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 403 Forbidden error from the Calendly API.
+> The error message is: "Insufficient permissions or subscription level"
+> I'm trying to access Calendly resources with my integration.
+> Please give me a step-by-step fix to check my OAuth scopes and subscription level.
+
+**What to expect:** The AI should help you check your account permissions and explain which Calendly endpoints need a paid plan.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 403 errors. Here's my account info: [paste response from /users/me]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining permission models), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Calendly 403 errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Calendly action step
+2. Check that your Calendly connection uses an admin account — reconnect with admin credentials if needed
+3. Verify your Calendly plan is Premium or higher (webhooks require it)
+
+### Make (Integromat)
+1. Open your scenario → click the Calendly module → check the "Connection" details
+2. Make sure the connected account has admin or owner role in Calendly
+3. If using webhook triggers, confirm your Calendly subscription is Premium+
+
+### n8n
+1. Open your workflow → click the Calendly node → check "Credentials"
+2. Verify the OAuth scopes include the resources you need (e.g., webhook subscriptions)
+3. Re-authorize with broader scopes if needed
+
+### Power Automate
+1. Open your flow → click the Calendly action
+2. Check "My connections" — make sure the connected account is a Calendly admin
+3. If the action requires webhooks, upgrade your Calendly plan first
+
+**Which tool should you use?** All tools need the same fix — an admin account on a paid Calendly plan. Start by checking your Calendly subscription level.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"403 Forbidden"`
+- `"Insufficient permissions or subscription level"`
+- `"forbidden"` in your Calendly API response
+- `"HTTP 403"` in your integration logs
+
+**What it means in plain English:** Your token works, but you're not allowed to do what you're trying to do. It's like having a key to the building but not to the specific room.
+
+**Most common cause:** Trying to use webhooks or admin features on a free Calendly plan, or using a token from a non-admin user.
+
+</div>
+
 ## What Causes Calendly 403
 
 Calendly returns HTTP 403 when the authenticated token is valid but the user or their subscription plan doesn't have permission to access the requested resource. This is common for webhook subscriptions (which require a paid Premium plan) and for resources scoped to organization admins only.
