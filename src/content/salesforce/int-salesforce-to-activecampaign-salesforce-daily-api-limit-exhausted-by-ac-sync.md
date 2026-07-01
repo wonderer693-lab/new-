@@ -24,6 +24,95 @@ keywords:
   - "activecampaign salesforce rate limit exhausted"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** ActiveCampaign's bidirectional sync exhausts Salesforce's daily API limit by mid-day. The sync polls Salesforce REST endpoints every minute, burning through the org-wide allocation and breaking every other integration.
+
+**The fix:**
+1. Check Salesforce API usage: Setup > Integrations > API Use
+2. Switch from REST polling to Salesforce Bulk API 2.0 (1 call per million records)
+3. Reduce sync frequency -- schedule incremental syncs off-peak (e.g., 2 AM UTC)
+4. Add field-level filters so only relevant field changes trigger the ActiveCampaign sync
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+r = requests.get(f"https://{instance}.my.salesforce.com/services/data/v60.0/limits",
+    headers={"Authorization": f"Bearer {token}"})
+limits = r.json()["DailyApiRequest"]
+print(f"Remaining: {limits['Remaining']} of {limits['Max']}")
+if limits["Remaining"] < limits["Max"] * 0.2:
+    print("WARNING: Below 20% - reduce sync frequency")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Salesforce with ActiveCampaign and the sync exhausts Salesforce's daily API limit by mid-day. The bidirectional sync polls REST endpoints every minute, consuming the org-wide quota. How do I reduce API calls using Bulk API 2.0 and scheduling?
+
+**What to expect:** The AI should help you switch to Bulk API 2.0, schedule off-peak syncs, and add field-level filters.
+
+**If it doesn't work**, add this follow-up:
+> I switched to Bulk API 2.0 but the limit is still being hit. Could other integrations in the org be sharing the same quota?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to reduce Salesforce API usage for ActiveCampaign syncs in other tools:
+
+### Zapier
+1. Use Zapier's native Salesforce trigger ('New or Updated Record') -- it uses webhooks, not polling
+2. Reduce Zap polling frequency to every 15 minutes instead of every minute
+3. Add a 'Filter' step to only sync records with relevant field changes
+
+### Make (Integromat)
+1. Use Make's Salesforce 'Watch Records' module with a longer polling interval
+2. Add a filter to only process records where subscribed fields changed
+3. Use Make's HTTP module to call Salesforce Bulk API 2.0 for large datasets
+
+### n8n
+1. Use the Salesforce trigger node with event-based listening instead of polling
+2. Add an IF node to filter records by relevant field changes
+3. Schedule the workflow to run off-peak using a Cron trigger
+
+### Power Automate
+1. Use the Salesforce 'When a record is modified' trigger for event-based sync
+2. Add a Condition to filter only relevant field changes
+3. Schedule the flow to run during off-peak hours
+
+**Which tool should you use?** Zapier is the easiest -- its native Salesforce trigger uses webhooks instead of polling, dramatically reducing API calls.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Salesforce returns REQUEST_LIMIT_EXCEEDED for all integrations by mid-day
+- ActiveCampaign sync accounts for more than 50% of Salesforce API usage
+- Other integrations (Mulesoft, Boomi, native apps) start failing
+- Salesforce API Usage dashboard shows rapid consumption starting at sync times
+
+**What it means in plain English:** The ActiveCampaign sync polls Salesforce REST endpoints too frequently, consuming the org-wide daily API allocation. Once exhausted, every integration in the org stalls.
+
+**Most common cause:** Using REST polling (per-record GET calls) instead of Bulk API 2.0 query jobs, which consume 1 call per million records.
+
+</div>
+
 ## The Problem
 
 Bidirectional Salesforce ↔ ActiveCampaign syncs return `REQUEST_LIMIT_EXCEEDED` to every other integration in the org by mid-day. Users see failures in unrelated Mulesoft, Boomi, and native apps because the shared 24-hour Salesforce API quota was consumed by ActiveCampaign polling. Once exhausted, all API integrations stall until the next rolling day.

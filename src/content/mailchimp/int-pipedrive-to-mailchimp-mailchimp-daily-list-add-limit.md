@@ -24,6 +24,95 @@ keywords:
   - "mailchimp audience member count quota"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Mailchimp's daily add-subscriber limit is hit by your Pipedrive bulk sync. The first batch succeeds but the rest fail with 'Daily Add Limit Reached.' Your Mailchimp audience only grew by a fraction.
+
+**The fix:**
+1. Check your Mailchimp plan's daily add limit (Free: ~500, Essentials: ~5,000-25,000)
+2. Split your Pipedrive contacts into smaller batches that fit under the daily cap
+3. Schedule batches across multiple days using a delay or scheduler
+4. Pre-filter Pipedrive contacts to skip emails that already exist in Mailchimp
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import datetime
+
+batches = split(contacts, 400)  # Safe under Free-tier cap
+schedule = []
+for i, batch in enumerate(batches):
+    day = datetime.date.today() + datetime.timedelta(days=i)
+    schedule.append({"day": str(day), "count": len(batch)})
+    print(f"Day {day}: {len(batch)} contacts")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Pipedrive with Mailchimp and my bulk sync fails partway through. Mailchimp says 'Daily Add Limit Reached' after adding about 500 contacts. How do I spread a large Pipedrive sync across multiple days to stay under Mailchimp's daily add limit?
+
+**What to expect:** The AI should help you implement multi-day batching and pre-filter contacts that already exist in Mailchimp.
+
+**If it doesn't work**, add this follow-up:
+> I set up multi-day batching but some contacts are still failing. Could it be that contacts I'm trying to add already exist in Mailchimp and are counting toward the daily limit?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Pipedrive-to-Mailchimp daily limits in other automation tools:
+
+### Zapier
+1. Use Zapier's 'Delay by Zapier' action to spread contacts across multiple days
+2. Add a 'Filter' step to skip Pipedrive contacts whose email already exists in Mailchimp
+3. Use 'Delay After Queue' to throttle the Zap to stay under the daily cap
+
+### Make (Integromat)
+1. Use Make's 'Array Aggregator' to chunk contacts into batches of 400
+2. Add a 'Sleep' module between batches and schedule with a timer trigger
+3. Use a Data Store to track which batches have been sent
+
+### n8n
+1. Use a 'Split In Batches' node to process contacts in groups of 400
+2. Add a 'Wait' node (24 hours) between batches
+3. Track progress in a database node so the workflow resumes correctly
+
+### Power Automate
+1. Use 'Apply to each' with a batch size of 400 contacts
+2. Add a 'Delay until' action to schedule each batch for the next day
+3. Add a condition to skip contacts that already exist in Mailchimp
+
+**Which tool should you use?** Zapier is the easiest -- its Delay action lets you spread contacts across days without writing a scheduler.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp returns 400 'Daily Add Limit Reached' during Pipedrive sync
+- Pipedrive sync reports success but Mailchimp audience only grew by a fraction
+- Mailchimp dashboard shows 'your daily add-subscriber limit has been reached'
+- New subscriber count in Mailchimp stops growing mid-batch
+
+**What it means in plain English:** Mailchimp caps how many new subscribers you can add per day based on your plan. Your Pipedrive bulk sync exceeds this cap, so contacts after the limit are rejected.
+
+**Most common cause:** Syncing too many Pipedrive contacts to Mailchimp in a single day without batching or pre-filtering existing members.
+
+</div>
+
 ## The Problem
 
 You bulk-sync 5,000 Pipedrive persons to a Mailchimp audience; the first ~750 succeed and the next 4,250 fail every time. The Mailchimp dashboard reads "your daily add-subscriber limit has been reached for this audience." No error is logged in middleware beyond a generic 400; meanwhile the Mailchimp audience only grew by a fraction of the intended count.

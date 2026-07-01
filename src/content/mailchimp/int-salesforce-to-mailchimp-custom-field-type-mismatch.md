@@ -24,6 +24,97 @@ keywords:
   - "mailchimp audience merge field types"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Salesforce sends dates as ISO timestamps and numbers as strings, but Mailchimp merge fields expect YYYY-MM-DD dates and numeric values. Fields arrive blank or show raw timestamps in Mailchimp.
+
+**The fix:**
+1. Check which Mailchimp merge fields are showing blank or wrong values
+2. Look up each Mailchimp merge field's type (date, number, birthday, text)
+3. Convert Salesforce ISO dates to YYYY-MM-DD format before sending to Mailchimp
+4. Cast Salesforce number strings to actual numeric values (floats)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+from datetime import datetime
+
+def sf_to_mc_date(s):
+    return datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.%f%z").strftime("%Y-%m-%d")
+
+def sf_to_mc_number(s):
+    return float(s) if s not in (None, "") else None
+
+print(sf_to_mc_date("2026-06-26T18:43:00.000+0000"))  # 2026-06-26
+print(sf_to_mc_number("5000"))  # 5000.0
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Salesforce with Mailchimp and merge fields are blank or show raw ISO timestamps. Salesforce sends dates as full timestamps and numbers as strings, but Mailchimp expects YYYY-MM-DD dates and numeric values. How do I convert these fields correctly?
+
+**What to expect:** The AI should help you build field converters for dates, numbers, and birthdays between Salesforce and Mailchimp.
+
+**If it doesn't work**, add this follow-up:
+> I fixed dates and numbers but birthday fields are still blank. What format does Mailchimp expect for birthday merge fields?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Salesforce-to-Mailchimp field types in other automation tools:
+
+### Zapier
+1. Use Zapier's 'Formatter' step > 'Format Date' > YYYY-MM-DD before the Mailchimp action
+2. Add a 'Numbers' formatter step to convert string numbers to actual numbers
+3. Map each Salesforce field to the correct Mailchimp merge tag type
+
+### Make (Integromat)
+1. Add a 'Date Format' tool module with pattern yyyy-MM-dd before the Mailchimp module
+2. Use a 'Set Variable' module to cast number strings to floats
+3. Check Mailchimp's merge field types and match each one explicitly
+
+### n8n
+1. Add a 'Date & Time' node to convert ISO dates to YYYY-MM-DD
+2. Use a 'Set' node to cast string numbers to numeric types
+3. Map each converted field to the correct Mailchimp merge tag
+
+### Power Automate
+1. Use a 'Compose' action to format dates as YYYY-MM-DD
+2. Add a condition to check field types and apply the correct conversion
+3. Use 'Parse JSON' to ensure numbers are sent as numeric values
+
+**Which tool should you use?** Zapier is the easiest -- its Formatter step handles date and number conversion without any code.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp merge fields show blank values after Salesforce sync
+- Date fields display raw ISO timestamps like '2026-06-26T18:43:00.000+0000'
+- Number fields show string values like '5000' instead of formatted numbers
+- Email personalization shows merge tag literals like *|RENEW_DATE|*
+
+**What it means in plain English:** Salesforce and Mailchimp use different data formats. Mailchimp silently drops values that don't match the merge field's expected type.
+
+**Most common cause:** Sending Salesforce ISO timestamps directly to Mailchimp date fields, which expect YYYY-MM-DD format only.
+
+</div>
+
 ## The Problem
 
 Mailchimp subscribers arrive with empty or obviously wrong merge fields after a Salesforce sync. Date fields render as raw ISO timestamps (`2026-06-26T18:43:00.000+0000`), numeric fields arrive as strings (`"5000"`), and groups fail validation entirely. Dynamic personalization in campaigns then displays `*|RENEW_DATE|*` literally because the field's value failed type validation on the Mailchimp side.

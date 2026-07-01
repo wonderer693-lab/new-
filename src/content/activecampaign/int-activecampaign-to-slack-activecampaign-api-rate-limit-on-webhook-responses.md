@@ -24,6 +24,94 @@ keywords:
   - "activecampaign webhook delivery fail retry policy"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** ActiveCampaign webhooks overwhelm Slack's rate limit because your middleware tries to post to Slack before responding to ActiveCampaign. ActiveCampaign times out at 5 seconds and retries, creating duplicates.
+
+**The fix:**
+1. ACK the ActiveCampaign webhook immediately with a 200 response (under 1 second)
+2. Queue the Slack message for async delivery after the ACK
+3. Add a delay module in Make or Zapier between ActiveCampaign and Slack steps
+4. Use webhook_id for deduplication so retries don't create duplicate Slack messages
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import threading
+
+@app.post("/acf/hook")
+def hook():
+    payload = request.json
+    threading.Thread(target=send_to_slack, args=(payload,)).start()
+    return "", 200  # ACK in milliseconds
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating ActiveCampaign with Slack and getting duplicate Slack messages. ActiveCampaign webhooks are being retried because my middleware takes too long to respond (over 5 seconds) while waiting for Slack's API. How do I ACK the webhook immediately and process the Slack message asynchronously?
+
+**What to expect:** The AI should walk you through ACK-first architecture and adding a queue between the webhook receiver and the Slack poster.
+
+**If it doesn't work**, add this follow-up:
+> I set up ACK-first but I'm still seeing duplicate Slack messages. How do I add idempotency keys using the ActiveCampaign webhook_id?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle ActiveCampaign-to-Slack rate limit issues in other automation tools:
+
+### Zapier
+1. Create a new Zap with trigger 'Webhooks by Zapier' (Catch Hook) -- Zapier auto-responds 200 to ActiveCampaign instantly
+2. Add a 'Delay by Zapier' step (1 second) before the Slack action to pace messages
+3. Zapier auto-retries on Slack 429 errors, so no messages are lost
+
+### Make (Integromat)
+1. Use the 'Instant Trigger (Webhook)' module -- Make returns 200 to ActiveCampaign immediately
+2. Add a 'Sleep' module (1 second) before the Slack module to respect Slack's rate limit
+3. Add an error handler on the Slack module to catch 429 and retry after the Retry-After period
+
+### n8n
+1. Create a webhook trigger node -- n8n responds 200 immediately before processing
+2. Add a 'Wait' node (1 second) before the Slack node
+3. Enable 'Retry on Fail' on the Slack node with 3 retries and 2-second intervals
+
+### Power Automate
+1. Use 'When an HTTP request is received' trigger -- Power Automate responds quickly
+2. Add a 'Delay' action (1 second) before the Slack 'Post message' action
+3. Enable 'Retry Policy' on the Slack action with exponential interval
+
+**Which tool should you use?** Zapier is the easiest -- its Catch Hook trigger auto-ACKs ActiveCampaign webhooks instantly and handles Slack retries automatically.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- ActiveCampaign webhook log shows the same event retried every 30 seconds
+- Slack channel gets the same notification 2-5 times within minutes
+- Your middleware logs show Slack returning 429 ratelimited while ActiveCampaign waits
+- ActiveCampaign dashboard shows webhook delivery failures or timeouts
+
+**What it means in plain English:** ActiveCampaign expects a response within 5 seconds, but your middleware is stuck waiting for Slack to accept the message. ActiveCampaign thinks the delivery failed and keeps retrying.
+
+**Most common cause:** Your middleware processes the Slack call synchronously before responding to ActiveCampaign, exceeding the 5-second ACK deadline whenever Slack rate-limits.
+
+</div>
+
 ## The Problem
 
 ActiveCampaign fires a webhook, your middleware synchronously pushes to Slack, Slack is throttled (429 with Retry-After = 1 s), the middleware waits for the Slack retry, the AC webhook hits the 5-second ACK deadline, AC declares the delivery failed and queues it again. The downstream Slack channel now gets the same event delivered 2–5 times; ops sees "duplicate lead created" Slack alerts and CRM end up double-inserted.

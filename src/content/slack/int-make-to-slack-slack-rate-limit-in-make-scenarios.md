@@ -24,6 +24,95 @@ keywords:
   - "slack web api tier 3 limit 2026"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Make scenarios hit Slack rate limits when looping over multiple items. The first Slack message succeeds but the rest return 429 'ratelimited' because Make fires all iterations instantly.
+
+**The fix:**
+1. Add a 'Sleep' module (1 second) between Slack module iterations in Make
+2. Use Make's 'Array Aggregator' to combine items into one summary Slack message
+3. Add a 'Throttle' module before the Slack module to pace at 1 request/second
+4. Add an error handler on the Slack module to catch 429 and retry
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+# In Make, add these modules in order:
+# 1. Iterator (over your items)
+# 2. Sleep module: 1 second delay
+# 3. Slack module: Send Message
+#
+# Or use Array Aggregator instead:
+# 1. Iterator -> Array Aggregator -> single Slack message
+# Text: {{forEach(array; item; "- " & item.name)}}
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Make with Slack and my scenario fails after the first message when looping over multiple items. Slack returns 429 'ratelimited' because Make fires all iterations at once. How do I add a throttle or aggregate messages to fix this?
+
+**What to expect:** The AI should walk you through adding Make's Throttle/Sleep module or using Array Aggregator for summary messages.
+
+**If it doesn't work**, add this follow-up:
+> I added a Throttle module but the scenario is too slow for 100+ items. Can I aggregate items into batches of 10 instead?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Slack rate limits in Make scenarios using other tools:
+
+### Zapier
+1. Use Zapier's Slack action -- it auto-paces messages through Zapier's internal queue
+2. Add a 'Delay by Zapier' step (1 second) between Slack actions
+3. Aggregate items into a single summary message using Zapier's 'Line Items' feature
+
+### Make (Integromat)
+1. Add Make's 'Throttle' module (1 second delay) before the Slack module
+2. Or use 'Array Aggregator' to combine all items into one Slack message
+3. Add a 'Break' error handler on the Slack module to catch and retry 429 errors
+
+### n8n
+1. Add a 'Wait' node (1 second) between Slack node executions
+2. Use an 'Item Lists' node to aggregate items before the Slack node
+3. Enable 'Retry on Fail' with 3 retries and 2-second intervals
+
+### Power Automate
+1. Add a 'Delay' action (1 second) before each Slack message
+2. Use 'Apply to each' with sequential processing
+3. Aggregate items into a single message using 'Compose' with a join expression
+
+**Which tool should you use?** Make's Array Aggregator is the best fix -- it turns 50 Slack messages into 1 summary message, completely avoiding the rate limit.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Make scenario shows red error lines after the first Slack message
+- Slack returns 429 'ratelimited' with retry_after: 1 for most iterations
+- Only the first message in a loop arrives in Slack; the rest fail
+- Make history shows HTTP 429 errors on the Slack module
+
+**What it means in plain English:** Make's Iterator fires all bundles simultaneously, and Slack only allows 1 message per second. The second through last messages get rate-limited.
+
+**Most common cause:** Running a Make scenario loop that posts to Slack without a Throttle/Sleep module or message aggregation.
+
+</div>
+
 ## The Problem
 
 A Make scenario iterates 50 fresh rows from a CRM and tries to notify a Slack channel each row, but only the first message lands; the remainder error out with `chat.postMessage` returning HTTP 429 `{"error":"ratelimited"}`. Make flags those executions as failed, so end users see 49 red execution lines per run plus an aggrieved Slack team pinging on real-time alerts they missed.

@@ -24,6 +24,94 @@ keywords:
   - "salesforce activecampaign tag payload fix"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** ActiveCampaign's ContactTag API requires a specific wrapper format. Sending a flat payload returns HTTP 400 and contacts stay untagged. The fix is wrapping the payload in a contactTag key.
+
+**The fix:**
+1. Check your current payload -- if it looks like {"contact": "1", "tag": "2"}, it's missing the wrapper
+2. Wrap the payload as {"contactTag": {"contact": "1", "tag": "2"}} with both IDs as strings
+3. In Zapier or Make, use the built-in 'Add Tag' action which handles the wrapper automatically
+4. Test with a single contact to confirm the tag appears in ActiveCampaign
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+def attach_tag(contact_id, tag_id, ac_url, ac_token):
+    resp = requests.post(f"{ac_url}/api/3/contactTags",
+        headers={"Api-Token": ac_token, "Content-Type": "application/json"},
+        json={"contactTag": {"contact": str(contact_id), "tag": str(tag_id)}})
+    return resp.json()
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Salesforce with ActiveCampaign and getting HTTP 400 errors when trying to tag contacts. The error says 'Validation failed: Contact must be a valid contact id, Tag must be a valid tag id' but my IDs are correct. What's the correct payload format for the /contactTags endpoint?
+
+**What to expect:** The AI should explain the required contactTag wrapper and help you fix the payload structure.
+
+**If it doesn't work**, add this follow-up:
+> I fixed the wrapper but I'm still getting 400 errors. Could the issue be that I'm sending integer IDs instead of string IDs?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Salesforce-to-ActiveCampaign tagging in other automation tools:
+
+### Zapier
+1. Use Zapier's native 'Add Tag to Contact' action for ActiveCampaign -- it handles the wrapper automatically
+2. Map the Salesforce contact ID to the ActiveCampaign contact ID using a lookup step
+3. Test the Zap with a single record to confirm the tag appears
+
+### Make (Integromat)
+1. Use Make's ActiveCampaign 'Add Tag' module -- it wraps the payload for you
+2. Connect the Salesforce module output to the ActiveCampaign module input
+3. Add an error handler to catch 400 errors and log them
+
+### n8n
+1. Add an HTTP Request node targeting the ActiveCampaign /contactTags endpoint
+2. Set the body to JSON with the contactTag wrapper: {"contactTag": {"contact": "...", "tag": "..."}}
+3. Add an IF node to check for 200 response and alert on failure
+
+### Power Automate
+1. Use the HTTP action to call ActiveCampaign's /contactTags endpoint
+2. Set the body with the contactTag wrapper and string IDs
+3. Add a condition to check the response and send an alert on failure
+
+**Which tool should you use?** Zapier is the easiest -- its native ActiveCampaign 'Add Tag' action handles the payload wrapper automatically.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- ActiveCampaign returns HTTP 400 when tagging contacts from Salesforce
+- Error message says 'Validation failed' even though contact and tag IDs are valid
+- Salesforce shows the sync as successful but ActiveCampaign contacts have no tags
+- The same tag assignment works in the ActiveCampaign UI but fails via API
+
+**What it means in plain English:** ActiveCampaign's API requires a specific JSON wrapper around the tag assignment payload. Without it, the API rejects the request even with valid IDs.
+
+**Most common cause:** Sending a flat JSON payload like {"contact": "1", "tag": "2"} instead of wrapping it in {"contactTag": {...}}.
+
+</div>
+
 ## The Problem
 
 When applying Salesforce-driven tags to ActiveCampaign contacts, all POST calls to `/contactTags` fail with HTTP 400 and your contacts remain untagged. The error body is generic: `"Validation failed: Contact must be a valid contact id, Tag must be a valid tag id."` Meanwhile the IDs you supplied pass through `GET /tags` and `GET /contacts` with no issues. The header missing here is the wrapper, not the values.

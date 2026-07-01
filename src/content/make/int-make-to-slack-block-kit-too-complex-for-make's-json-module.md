@@ -24,6 +24,92 @@ keywords:
   - "make slack complex blocks module fail"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Block Kit JSON is too complex for Make's structured Slack module. A missing comma or bracket in the nested JSON breaks the entire Slack message with an 'invalid_blocks' error.
+
+**The fix:**
+1. Build the Block Kit JSON as a plain text string using Make's 'Set Variable' module
+2. Escape dynamic values to prevent unescaped quotes from breaking the JSON
+3. Validate the rendered JSON in Slack's Block Kit Builder before deploying
+4. Use Make's HTTP module with 'Body type: JSON' instead of the structured Slack module
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+blocks_json = '{{"blocks": [{{"type": "section", "text": {{"type": "mrkdwn", "text": "*{name}* - {amount}"}}}}]}}'.format(
+    name=deal_name.replace('"', '\\"'),
+    amount=deal_amount
+)
+print(blocks_json)  # Paste into Block Kit Builder to validate
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Make with Slack and complex Block Kit messages fail with 'invalid_blocks' errors. Make's structured Slack module can't handle deeply nested JSON -- a single missing comma breaks everything. How do I build Block Kit messages as a text string and validate them before sending?
+
+**What to expect:** The AI should help you build Block Kit JSON as a templated string and validate it with Slack's Block Kit Builder.
+
+**If it doesn't work**, add this follow-up:
+> I switched to a text string but dynamic values with quotes still break the JSON. How do I escape special characters in Make variables?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to send complex Slack messages from Make using other tools:
+
+### Zapier
+1. Use Zapier's 'Send Block Kit Message' action -- it has a JSON editor that catches syntax errors
+2. Build the JSON in a Zapier 'Formatter' step before the Slack action
+3. Validate the JSON in Slack's Block Kit Builder before deploying the Zap
+
+### Make (Integromat)
+1. Build the Block Kit JSON as a string in Make's 'Set Variable' module
+2. Use Make's HTTP module (not the Slack module) to send the JSON -- set Body type to JSON
+3. Keep messages under 15 blocks to reduce complexity
+
+### n8n
+1. Use a 'Set' node to build the Block Kit JSON as a string
+2. Send via the Slack node with the JSON string in the 'blocks' field
+3. Add error handling to catch invalid_blocks and send a plain-text fallback
+
+### Power Automate
+1. Use a 'Compose' action to build the Block Kit JSON string
+2. Send via the Slack connector with the composed JSON
+3. Add a condition to check for errors and send a plain-text fallback
+
+**Which tool should you use?** Zapier is the easiest -- its Block Kit message editor catches JSON syntax errors at setup time, before they reach production.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Slack returns 'invalid_blocks' error for Make scenario messages
+- Complex Block Kit layouts with sections, fields, and actions fail to send
+- Simple text messages work fine but formatted messages break
+- Make scenario history shows the Slack module failing on every iteration
+
+**What it means in plain English:** Make's structured Slack module tries to build nested JSON through UI fields, making it easy to introduce syntax errors. Slack rejects the entire message when the JSON is malformed.
+
+**Most common cause:** Building complex Block Kit JSON inside Make's structured module fields instead of composing it as a validated text string.
+
+</div>
+
 ## The Problem
 
 A Make scenario builds a Slack message with nested Block Kit (Sections containing `mrkdwn`, accessory images, conditional `actions`) using Make's structured Slack module. Each iteration the scenario fails with `invalid_blocks` from Slack and the entire Slack payload is discarded. The Make UI makes it easy to drop a comma or bracket in the deeply nested JSON, and the user-friendliest browsing field doesn't surface the syntax error until a real Slack call attempts to render it.

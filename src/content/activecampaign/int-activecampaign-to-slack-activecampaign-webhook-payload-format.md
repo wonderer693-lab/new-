@@ -24,6 +24,94 @@ keywords:
   - "slack notification breaks on activecampaign event type"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** ActiveCampaign webhook data format doesn't match what Slack expects. Contact events use different JSON keys than deal events, so your Slack template shows blank fields.
+
+**The fix:**
+1. Check which ActiveCampaign event type is firing (contact vs deal vs tag)
+2. Add a JSON parser module in Make or a Formatter step in Zapier to detect the event type
+3. Create separate Slack message templates for each event type
+4. Route each event type to its own Zap or scenario with matching field mappings
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+def render(event):
+    t = event["type"]
+    if t.startswith("deal_"):
+        d = event["data"]["deal"]
+        return f"Deal *{d['title']}* ({d['currency']} {d['value']})"
+    c = event["data"]["contact"]
+    return f"Contact {c.get('first_name', '')} - {c.get('email', '')}" 
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating ActiveCampaign with Slack and my Slack notifications show blank fields. The ActiveCampaign webhook sends different JSON formats for contact events vs deal events, and my single Slack template can't handle both. How do I parse each event type and render the correct fields in Slack?
+
+**What to expect:** The AI should help you create separate Slack templates per ActiveCampaign event type and add routing logic.
+
+**If it doesn't work**, add this follow-up:
+> I split my Zaps by event type but some ActiveCampaign webhooks still arrive with unexpected fields. How do I add a fallback Slack message for unknown event types?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle ActiveCampaign webhook parsing for Slack in other automation tools:
+
+### Zapier
+1. Create separate Zaps for each ActiveCampaign event type (contact, deal, tag)
+2. Add a 'Filter' step after the webhook trigger to route by event type
+3. Use Zapier's Formatter step to extract the correct fields before sending to Slack
+
+### Make (Integromat)
+1. Create separate scenarios for each ActiveCampaign event type
+2. Add a JSON 'Parse' module after the webhook trigger to extract the event type
+3. Use a 'Router' module to send each event type to the correct Slack template
+
+### n8n
+1. Create a webhook trigger node and add a 'Switch' node to route by event type
+2. Add a 'Set' node per branch to map the correct fields for each event type
+3. Connect each branch to a Slack node with the matching message template
+
+### Power Automate
+1. Use 'When an HTTP request is received' trigger with a JSON schema
+2. Add a 'Condition' action to check the event type field
+3. Route each branch to a different Slack message template
+
+**Which tool should you use?** Zapier is the easiest -- create one Zap per event type with a Filter step, so each Slack template only sees the fields it expects.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Slack notifications from ActiveCampaign show blank or null fields for some events
+- Contact-created notifications look fine but deal-updated show empty values
+- Your Slack template renders data.contact.email as blank on deal events
+- ActiveCampaign webhook logs show successful delivery but Slack messages are incomplete
+
+**What it means in plain English:** ActiveCampaign sends different JSON structures for different event types. Your Slack template was built for one structure and breaks when a different event type arrives.
+
+**Most common cause:** Using a single Slack message template for all ActiveCampaign webhook event types instead of creating per-type templates.
+
+</div>
+
 ## The Problem
 
 Your Zapier or Make pipeline routes all ActiveCampaign webhooks to one Slack notification template. Contact-created events look fine, but deal-updated notifications arrive with blank fields — `First Name`/`Email` rendered as `null` because the deal payload employeesfields at a different JSON path. Slack teams see half-filled notifications, lose confidence in the integration, and stop reading them.

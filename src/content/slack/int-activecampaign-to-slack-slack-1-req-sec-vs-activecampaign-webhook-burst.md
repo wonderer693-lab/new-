@@ -24,6 +24,99 @@ keywords:
   - "slack tier 3 postmessage bulk tag update"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** ActiveCampaign fires a webhook per contact during bulk tag updates. Your middleware sends a Slack notification for each, but Slack's 1 req/sec limit rejects 99 out of 100 messages.
+
+**The fix:**
+1. Add a rate limiter or delay module between ActiveCampaign webhooks and Slack posts
+2. Buffer webhooks for 2 seconds and aggregate into a single summary Slack message
+3. ACK each ActiveCampaign webhook immediately (200) before processing the Slack post
+4. Send one summary message like '100 contacts tagged Priority' instead of 100 individual messages
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import threading, time
+
+buffer = {}
+def on_webhook(payload):
+    tag = payload["tag"]["id"]
+    buffer.setdefault(tag, []).append(payload["contact"])
+    threading.Timer(2.0, drain, args=(tag,)).start()
+
+def drain(tag):
+    contacts = buffer.pop(tag, [])
+    msg = f'{len(contacts)} contacts tagged "{tag}"'
+    print(msg)  # Send this single message to Slack
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating ActiveCampaign with Slack and bulk tag updates only deliver 1 out of 100 Slack notifications. ActiveCampaign fires a webhook per contact, and Slack's 1 req/sec rate limit rejects the rest. How do I aggregate webhooks into a single summary Slack message?
+
+**What to expect:** The AI should help you implement webhook buffering and message aggregation to stay under Slack's rate limit.
+
+**If it doesn't work**, add this follow-up:
+> I added aggregation but individual notifications are still needed for some events. How do I handle both summary and per-contact messages?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle ActiveCampaign-to-Slack rate limiting in other tools:
+
+### Zapier
+1. Use Zapier's built-in queue pacing -- it automatically spaces Slack calls at ~1/second
+2. Add a 'Delay by Zapier' step (1 second) before each Slack action
+3. Use a single summary Zap that aggregates events instead of one notification per webhook
+
+### Make (Integromat)
+1. Add a 'Throttle' module (1 second delay) before the Slack module
+2. Use Make's 'Array Aggregator' to collect webhook events into a single batch
+3. Send one summary Slack message per batch instead of individual notifications
+
+### n8n
+1. Add a 'Wait' node (1 second) between Slack message sends
+2. Use a 'Merge' node to aggregate events before the Slack node
+3. Send a single summary message with the count and details
+
+### Power Automate
+1. Add a 'Delay' action (1 second) before each Slack 'Post message' action
+2. Use 'Apply to each' with sequential processing to pace messages
+3. Aggregate events into a single summary message when possible
+
+**Which tool should you use?** Zapier is the easiest -- its queue pacing automatically spaces Slack calls to respect the 1 req/sec limit.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Only 1 Slack notification arrives when ActiveCampaign bulk-tags 100 contacts
+- Slack returns 429 'ratelimited' for most ActiveCampaign webhook-triggered messages
+- ActiveCampaign webhook log shows a 1:99 sent-to-failed ratio
+- Slack channel shows one message despite many contacts being tagged
+
+**What it means in plain English:** ActiveCampaign sends one webhook per contact during bulk operations. Your middleware posts each to Slack instantly, exceeding Slack's 1 message per second limit.
+
+**Most common cause:** Forwarding each ActiveCampaign webhook directly to Slack without aggregation or rate limiting.
+
+</div>
+
 ## The Problem
 
 A marketer bulk-tags 100 ActiveCampaign contacts in the admin UI; ActiveCampaign fires a webhook for every changed contact; your middleware immediately sends a Slack notification each, and 99% of those calls return `{"ok":false,"error":"ratelimited"}` from Slack. On-call sees one notification in Slack and 99 failed webhooks on the ActiveCampaign webhook log — the team thinks only one contact was tagged.

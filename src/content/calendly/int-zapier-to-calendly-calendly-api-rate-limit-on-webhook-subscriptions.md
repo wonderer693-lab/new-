@@ -24,6 +24,95 @@ keywords:
   - "calendly personal access token limit"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Calendly returns 429 rate limit errors when your Zapier integration creates too many webhook subscriptions. Each Zap test creates a new subscription, burning through Calendly's 120 requests/minute quota.
+
+**The fix:**
+1. Check your Calendly webhook subscriptions list for duplicates
+2. Delete orphan subscriptions you no longer need
+3. Cache subscription IDs and reuse them instead of creating new ones
+4. Add a delay between webhook management API calls
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+def list_webhooks(token, org):
+    r = requests.get("https://api.calendly.com/webhook_subscriptions",
+        params={"organization": org},
+        headers={"Authorization": f"Bearer {token}"})
+    hooks = r.json()["_embedded"]["webhook_subscriptions"]
+    print(f"Found {len(hooks)} subscriptions")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Zapier with Calendly and getting 429 rate limit errors when creating webhook subscriptions. My Zap creates a new webhook subscription on every test run and I've exceeded Calendly's API quota. How do I cache and reuse existing webhook subscriptions?
+
+**What to expect:** The AI should help you implement subscription caching and clean up orphan subscriptions.
+
+**If it doesn't work**, add this follow-up:
+> I cleaned up subscriptions but I'm still hitting the rate limit during Zap testing. How do I reduce API calls to Calendly during development?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Calendly webhook management in other automation tools:
+
+### Zapier
+1. Use Zapier's native Calendly trigger ('Invitee Created') -- it manages subscriptions internally
+2. Avoid using 'Webhooks by Zapier' as a Calendly trigger unless you need custom events
+3. If using custom webhooks, test with a single subscription and reuse it across Zap runs
+
+### Make (Integromat)
+1. Use Make's 'Calendly -- Watch Events' trigger module
+2. Cache the subscription UUID in a Make Data Store module to avoid recreating it
+3. Add a filter to check for existing subscriptions before creating new ones
+
+### n8n
+1. Create a Calendly trigger node and configure the webhook subscription once
+2. Store the subscription ID in a static variable or database node
+3. Add a check at the start of the workflow to skip creation if the subscription exists
+
+### Power Automate
+1. Use the Calendly connector's built-in trigger -- it handles subscription management
+2. Avoid creating webhook subscriptions manually in the flow
+3. Add a 'Delay' action between any Calendly API calls to stay under the rate limit
+
+**Which tool should you use?** Zapier's native Calendly trigger is the easiest -- it manages webhook subscriptions internally without burning your API quota.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Calendly returns 429 'Rate Limit Exceeded' when creating webhook subscriptions
+- Zapier Calendly trigger stops firing after multiple test runs
+- Calendly webhook list shows many duplicate subscriptions for the same URL
+- New Calendly bookings stop arriving in Zapier after testing
+
+**What it means in plain English:** Your integration is creating new Calendly webhook subscriptions too frequently, exceeding the API rate limit. Calendly caps at about 120 requests per minute per token.
+
+**Most common cause:** Each Zapier test run creates a new webhook subscription without cleaning up old ones, quickly exhausting Calendly's API quota.
+
+</div>
+
 ## The Problem
 
 Your Zapier integration creates a new Calendly webhook subscription on every Zap turn ("if not exists, create it"), and within minutes Calendly returns `429 Retry-After=60` for all webhook management calls. New bookings stop arriving in Zapier. Worse, the same flow on Zapier's background polling exposes large-error "out of quota" stacks with no automatic recovery.

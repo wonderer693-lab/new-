@@ -28,6 +28,100 @@ keywords:
   <strong>Silent failure:</strong> The Zoho API returns HTTP 401 when the access token expires, and a single sync batch of 200 contacts will skip the remaining 199 records. The middleware rarely surfaces this — check your Mailchimp subscriber delta before assuming the integration works.
 </div>
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Zoho OAuth access tokens expire every 60 minutes. When the token expires mid-sync, the remaining Mailchimp contacts are silently skipped with HTTP 401 errors.
+
+**The fix:**
+1. Set up auto-refresh: refresh the token proactively at 50 minutes (before expiry)
+2. Wrap every Zoho API call in a retry-on-401 that refreshes the token and replays
+3. Use the correct auth header: 'Zoho-oauthtoken' (not 'Bearer')
+4. Re-run skipped records using a last_modified_time bookmark after token refresh
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+_cache = {"token": None, "expires_at": 0}
+
+def get_token(client_id, client_secret, refresh_token):
+    if _cache["token"] and time.time() < _cache["expires_at"] - 600:
+        return _cache["token"]
+    r = requests.post("https://accounts.zoho.com/oauth/v2/token", data={
+        "grant_type": "refresh_token", "client_id": client_id,
+        "client_secret": client_secret, "refresh_token": refresh_token})
+    _cache["token"] = r.json()["access_token"]
+    _cache["expires_at"] = time.time() + 3600
+    return _cache["token"]
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Zoho CRM with Mailchimp and the sync silently stops after about an hour. Zoho OAuth tokens expire every 60 minutes, and my middleware doesn't refresh them -- the remaining contacts get 401 errors. How do I auto-refresh the token before it expires?
+
+**What to expect:** The AI should help you implement proactive token refresh and retry-on-401 logic.
+
+**If it doesn't work**, add this follow-up:
+> I added auto-refresh but I'm getting 'invalid_code' errors on refresh. Could it be that I'm reusing a rotated refresh token?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Zoho token expiry in Mailchimp syncs using other tools:
+
+### Zapier
+1. Use Zapier's native Zoho CRM connection -- it auto-refreshes tokens
+2. Check Zap history for 'authentication_error' which indicates a stale token
+3. Re-authorize the Zoho connection in Zapier if refresh fails
+
+### Make (Integromat)
+1. Store Zoho credentials in Make's connection manager -- it handles refresh
+2. Enable the 'Break' error handler on the Zoho module to surface 401 errors
+3. Re-authorize the Zoho connection in Make if tokens fail to refresh
+
+### n8n
+1. Use the Zoho credential node with auto-refresh enabled
+2. Add a 'Code' node to implement proactive token refresh at 50 minutes
+3. Add error handling to catch 401 and trigger a token refresh
+
+### Power Automate
+1. Use the Zoho connector's built-in authentication -- it handles token refresh
+2. Add a Condition to check for 401 errors and refresh the token
+3. Store the refresh token in a secure variable for reuse
+
+**Which tool should you use?** Zapier is the easiest -- its native Zoho connection handles token refresh automatically without any code.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Zoho-to-Mailchimp sync silently stops after about an hour
+- Zoho API returns 401 'INVALID_TOKEN' for contacts mid-batch
+- Mailchimp audience hasn't grown in 24 hours despite Zoho having new contacts
+- Middleware logs show a spike of 401 errors once per hour
+
+**What it means in plain English:** Zoho OAuth access tokens expire every 60 minutes. When the token expires, all API calls return 401 and the sync silently skips remaining records.
+
+**Most common cause:** Not implementing proactive token refresh -- the middleware uses the token until it expires instead of refreshing at 50 minutes.
+
+</div>
+
 ## The Problem
 
 A Zoho-to-Mailchimp contact sync that worked yesterday stops adding or updating subscribers in Mailchimp, but no exception is raised in the middleware. The Zoho REST API returns `HTTP 401 Unauthorized` after the access token's lifetime elapses, and unless your integration explicitly treats 401 as a refresh trigger, the rest of the batch is silently aborted. By the time an operator notices the Mailchimp audience has not grown in 24 hours, hundreds of Zoho records are un-synced.

@@ -24,6 +24,94 @@ keywords:
   - "salesforce to activecampaign field mapping fix"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Salesforce and ActiveCampaign use different field types. Picklist values from Salesforce don't match ActiveCampaign dropdown options, and booleans don't translate to checkboxes. Fields arrive blank in ActiveCampaign.
+
+**The fix:**
+1. Check which Salesforce fields are syncing blank into ActiveCampaign
+2. Look up the ActiveCampaign field type and options for each field (GET /fields)
+3. Map Salesforce picklist values to ActiveCampaign dropdown option labels
+4. Convert Salesforce booleans to '0'/'1' strings for ActiveCampaign checkboxes
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+f = requests.get(f"{ac_url}/api/3/fields",
+    headers={"Api-Token": token}).json()
+for field in f["fields"]:
+    if field["type"] == "dropdown":
+        print(field["title"], field.get("options", []))
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Salesforce with ActiveCampaign and custom fields are syncing blank. Salesforce sends picklist values as internal names but ActiveCampaign dropdowns expect option labels. How do I map Salesforce picklist values to ActiveCampaign dropdown options correctly?
+
+**What to expect:** The AI should help you build a mapping between Salesforce picklist values and ActiveCampaign dropdown labels, and handle boolean/date conversions.
+
+**If it doesn't work**, add this follow-up:
+> I mapped the dropdown values but date fields are still failing. Salesforce sends ISO timestamps -- what format does ActiveCampaign expect?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Salesforce-to-ActiveCampaign field mapping in other automation tools:
+
+### Zapier
+1. Use Zapier's 'Formatter' step to convert picklist values before the ActiveCampaign action
+2. Add a 'Lookup Table' in Formatter to map Salesforce values to ActiveCampaign option labels
+3. Use the 'Format Date' step to convert ISO timestamps to YYYY-MM-DD
+
+### Make (Integromat)
+1. Add a 'Set Variable' module to transform field values before the ActiveCampaign module
+2. Use Make's built-in date formatting to convert Salesforce timestamps
+3. Create a lookup table in a Data Store for picklist-to-dropdown mapping
+
+### n8n
+1. Add a 'Set' node to transform each field value before the ActiveCampaign node
+2. Use the 'Date & Time' node to convert ISO dates to YYYY-MM-DD
+3. Map picklist values using an expression with a lookup object
+
+### Power Automate
+1. Use a 'Compose' action to transform field values before the ActiveCampaign action
+2. Add a 'Condition' to check field types and apply the correct conversion
+3. Use the 'Convert time zone' action for date fields
+
+**Which tool should you use?** Zapier is the easiest -- its Formatter step handles picklist mapping and date conversion without code.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- ActiveCampaign custom fields show blank values after Salesforce sync
+- Salesforce picklist values don't appear in ActiveCampaign dropdown fields
+- Boolean fields from Salesforce show as literal 'true'/'false' instead of checkboxes
+- ActiveCampaign segmentation by custom field returns zero contacts
+
+**What it means in plain English:** Salesforce and ActiveCampaign use different data formats for the same field types. Without conversion, ActiveCampaign silently drops values that don't match its expected format.
+
+**Most common cause:** Passing Salesforce picklist internal values directly to ActiveCampaign dropdowns, which expect option labels instead.
+
+</div>
+
 ## The Problem
 
 Salesforce picklist updates pushed to ActiveCampaign arrive blank, or the picklist array arrives as `[redundant.encoded.label]` and silently refuses. Sometimes a Salesforce boolean true/false becomes "1"/"0" and triggers a duplicate-value error in ActiveCampaign's strict checkbox validation. New contacts arrive without their favorite fields populated, segmentation breaks, and operations teams scramble to remediate the silent data loss.

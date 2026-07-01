@@ -28,6 +28,92 @@ keywords:
   <strong>Silent failure:</strong> Pipedrive contacts without a primary email are skipped by the Mailchimp sync without an error. The Mailchimp audience is silently short compared to Pipedrive. Compare counts today.
 </div>
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Pipedrive persons without an email address are silently skipped by the Mailchimp sync. Mailchimp requires email as the primary key, so contacts with no email never reach the audience -- and no error is logged.
+
+**The fix:**
+1. Compare Pipedrive person count to Mailchimp audience count -- a gap means silent skips
+2. Add an email validation step before the Mailchimp action to catch missing emails
+3. Log skipped persons to a spreadsheet or data-steward list for email enrichment
+4. Make email required in Pipedrive for any person that should sync to Mailchimp
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+persons_no_email = [p for p in persons if not p.get("email") or len(p["email"]) == 0]
+print(f"Found {len(persons_no_email)} persons without email")
+for p in persons_no_email[:5]:
+    print(f"  - {p['name']} (ID: {p['id']})")
+# Export to CSV for data enrichment
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Pipedrive with Mailchimp and the Mailchimp audience is smaller than expected. Pipedrive allows persons without email, but Mailchimp requires email as the primary key. My sync silently skips these contacts with no error. How do I detect and handle missing emails?
+
+**What to expect:** The AI should help you add email validation, log skipped contacts, and set up data enrichment workflows.
+
+**If it doesn't work**, add this follow-up:
+> I added validation but some Pipedrive persons have email arrays with empty values like [{value: ''}]. How do I handle these edge cases?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle missing emails in Pipedrive-to-Mailchimp syncs using other tools:
+
+### Zapier
+1. Add a 'Filter' step after the Pipedrive trigger: only continue if email is not empty
+2. Use Zapier's 'Paths' to route persons with email to Mailchimp and persons without to a Google Sheet
+3. Set up a weekly Zap that reads the Google Sheet and alerts the data team
+
+### Make (Integromat)
+1. Add a filter module: 'email exists AND email[0].value is not empty'
+2. Route skipped persons to a Make Data Store or Google Sheets module for enrichment
+3. Set up an alert scenario that counts skipped persons weekly
+
+### n8n
+1. Add an IF node after the Pipedrive trigger to check for email presence
+2. Route persons without email to a 'Spreadsheet File' node for tracking
+3. Send an email alert when the skip count exceeds a threshold
+
+### Power Automate
+1. Add a Condition action to check if the Pipedrive person has an email
+2. Route persons without email to a 'Create row in Excel' action for tracking
+3. Send a Teams notification when skipped contacts accumulate
+
+**Which tool should you use?** Zapier is the easiest -- its Filter step makes it obvious when contacts are skipped, and Paths let you route them to a tracking spreadsheet.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp audience count is lower than Pipedrive person count
+- No errors in sync logs but contacts are missing from Mailchimp
+- Pipedrive persons with only phone numbers never appear in Mailchimp
+- Middleware reports all syncs as successful despite the audience gap
+
+**What it means in plain English:** Pipedrive allows creating persons without email, but Mailchimp requires email as the member key. The sync silently skips these persons without logging an error.
+
+**Most common cause:** Pipedrive persons created without an email address (phone-only contacts) have no key for Mailchimp to create a member record.
+
+</div>
+
 ## The Problem
 
 You onboard a list of Pipedrive persons into a Mailchimp audience for the first launch and discover the audience is short of the Pipedrive count. There were no error logs from the middleware. The root cause: a chunk of Pipedrive persons were created without an email address, and Mailchimp requires email as the member primary key, so the integration silently passed them over.

@@ -24,6 +24,97 @@ keywords:
   - "salesforce to mailchimp consent compliance"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Mailchimp unsubscribes get re-added by your Salesforce sync. When Salesforce pushes contact updates, it accidentally re-subscribes people who opted out -- a GDPR compliance risk.
+
+**The fix:**
+1. Check if your sync sends 'status: subscribed' on every update -- it shouldn't
+2. Remove the 'status' field from PATCH requests for existing Mailchimp members
+3. Add a suppression list check: skip members whose Mailchimp status is 'unsubscribed' or 'cleaned'
+4. Use 'status_if_new' instead of 'status' -- it only applies to brand-new members
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests, hashlib
+
+h = hashlib.md5(email.lower().encode()).hexdigest()
+r = requests.get(f"https://{dc}.api.mailchimp.com/3.0/lists/{LIST}/members/{h}",
+    headers={"Authorization": f"apikey {key}"})
+status = r.json().get("status")
+if status in ("unsubscribed", "cleaned"):
+    print(f"SKIP: {email} is {status}")
+else:
+    print(f"OK to update: {email}")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Salesforce with Mailchimp and unsubscribed contacts are getting re-subscribed. My sync sends 'status: subscribed' on every update, which overrides the member's opt-out. How do I prevent re-subscribing people who opted out while still updating their other fields?
+
+**What to expect:** The AI should help you add a status guard that skips unsubscribed members and uses status_if_new for new members only.
+
+**If it doesn't work**, add this follow-up:
+> I removed the status field but new contacts aren't getting subscribed. Should I use status_if_new instead?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle unsubscribe protection in other automation tools:
+
+### Zapier
+1. In Zapier's Mailchimp 'Add/Update Subscriber' action, set status to blank or 'Don't update status'
+2. Add a 'Filter' step to skip contacts whose Mailchimp status is 'unsubscribed'
+3. Use 'Find Subscriber' before 'Update' to check the current status
+
+### Make (Integromat)
+1. Add a filter before the Mailchimp module: MemberStatus != unsubscribed
+2. Use Make's Mailchimp 'Get Subscriber' module to check status before updating
+3. Set the update module to omit the status field for existing members
+
+### n8n
+1. Add a Mailchimp 'Get' node to check the member's current status
+2. Use an IF node to skip members with status 'unsubscribed' or 'cleaned'
+3. Only include the status field when creating new members
+
+### Power Automate
+1. Add a 'Get member' Mailchimp action to check current status
+2. Use a Condition to skip members who are unsubscribed
+3. Set the update action to not modify the subscription status
+
+**Which tool should you use?** Zapier is the easiest -- its Mailchimp action lets you choose 'Don't update status' so unsubscribes are never overwritten.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp contacts who unsubscribed are receiving campaigns again
+- Salesforce sync show success but Mailchimp compliance dashboard flags re-subscriptions
+- Mailchimp member status changed from 'unsubscribed' to 'subscribed' after sync
+- GDPR or CAN-SPAM compliance warnings appear in your Mailchimp account
+
+**What it means in plain English:** Your Salesforce sync is sending 'status: subscribed' on every contact update, which overrides the member's unsubscribe status in Mailchimp. This violates GDPR Article 21.
+
+**Most common cause:** Hardcoding 'status: subscribed' in every PATCH request instead of omitting the status field for existing members.
+
+</div>
+
 ## The Problem
 
 Salesforce sends routine contact updates into Mailchimp; among the updates are records whose Mailchimp status is `unsubscribed` or `cleaned`. Without a status guard, the PATCH re-subscribes the member — sending future campaigns to a contact who opted out. This is a GDPR Article 21 and CAN-SPAM violation, can trigger Mailchimp compliance review, and risks blacklisting your sending domain.

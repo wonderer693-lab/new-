@@ -24,6 +24,94 @@ keywords:
   - "calendly webhook payload verification zapier"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Calendly webhook verification fails in Zapier because the generic 'Webhooks by Zapier' trigger doesn't validate the Calendly-Webhook-Signature header. Events arrive untrusted and may be silently dropped.
+
+**The fix:**
+1. Switch to Zapier's official Calendly app trigger -- it verifies signatures automatically
+2. If you must use 'Webhooks by Zapier', add a 'Run JavaScript' step to verify the HMAC signature
+3. Get your webhook signing key from Calendly: Integrations & Apps > API and Webhooks
+4. Reject webhooks with invalid or stale signatures (older than 3 minutes)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+const crypto = require("crypto");
+const [t, v1] = input.headers["calendly-webhook-signature"]
+    .split(",").map(p => p.split("=")[1]);
+const hmac = crypto.createHmac("sha256", SIGNING_KEY)
+    .update(`${t}.${input.rawBody}`).digest("hex");
+if (hmac !== v1) throw new Error("Bad signature");
+return { verified: true };
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Zapier with Calendly and webhook events are arriving unverified. I'm using 'Webhooks by Zapier' as the trigger and it doesn't check the Calendly-Webhook-Signature header. How do I verify the HMAC signature to ensure webhooks are authentic?
+
+**What to expect:** The AI should walk you through verifying Calendly's HMAC-SHA256 signature in a Zapier code step, or switching to the official Calendly trigger.
+
+**If it doesn't work**, add this follow-up:
+> I added signature verification but Calendly is still retrying events. Could the issue be that I'm returning 200 for invalid signatures instead of 401?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Calendly webhook verification in other automation tools:
+
+### Zapier
+1. Use Zapier's native Calendly trigger ('Invitee Created') -- it verifies signatures automatically
+2. Avoid 'Webhooks by Zapier' for Calendly unless you add a JavaScript verification step
+3. Store the signing key in Zapier's environment, not in the Zap's visible fields
+
+### Make (Integromat)
+1. Use Make's official Calendly module which handles verification
+2. If using a custom webhook, add a 'Hash (HMAC)' module to compute and compare signatures
+3. Set the signing secret in a Make Data Store or key management module
+
+### n8n
+1. Create a Webhook trigger node and add a 'Crypto' node to verify HMAC-SHA256
+2. Compare the computed hash with the Calendly-Webhook-Signature header
+3. Return 401 for invalid signatures and 200 for valid ones
+
+### Power Automate
+1. Use 'When an HTTP request is received' trigger
+2. Add a 'Compose' action to compute HMAC-SHA256 of the body with the signing key
+3. Add a 'Condition' to compare the computed hash with the header value
+
+**Which tool should you use?** Zapier's native Calendly trigger is the easiest -- it handles signature verification automatically without any code.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Calendly webhook events arrive in Zapier but are marked as unverified
+- Calendly's webhook log shows retries with 'not verified' or '500' status
+- Zapier received fewer events than Calendly reports sending
+- Calendly pauses the webhook integration after 5 consecutive unverified responses
+
+**What it means in plain English:** Calendly signs every webhook with an HMAC-SHA256 header. Your Zapier trigger receives the data but doesn't verify the signature, so Calendly considers the delivery unverified and may pause the integration.
+
+**Most common cause:** Using 'Webhooks by Zapier' (a raw HTTP receiver) instead of the official Calendly Zapier trigger, which handles signature verification automatically.
+
+</div>
+
 ## The Problem
 
 Calendly firing into a custom Zapier "Webhooks by Zapier" trigger delivers meeting events — but every event arrives unverified. Calendly expects a 200 response only after you validate the `Calendly-Webhook-Signature` header; Zapier's generic Catch Hook does not do this for you. Worse, missed-verifications occasionally look like spam and Calendly retries the same event repeatedly until they hit the retry cap.

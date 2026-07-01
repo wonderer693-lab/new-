@@ -24,6 +24,95 @@ keywords:
   - "pipedrive deal custom data json key hash"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Pipedrive v2 API returns custom field keys as 40-character hash strings instead of numeric IDs. Your middleware still looks for numeric keys, reads empty values, and writes blank fields to Mailchimp.
+
+**The fix:**
+1. Fetch Pipedrive's field schema (/personFields) to get the hash key for each custom field
+2. Update your field mapping to use hash keys instead of numeric IDs
+3. In Zapier or Make, re-select custom fields in the module configuration
+4. Test with a single contact to confirm merge fields populate correctly in Mailchimp
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+r = requests.get("https://api.pipedrive.com/v2/personFields",
+    headers={"Authorization": f"Bearer {token}"},
+    params={"limit": 500})
+for f in r.json()["data"]:
+    if f.get("key") and len(f["key"]) > 10:
+        print(f"{f['name']}: key={f['key']}")  # Map these to Mailchimp merge tags
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Pipedrive with Mailchimp and after migrating to Pipedrive API v2, all custom field merge fields in Mailchimp are blank. Pipedrive v2 uses 40-character hash keys instead of numeric IDs for custom fields. How do I update my field mapping?
+
+**What to expect:** The AI should help you fetch the v2 field schema, build a hash-key-to-merge-tag mapping, and update your middleware.
+
+**If it doesn't work**, add this follow-up:
+> I updated the field mapping but email fields are also blank. Did Pipedrive v2 change the email format too?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Pipedrive v2 field mapping in other automation tools:
+
+### Zapier
+1. Re-select custom fields in Zapier's Pipedrive module -- the dropdown shows v2 field names
+2. Use Zapier's 'Formatter' step to map hash keys to Mailchimp merge tag names
+3. Test with a single contact and verify merge fields in Mailchimp
+
+### Make (Integromat)
+1. Re-pick custom fields in Make's Pipedrive module configuration
+2. Add a 'Set Variable' module to map Pipedrive hash keys to Mailchimp merge tags
+3. Store the field mapping in a Data Store module for easy updates
+
+### n8n
+1. Add an HTTP Request node to fetch /personFields from Pipedrive v2
+2. Use a 'Set' node to build the Mailchimp merge field mapping from hash keys
+3. Cache the field schema to avoid repeated API calls
+
+### Power Automate
+1. Use the HTTP action to fetch Pipedrive's field schema
+2. Use a 'Compose' action to build the merge field mapping
+3. Store the mapping in a variable for reuse across flow runs
+
+**Which tool should you use?** Zapier is the easiest -- re-selecting custom fields in the Pipedrive module automatically picks up v2 hash keys.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp merge fields are blank after Pipedrive v2 migration
+- Pipedrive custom fields show values in the UI but arrive empty in Mailchimp
+- Middleware logs show numeric field IDs that no longer exist in v2 responses
+- Custom field data that worked before the migration is now silently dropped
+
+**What it means in plain English:** Pipedrive v2 changed custom field keys from numeric IDs to 40-character hash strings. Your middleware still references the old numeric IDs, so it reads empty values.
+
+**Most common cause:** Not updating field mappings after migrating from Pipedrive API v1 (numeric IDs) to v2 (hash keys).
+
+</div>
+
 ## The Problem
 
 After migrating your Pipedrive integration from v1 to v2, every Mailchimp merge field that came from a custom field is now blank — but the Pipedrive record itself shows the value plainly in the UI. The middleware was looking up `['12345']` and Pipedrive v2 is now returning `['a1b2c3d4e5f6...40-char-hash']` as the JSON key, so your field map misses and the value is silently dropped.

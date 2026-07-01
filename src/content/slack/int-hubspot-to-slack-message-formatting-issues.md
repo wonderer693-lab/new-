@@ -24,6 +24,98 @@ keywords:
   - "slack markdown bold curly quotes hubspot"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** HubSpot data doesn't format correctly in Slack messages. Deal amounts show as raw numbers, dates appear as ISO strings, and text runs together without styling.
+
+**The fix:**
+1. Use Slack Block Kit instead of plain text for structured deal notifications
+2. Format currency server-side before sending (e.g., $1,000,000 instead of 1000000)
+3. Use Slack's mrkdwn syntax: *bold* (not **bold**), _italic_ (not *italic*)
+4. Build a reusable message template with header, fields, and context blocks
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+deal_card = {
+    "channel": "#deals",
+    "blocks": [
+        {"type": "header", "text": {"type": "plain_text", "text": f"New deal: {deal_name}"}},
+        {"type": "section", "fields": [
+            {"type": "mrkdwn", "text": f"*Amount:* ${amount:,.0f}"},
+            {"type": "mrkdwn", "text": f"*Stage:* {stage}"}
+        ]}
+    ]
+}
+print(json.dumps(deal_card, indent=2))
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating HubSpot with Slack and deal notifications look like walls of plain text. Amounts show as raw numbers (1000000 instead of $1,000,000), dates are ISO strings, and there's no formatting. How do I use Slack Block Kit to create properly formatted deal cards?
+
+**What to expect:** The AI should help you build Block Kit deal card templates with proper currency formatting and mrkdwn styling.
+
+**If it doesn't work**, add this follow-up:
+> I built a Block Kit template but HubSpot product names with asterisks break the formatting. How do I escape mrkdwn special characters?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to format HubSpot-Slack notifications in other automation tools:
+
+### Zapier
+1. Use Zapier's 'Formatter' step to format currency and dates before the Slack action
+2. Use Zapier's 'Send Block Kit Message' action with a pre-built JSON template
+3. Test the message in Slack's Block Kit Builder before deploying
+
+### Make (Integromat)
+1. Use Make's 'Set Variable' module to build a Block Kit JSON string
+2. Format currency and dates in Make before the Slack module
+3. Send via Make's HTTP module with the Block Kit JSON payload
+
+### n8n
+1. Use a 'Set' node to format currency and dates from HubSpot
+2. Build the Block Kit JSON in a 'Code' node
+3. Send via the Slack node with the formatted blocks
+
+### Power Automate
+1. Use a 'Compose' action to format currency and dates
+2. Build the Block Kit JSON in the compose output
+3. Send via the Slack connector with the composed payload
+
+**Which tool should you use?** Zapier is the easiest -- its Formatter step handles currency and date formatting, and the Block Kit editor catches JSON errors at setup time.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- HubSpot deal notifications show raw numbers instead of formatted currency
+- Dates appear as ISO timestamps (2026-06-26T18:43:00) instead of readable dates
+- Slack messages look like walls of plain text with no structure
+- Sales reps ignore notifications because they're hard to read
+
+**What it means in plain English:** HubSpot field values are being sent as raw text to Slack without formatting. Slack has no built-in currency or date formatter -- you must format values before sending.
+
+**Most common cause:** Piping HubSpot field values directly into Slack's text parameter without using Block Kit or server-side formatting.
+
+</div>
+
 ## The Problem
 
 HubSpot deal updates pushed to Slack look like walls of plain text: amounts show as `1000000` instead of `$1,000,000`, dates bleed through as raw ISO strings, and line breaks collapse so two deals blur into one unreadable line. Recipients ignore these notifications, which defeats the point of the integration.

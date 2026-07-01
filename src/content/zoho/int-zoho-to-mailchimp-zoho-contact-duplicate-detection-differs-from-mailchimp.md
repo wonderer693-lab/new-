@@ -24,6 +24,98 @@ keywords:
   - "mailchimp merge field email md5 sync"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Zoho allows multiple contacts with the same email, but Mailchimp deduplicates strictly on email. Syncing Zoho to Mailchimp causes contacts to overwrite each other -- the last write wins.
+
+**The fix:**
+1. Detect duplicate emails in Zoho before syncing (use a Coql query to group by email)
+2. Choose a winner per email (e.g., the most recently modified contact)
+3. Normalize emails before sync: trim whitespace, lowercase, strip aliases
+4. Add a suppression list for duplicate losers so they're skipped by the sync
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+from collections import defaultdict
+
+buckets = defaultdict(list)
+for contact in zoho_contacts:
+    email = contact["Email"].strip().lower()
+    buckets[email].append(contact)
+
+dupes = {k: v for k, v in buckets.items() if len(v) > 1}
+print(f"Found {len(dupes)} duplicate emails")
+for email, contacts in list(dupes.items())[:5]:
+    print(f"  {email}: {len(contacts)} contacts")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Zoho CRM with Mailchimp and contacts with the same email are overwriting each other. Zoho allows duplicate emails but Mailchimp uses email as the unique key. How do I detect and resolve duplicates before syncing?
+
+**What to expect:** The AI should help you detect Zoho duplicates, choose winners, and suppress losers before the Mailchimp sync.
+
+**If it doesn't work**, add this follow-up:
+> I resolved duplicates but some emails differ only by casing (User@Example.com vs user@example.com). How do I normalize emails before deduplication?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle duplicate detection in Zoho-to-Mailchimp syncs using other tools:
+
+### Zapier
+1. Use Zapier's 'Find Subscriber' step before 'Add/Update' to check if the email already exists
+2. Add a 'Filter' step to skip duplicate emails (use a lookup table)
+3. Use Zapier's 'Deduper' action to remove duplicate contacts before the Mailchimp step
+
+### Make (Integromat)
+1. Use Make's 'Array Aggregator' to group contacts by email before the Mailchimp module
+2. Add a filter to pick the most recently modified contact per email
+3. Route duplicate losers to a Data Store for review instead of syncing them
+
+### n8n
+1. Use an 'Item Lists' node to remove duplicates by email before the Mailchimp node
+2. Add a 'Code' node to group contacts by normalized email and pick winners
+3. Log duplicates to a spreadsheet node for manual review
+
+### Power Automate
+1. Use a 'Select' action with distinct email filtering before the Mailchimp action
+2. Add a Condition to skip contacts whose email already exists in Mailchimp
+3. Log duplicates to an Excel Online action for review
+
+**Which tool should you use?** Zapier is the easiest -- its Deduper action removes duplicate contacts before they reach Mailchimp.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp returns 400 'Member Exists' for some Zoho contacts during sync
+- Mailchimp merge fields show the wrong name for some contacts
+- Mailchimp audience is smaller than Zoho contact count (duplicates collapsed)
+- Two Zoho contacts with the same email show different data in Mailchimp over time
+
+**What it means in plain English:** Zoho allows multiple contacts with the same email, but Mailchimp keys members on email. When two Zoho contacts share an email, the second sync overwrites the first in Mailchimp.
+
+**Most common cause:** Not deduplicating Zoho contacts by email before syncing, so two contacts with the same email collapse into one Mailchimp member.
+
+</div>
+
 ## The Problem
 
 You run a sync from Zoho CRM contacts into a Mailchimp audience and partway through the batch you receive `400 Member Exists` for some records while other emails land on the wrong contact record. Mailchimp treats `email_address` as the primary key for an audience and will overwrite merge fields on the existing member, so two distinct Zoho contacts that happen to share an email collapse into one Mailchimp profile — typically the last one written wins.

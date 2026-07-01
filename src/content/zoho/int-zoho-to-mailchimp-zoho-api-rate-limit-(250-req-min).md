@@ -24,6 +24,99 @@ keywords:
   - "zoho crm rate limit 2026"
 ---
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Zoho CRM's 250 requests/minute API rate limit is hit during Mailchimp bulk sync. The sync stalls after a few hundred records and requires manual re-runs.
+
+**The fix:**
+1. Add a rate limiter to pace Zoho API calls at 240 requests/minute (leave headroom)
+2. Use Zoho Coql batch queries to fetch 200 records per call instead of one-by-one
+3. Add exponential backoff on 429 errors -- honor the Retry-After header
+4. Bookmark sync progress by last_modified_time so stalled batches resume, not restart
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time
+
+class ZohoLimiter:
+    def __init__(self, rpm=240):
+        self.calls = []
+        self.rpm = rpm
+    def acquire(self):
+        now = time.monotonic()
+        self.calls = [t for t in self.calls if now - t < 60]
+        if len(self.calls) >= self.rpm:
+            time.sleep(60 - (now - self.calls[0]))
+        self.calls.append(time.monotonic())
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Zoho CRM with Mailchimp and bulk syncs stall after a few hundred records. Zoho returns 429 'Rate Limit Exceeded' at 250 requests/minute. How do I pace API calls and use batch queries to sync large contact lists?
+
+**What to expect:** The AI should help you implement rate limiting, batch queries, and resume bookmarks for Zoho-to-Mailchimp syncs.
+
+**If it doesn't work**, add this follow-up:
+> I added rate limiting but the sync is still too slow for 10,000 contacts. Can I use Zoho's bulk export API instead of Coql?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle Zoho rate limits in Mailchimp syncs using other tools:
+
+### Zapier
+1. Use Zapier's 'Delay After Queue' to throttle Zoho API calls
+2. Add a 'Delay by Zapier' step (1 second) between Zoho fetch actions
+3. Split contacts into batches of 200 with delays between each batch
+
+### Make (Integromat)
+1. Use Make's built-in rate-limit module with a 60-second window
+2. Add an 'Array Aggregator' to chunk contacts into 200-record batches
+3. Add a 'Sleep' module between batches to stay under 250 RPM
+
+### n8n
+1. Use a 'Wait' node between Zoho API calls to pace at 240 RPM
+2. Use the 'Split In Batches' node to process contacts in groups
+3. Add error handling to catch 429 and wait for the Retry-After period
+
+### Power Automate
+1. Add a 'Delay' action between Zoho API calls
+2. Use 'Apply to each' with sequential processing and delays
+3. Add error handling with retry on 429 responses
+
+**Which tool should you use?** Zapier is the easiest -- its Delay action lets you throttle Zoho calls without building a custom rate limiter.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Zoho returns 429 'Rate Limit Exceeded' during Mailchimp sync
+- Sync stalls after 200-300 records and requires manual re-runs
+- Middleware logs show X-RateLimit-Remaining: 0 from Zoho
+- Re-running the sync repeats the first records because the cursor was lost
+
+**What it means in plain English:** Your Zoho-to-Mailchimp sync exceeds Zoho's 250 requests/minute limit. The rolling 60-second window means you can't burst and wait -- you must pace continuously.
+
+**Most common cause:** Making too many Zoho API calls per minute without rate limiting, batch queries, or progress bookmarks.
+
+</div>
+
 ## The Problem
 
 A 10,000-contact Zoho-to-Mailchimp sync routinely stalls after a few hundred records, leaving the Mailchimp audience partially populated and requiring hours of manual re-runs. The middleware stops because Zoho returns `429 Too Many Requests` once the rolling 60-second window exceeds 250 calls, and most middleware aborts the batch instead of waiting.

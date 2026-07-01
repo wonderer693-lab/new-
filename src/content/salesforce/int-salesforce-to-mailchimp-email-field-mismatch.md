@@ -28,6 +28,95 @@ keywords:
   <strong>Silent failure:</strong> Salesforce contacts with no Email field are silently skipped by most Mailchimp sync middleware. You will not see an error log; você only discover missing subscribers when the audience should have grown but did not. Audit your Mailchimp audience delta against Salesforce today.
 </div>
 
+
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Salesforce contacts with empty or unmapped Email fields are silently skipped by the Mailchimp sync. Mailchimp requires email as the primary key, so contacts without email never reach the audience.
+
+**The fix:**
+1. Compare Salesforce contact count to Mailchimp audience growth -- a gap means silent skips
+2. Add an email validation step: transform and normalize the email field before sending to Mailchimp
+3. Use a Salesforce formula field to coalesce Email and Alternate_Email__c
+4. Log skipped contacts for data enrichment by your team
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import hashlib
+
+def to_mailchimp(sf_contact):
+    email = (sf_contact.get("Email") or sf_contact.get("Alternate_Email__c") or "").strip().lower()
+    if not email:
+        return None  # Skip - log this contact for enrichment
+    h = hashlib.md5(email.encode()).hexdigest()
+    return {"email_address": email, "merge_fields": {"FNAME": sf_contact.get("FirstName", "")}}
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code workaround](#no-code-workaround).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm integrating Salesforce with Mailchimp and contacts are silently missing from the audience. Salesforce contacts without an Email field (or with an alternate email field) are skipped by the sync. How do I transform and coalesce email fields so more contacts reach Mailchimp?
+
+**What to expect:** The AI should help you coalesce email fields, normalize addresses, and set up skip logging.
+
+**If it doesn't work**, add this follow-up:
+> I added a formula field but some contacts still have no email at all. How do I set up a data enrichment workflow for these contacts?
+
+**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
+
+</div>
+
+## No-Code Workaround <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to debug this? Here's how to handle email field issues in Salesforce-to-Mailchimp syncs using other tools:
+
+### Zapier
+1. Use Zapier's 'Formatter' step to coalesce Email and Alternate Email fields
+2. Add a 'Filter' step to skip contacts with no email and route them to a Google Sheet
+3. Use 'Lowercase' formatter on the email to normalize before the Mailchimp action
+
+### Make (Integromat)
+1. Add a 'Set Variable' module to coalesce email fields before the Mailchimp module
+2. Use a filter to route contacts without email to a Data Store for enrichment
+3. Normalize email to lowercase to match Mailchimp's hashing behavior
+
+### n8n
+1. Add a 'Set' node to coalesce Email and Alternate_Email__c fields
+2. Use an IF node to skip contacts with empty email and log them
+3. Normalize email to lowercase before computing the Mailchimp subscriber hash
+
+### Power Automate
+1. Use a 'Compose' action to coalesce email fields
+2. Add a Condition to skip contacts without email
+3. Route skipped contacts to an Excel Online action for tracking
+
+**Which tool should you use?** Zapier is the easiest -- its Formatter step handles email coalescing and normalization, and Filter makes skips visible.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these:
+
+- Mailchimp audience is smaller than Salesforce contact count
+- No errors in sync logs but contacts are missing from Mailchimp
+- Salesforce contacts with Alternate_Email__c but no Email never reach Mailchimp
+- Middleware reports success for all records despite the audience gap
+
+**What it means in plain English:** Salesforce contacts without a primary Email field have no key for Mailchimp. The sync silently skips them because Mailchimp requires email_address as the member primary key.
+
+**Most common cause:** Salesforce Email field is empty or not mapped, and alternate email fields (Alternate_Email__c) are not being coalesced.
+
+</div>
+
 ## The Problem
 
 Contacts created in Salesforce without a primary Email are dropped quietly on the way to Mailchimp. The Mailchimp audience is short by contact count with no exceptions in the integration logs. Because Mailchimp keys every member on `email_address`, a blank email from Salesforce simply has no member record; since middleware treats "no email" as a skip and logs it as success at best — or not at all — the absence is invisible.
