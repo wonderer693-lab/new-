@@ -200,6 +200,12 @@ resp = requests.post("https://api.calendly.com/webhook_subscriptions", headers=h
 - **Can I have multiple Calendly webhooks for the same URL?** No — each URL can only have one webhook subscription. Process multiple event types in the same webhook handler.
 - **Does Calendly 409 apply to event scheduling?** Less commonly — most scheduling conflicts are handled by Calendly's UI. 409 mainly occurs with webhook subscriptions and configuration resources.
 
+See all [Calendly API errors](/calendly/) in our complete reference.
+
+Similar conflict issues occur with [HubSpot 409](/hubspot/errors/409) and [Salesforce 409](/salesforce/errors/409).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
+
 ## Related Errors
 
 - [Calendly 422 Validation Error](/calendly/errors/422) — Validation error

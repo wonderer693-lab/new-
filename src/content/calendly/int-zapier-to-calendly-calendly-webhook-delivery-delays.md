@@ -198,6 +198,10 @@ A scheduling workflow routes Calendly meeting bookings to a CRM update, a Slack 
 - [API Docs](https://developer.calendly.com/api-docs/)
 - [Webhooks](https://developer.calendly.com/api-docs/ZG9jOjM2MzE2MzQ-webhooks)
 
+Related: [Calendly 404](/calendly/errors/404) for missing events, [Zapier 500](/zapier/errors/500) for server errors.
+
+See all [Calendly API errors](/calendly/) or [Zapier errors](/zapier/) for more troubleshooting.
+
 ## Related Errors
 - [Calendly webhook verification header missing](/integrations/zapier-to-calendly/errors/calendly-webhook-verification-header-missing)
 - [Calendly API rate limit on webhook subscriptions](/integrations/zapier-to-calendly/errors/calendly-api-rate-limit-on-webhook-subscriptions)

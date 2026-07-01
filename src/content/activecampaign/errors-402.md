@@ -181,6 +181,12 @@ curl -s -w "\n%{http_code}" "https://{account}.api-us1.com/api/3/contacts" \
 - **How long after payment does API access resume?** Usually within minutes of successful payment. If still blocked after 24 hours, contact ActiveCampaign support.
 - **Does downgrading my plan cause 402?** Possibly — if the new plan doesn't include API access, you'll get 402 errors. Verify your plan includes API features.
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar billing issues occur with [Pipedrive 402](/pipedrive/errors/402) for plan-limited features.
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [ActiveCampaign 401 Unauthorized](/activecampaign/errors/401) — Invalid or missing API token

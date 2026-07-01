@@ -207,6 +207,10 @@ You bulk-sync 5,000 Pipedrive persons to a Mailchimp audience; the first ~750 su
 - [API Docs](https://mailchimp.com/developer/marketing/api/)
 - [Lists](https://mailchimp.com/developer/marketing/api/lists/)
 
+Related: [Pipedrive 400](/pipedrive/errors/400) for data format issues, [Mailchimp 400](/mailchimp/errors/400) for validation errors.
+
+See all [Mailchimp API errors](/mailchimp/) or [Pipedrive API errors](/pipedrive/) for more troubleshooting.
+
 ## Related Errors
 - [Pipedrive person email not required](/integrations/pipedrive-to-mailchimp/errors/pipedrive-person-email-not-required)
 - [Pipedrive v2 hash key field IDs in custom data](/integrations/pipedrive-to-mailchimp/errors/pipedrive-v2-hash-key-field-ids-in-custom-data)

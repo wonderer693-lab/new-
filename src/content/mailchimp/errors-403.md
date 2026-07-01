@@ -189,6 +189,12 @@ In Mailchimp web UI: Profile > Extras > API keys > ensure API access is enabled 
 - **Can I fix Mailchimp 403 by changing permissions?** No — permissions are tied to the Mailchimp user role, which is set in the web UI. Generate the API key under an Admin-level user instead.
 - **Does Mailchimp 403 mean my API key is expired?** No — API keys don't expire. A 403 means the key is valid but the associated user lacks the required permissions.
 
+See all [Mailchimp API errors](/mailchimp/) in our complete reference.
+
+Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Slack not_in_channel](/slack/errors/not_in_channel).
+
+This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/), [Pipedrive to Mailchimp](/integrations/pipedrive-to-mailchimp/), and [Zoho to Mailchimp](/integrations/zoho-to-mailchimp/) integration error guides.
+
 ## Related Errors
 
 - [Mailchimp 401 Unauthorized](/mailchimp/errors/401) — Invalid or missing API token

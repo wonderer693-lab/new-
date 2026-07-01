@@ -216,6 +216,10 @@ Calendly firing into a custom Zapier "Webhooks by Zapier" trigger delivers meeti
 - [API Docs](https://developer.calendly.com/api-docs/)
 - [Webhooks](https://developer.calendly.com/api-docs/ZG9jOjM2MzE2MzQ-webhooks)
 
+Related: [Calendly 401](/calendly/errors/401) for auth issues, [Zapier 400](/zapier/errors/400) for configuration errors.
+
+See all [Calendly API errors](/calendly/) or [Zapier errors](/zapier/) for more troubleshooting.
+
 ## Related Errors
 - [Calendly webhook delivery delays](/integrations/zapier-to-calendly/errors/calendly-webhook-delivery-delays)
 - [Calendly API rate limit on webhook subscriptions](/integrations/zapier-to-calendly/errors/calendly-api-rate-limit-on-webhook-subscriptions)

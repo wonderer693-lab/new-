@@ -212,6 +212,10 @@ Salesforce sends routine contact updates into Mailchimp; among the updates are r
 - [API Docs](https://mailchimp.com/developer/marketing/api/)
 - [Lists](https://mailchimp.com/developer/marketing/api/lists/)
 
+Related: [Salesforce 400](/salesforce/errors/400) for data format issues, [Mailchimp 429](/mailchimp/errors/429) for rate limit issues during re-sync.
+
+See all [Mailchimp API errors](/mailchimp/) or [Salesforce API errors](/salesforce/) for more troubleshooting.
+
 ## Related Errors
 - [Email field mismatch (Salesforce ↔ Mailchimp)](/integrations/salesforce-to-mailchimp/errors/email-field-mismatch)
 - [Custom field type mismatch (Salesforce ↔ Mailchimp)](/integrations/salesforce-to-mailchimp/errors/custom-field-type-mismatch)

@@ -200,6 +200,12 @@ if resp.status_code == 403:
 - **What causes Calendly 403 for an admin?** Even admins get 403 for organization-level resources if the API token is not scoped to the organization. Use organization OAuth scopes.
 - **How do I check my Calendly subscription level?** Go to Calendly web app > Settings > Account > Subscription or call `GET /users/me` and check the organization details.
 
+See all [Calendly API errors](/calendly/) in our complete reference.
+
+Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Mailchimp 403](/mailchimp/errors/403).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
+
 ## Related Errors
 
 - [Calendly 401 Unauthorized](/calendly/errors/401) — Invalid or missing token

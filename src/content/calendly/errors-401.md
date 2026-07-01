@@ -216,6 +216,12 @@ def calendly_authenticated_request(url, headers, refresh_token, client_id, clien
 - **How do I create a Calendly Personal Access Token?** Go to https://calendly.com/integrations/api_webhooks and click "Generate New Token" under Personal Access Tokens.
 - **What's the difference between Calendly 401 and 403?** 401 means the token is missing or invalid. 403 means the token is valid but the user doesn't have permission for that specific resource.
 
+See all [Calendly API errors](/calendly/) in our complete reference.
+
+Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Slack invalid_auth](/slack/errors/invalid_auth).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
+
 ## Related Errors
 
 - [Calendly 403 Forbidden](/calendly/errors/403) — Insufficient permissions

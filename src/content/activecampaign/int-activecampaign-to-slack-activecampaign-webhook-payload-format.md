@@ -209,6 +209,10 @@ Your Zapier or Make pipeline routes all ActiveCampaign webhooks to one Slack not
 - [Web API](https://api.slack.com/web)
 - [Block Kit](https://api.slack.com/block-kit)
 
+Related: [ActiveCampaign 400](/activecampaign/errors/400) for data format issues, [Slack not_in_channel](/slack/errors/not_in_channel) for delivery issues.
+
+See all [ActiveCampaign API errors](/activecampaign/) or [Slack API errors](/slack/) for more troubleshooting.
+
 ## Related Errors
 - [ActiveCampaign API rate limit on webhook responses](/integrations/activecampaign-to-slack/errors/activecampaign-api-rate-limit-on-webhook-responses)
 - [Slack 1 req/sec vs ActiveCampaign webhook burst](/integrations/activecampaign-to-slack/errors/slack-1-req-sec-vs-activecampaign-webhook-burst)

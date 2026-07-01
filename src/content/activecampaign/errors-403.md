@@ -197,6 +197,12 @@ curl -s "https://{account}.api-us1.com/api/3/contacts" \
 - **Can I have an admin-only API key?** Yes — generate the API token from an admin user account. That key will have full access to all modules.
 - **Why does one endpoint return 403 while others work?** The API user likely has partial permissions — access to some modules but not others. Check the user's permission settings.
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Mailchimp 403](/mailchimp/errors/403).
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [ActiveCampaign 401 Unauthorized](/activecampaign/errors/401) — Invalid or missing API token

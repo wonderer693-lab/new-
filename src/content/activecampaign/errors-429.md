@@ -213,6 +213,12 @@ def activecampaign_request(url, headers, method="GET", data=None, max_retries=3)
 - **Can I increase my ActiveCampaign rate limit?** Enterprise plans may have higher limits. Contact ActiveCampaign support or your account manager to discuss rate limit increases.
 - **How long does a 429 block last?** Typically 60 seconds. After the cooldown, requests from the token are accepted again.
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Slack rate_limited](/slack/errors/rate_limited).
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [ActiveCampaign 401 Unauthorized](/activecampaign/errors/401) — Invalid or missing API token

@@ -207,6 +207,12 @@ resp = requests.put(
 - **What's the correct subscriber status flow in Mailchimp?** Valid statuses are: subscribed, unsubscribed, cleaned, pending. You cannot transition from "cleaned" directly to "subscribed" — use "pending" as an intermediate step.
 - **How do I create a subscriber with Mailchimp API?** Use `PUT /3.0/lists/{list_id}/members/{subscriber_hash}` with `email_address` and `status` fields. PUT acts as upsert — it creates if new, updates if existing.
 
+See all [Mailchimp API errors](/mailchimp/) in our complete reference.
+
+Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [Pipedrive 400](/pipedrive/errors/400).
+
+This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/), [Pipedrive to Mailchimp](/integrations/pipedrive-to-mailchimp/), and [Zoho to Mailchimp](/integrations/zoho-to-mailchimp/) integration error guides.
+
 ## Related Errors
 
 - [Mailchimp 404 Not Found](/mailchimp/errors/404) — Resource does not exist

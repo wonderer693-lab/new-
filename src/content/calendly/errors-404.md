@@ -211,6 +211,12 @@ if resp.status_code == 404:
 - **Can I get 404 with a valid UUID?** Yes — if the UUID is from a different organization or the resource is outside the token's scope, you'll get 404 even with a valid format.
 - **How do I get Calendly scheduled event UUIDs?** Use `GET /scheduled_events?user=<user_uri>` to list upcoming events and their UUIDs.
 
+See all [Calendly API errors](/calendly/) in our complete reference.
+
+Similar not-found issues occur with [HubSpot 404](/hubspot/errors/404), [Salesforce 404](/salesforce/errors/404), and [Mailchimp 404](/mailchimp/errors/404).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
+
 ## Related Errors
 
 - [Calendly 401 Unauthorized](/calendly/errors/401) — Invalid or missing token

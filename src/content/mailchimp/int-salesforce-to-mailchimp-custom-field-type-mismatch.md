@@ -213,6 +213,10 @@ Mailchimp subscribers arrive with empty or obviously wrong merge fields after a 
 - [API Docs](https://mailchimp.com/developer/marketing/api/)
 - [Lists](https://mailchimp.com/developer/marketing/api/lists/)
 
+Related: [Salesforce 400](/salesforce/errors/400) for data format issues, [Mailchimp 400](/mailchimp/errors/400) for validation errors.
+
+See all [Mailchimp API errors](/mailchimp/) or [Salesforce API errors](/salesforce/) for more troubleshooting.
+
 ## Related Errors
 - [Email field mismatch (Salesforce ↔ Mailchimp)](/integrations/salesforce-to-mailchimp/errors/email-field-mismatch)
 - [Mailchimp unsubscribes re-synced (Salesforce)](/integrations/salesforce-to-mailchimp/errors/mailchimp-unsubscribes-re-synced)

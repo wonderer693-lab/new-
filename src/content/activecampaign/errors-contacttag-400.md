@@ -274,6 +274,12 @@ print(resp.status_code)  # 201 or 200
 - [ActiveCampaign Authentication](https://developers.activecampaign.com/reference/authentication)
 - [ActiveCampaign Contact Tags](https://developers.activecampaign.com/reference/create-a-new-contacttag)
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [Mailchimp 400](/mailchimp/errors/400).
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [Salesforce INVALID_SESSION_ID](/salesforce/errors/INVALID_SESSION_ID)

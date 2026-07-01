@@ -215,6 +215,12 @@ if resp.status_code == 404:
 - **Can I get 404 for a valid ID?** Not normally. If a valid ID returns 404, it may be archived or in a different scope (e.g., a list in a different group).
 - **What's the difference between ActiveCampaign 404 and 422?** 404 means the resource doesn't exist. 422 means the resource path is valid but the request body has missing or invalid parameters.
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar not-found issues occur with [HubSpot 404](/hubspot/errors/404), [Salesforce 404](/salesforce/errors/404), and [Mailchimp 404](/mailchimp/errors/404).
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [ActiveCampaign 422 Unprocessable Entity](/activecampaign/errors/422) — Missing or invalid parameters

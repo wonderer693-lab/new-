@@ -199,6 +199,12 @@ def rate_limited_call(url, headers):
 - **How do I fix Calendly 429?** Add exponential backoff with jitter, respect the Retry-After header, and add inter-request delays.
 - **Can I increase my Calendly rate limit?** Higher limits are available on paid Calendly plans. Contact Calendly support for plan-specific allocations.
 
+See all [Calendly API errors](/calendly/) in our complete reference.
+
+Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Slack rate_limited](/slack/errors/rate_limited).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
+
 ## Related Errors
 
 - [Calendly 401 Unauthorized](/calendly/errors/401) — Invalid or missing token

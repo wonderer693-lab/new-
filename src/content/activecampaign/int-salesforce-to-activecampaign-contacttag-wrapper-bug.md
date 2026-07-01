@@ -209,6 +209,10 @@ When applying Salesforce-driven tags to ActiveCampaign contacts, all POST calls 
 - [API Overview](https://developers.activecampaign.com/reference/overview)
 - [Contact Tags](https://developers.activecampaign.com/reference/create-a-new-contacttag)
 
+Related: [ActiveCampaign 400](/activecampaign/errors/400) for validation errors, [Salesforce 400](/salesforce/errors/400) for data format issues.
+
+See all [ActiveCampaign API errors](/activecampaign/) or [Salesforce API errors](/salesforce/) for more troubleshooting.
+
 ## Related Errors
 - [Custom field type mismatch (Salesforce ↔ ActiveCampaign)](/integrations/salesforce-to-activecampaign/errors/custom-field-type-mismatch)
 - [Salesforce daily API limit exhausted by AC sync](/integrations/salesforce-to-activecampaign/errors/salesforce-daily-api-limit-exhausted-by-ac-sync)

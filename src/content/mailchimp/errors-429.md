@@ -206,6 +206,12 @@ batch_resp = requests.post("https://usX.api.mailchimp.com/3.0/batches",
 - **Does Mailchimp's batch endpoint count against rate limits?** A batch operation counts as 1 API call for the batch submission, plus 1 per operation within it for rate limiting purposes. However, it avoids the 10-connection concurrency limit.
 - **Can I increase my Mailchimp API rate limit?** Higher rate limits are available on paid Mailchimp plans. Contact Mailchimp support or your account manager for plan-specific allocations.
 
+See all [Mailchimp API errors](/mailchimp/) in our complete reference.
+
+Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Slack rate_limited](/slack/errors/rate_limited).
+
+This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/), [Pipedrive to Mailchimp](/integrations/pipedrive-to-mailchimp/), and [Zoho to Mailchimp](/integrations/zoho-to-mailchimp/) integration error guides.
+
 ## Related Errors
 
 - [Mailchimp 403 Forbidden](/mailchimp/errors/403) — User role lacks permission

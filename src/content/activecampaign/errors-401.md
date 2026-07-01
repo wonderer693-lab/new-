@@ -196,6 +196,12 @@ print(resp.status_code)  # 200 if token is valid
 - **Can I have multiple ActiveCampaign API keys?** Yes — each user can have their own API key. Manage them under Settings > Developer > API Access for each user.
 - **What happens if I regenerate my ActiveCampaign API key?** The old key is immediately invalidated. All integrations using the old key will get 401 until updated with the new key.
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Slack invalid_auth](/slack/errors/invalid_auth).
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [ActiveCampaign 403 Forbidden](/activecampaign/errors/403) — Authenticated but not authorized for resource

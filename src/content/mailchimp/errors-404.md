@@ -195,6 +195,12 @@ def get_subscriber(list_id, email):
 - **What data center should I use in the API URL?** Your Mailchimp data center (e.g., `us1`, `us2`, `us19`) is visible in your browser URL when logged into Mailchimp — it's the two-letter-two-digit prefix before `.api.mailchimp.com`.
 - **Does Mailchimp 404 mean my API key is wrong?** No — a wrong API key would return 401 (Unauthorized). A 404 means the endpoint or resource ID is incorrect.
 
+See all [Mailchimp API errors](/mailchimp/) in our complete reference.
+
+Similar not-found issues occur with [HubSpot 404](/hubspot/errors/404), [Salesforce 404](/salesforce/errors/404), and [Pipedrive 404](/pipedrive/errors/404).
+
+This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/), [Pipedrive to Mailchimp](/integrations/pipedrive-to-mailchimp/), and [Zoho to Mailchimp](/integrations/zoho-to-mailchimp/) integration error guides.
+
 ## Related Errors
 
 - [Mailchimp 400 Bad Request](/mailchimp/errors/400) — Malformed request or validation error

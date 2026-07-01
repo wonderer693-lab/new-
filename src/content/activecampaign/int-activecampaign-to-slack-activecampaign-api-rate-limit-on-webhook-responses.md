@@ -197,6 +197,10 @@ ActiveCampaign fires a webhook, your middleware synchronously pushes to Slack, S
 - [Web API](https://api.slack.com/web)
 - [Rate Limits](https://api.slack.com/docs/rate-limits)
 
+Related: [ActiveCampaign 429](/activecampaign/errors/429) for AC rate limits, [Slack rate_limited](/slack/errors/rate_limited) for Slack rate limits.
+
+See all [ActiveCampaign API errors](/activecampaign/) or [Slack API errors](/slack/) for more troubleshooting.
+
 ## Related Errors
 - [Slack 1 req/sec vs ActiveCampaign webhook burst](/integrations/activecampaign-to-slack/errors/slack-1-req-sec-vs-activecampaign-webhook-burst)
 - [ActiveCampaign webhook payload format](/integrations/activecampaign-to-slack/errors/activecampaign-webhook-payload-format)

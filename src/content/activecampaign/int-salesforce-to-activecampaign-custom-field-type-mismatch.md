@@ -222,6 +222,10 @@ Salesforce picklist updates pushed to ActiveCampaign arrive blank, or the pickli
 - [API Overview](https://developers.activecampaign.com/reference/overview)
 - [Authentication](https://developers.activecampaign.com/reference/authentication)
 
+Related: [Salesforce 400](/salesforce/errors/400) for data format issues, [ActiveCampaign 422](/activecampaign/errors/422) for validation errors.
+
+See all [ActiveCampaign API errors](/activecampaign/) or [Salesforce API errors](/salesforce/) for more troubleshooting.
+
 ## Related Errors
 - [ContactTag wrapper bug (Salesforce ↔ ActiveCampaign)](/integrations/salesforce-to-activecampaign/errors/contacttag-wrapper-bug)
 - [Salesforce daily API limit exhausted by AC sync](/integrations/salesforce-to-activecampaign/errors/salesforce-daily-api-limit-exhausted-by-ac-sync)

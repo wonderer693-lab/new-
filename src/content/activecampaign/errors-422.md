@@ -205,6 +205,12 @@ payload = {"contact": {"email": "test@example.com", "phone": "+1234567890"}}
 - **Can 422 be caused by duplicate data?** ActiveCampaign uses 422 for validation errors including duplicates in some cases, but duplicates typically return a different error structure.
 - **What does the source.pointer field mean?** It indicates which part of the request body caused the error, using JSON pointer notation (e.g., `/data/attributes/email`).
 
+See all [ActiveCampaign API errors](/activecampaign/) in our complete reference.
+
+Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [Mailchimp 400](/mailchimp/errors/400).
+
+This error also affects integrations. See our [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
+
 ## Related Errors
 
 - [ActiveCampaign 404 Not Found](/activecampaign/errors/404) — Resource does not exist

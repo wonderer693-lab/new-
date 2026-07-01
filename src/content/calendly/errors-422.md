@@ -210,6 +210,12 @@ if start < datetime.now().astimezone():
 - **Does Calendly 422 mean my JSON is invalid?** No — 400 is for malformed JSON. 422 means the JSON structure is valid but the content fails business validation rules.
 - **How do I fix Calendly 422?** Check the `errors` array in the response for specific failure details. Common fixes: validate UUIDs, ensure dates are in the future, include required fields.
 
+See all [Calendly API errors](/calendly/) in our complete reference.
+
+Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [ActiveCampaign 422](/activecampaign/errors/422).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
+
 ## Related Errors
 
 - [Calendly 409 Conflict](/calendly/errors/409) — Resource already exists
