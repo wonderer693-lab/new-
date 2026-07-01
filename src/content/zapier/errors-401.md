@@ -20,6 +20,94 @@ keywords:
   - "zapier http 401"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** A connected app's authentication expired in Zapier, so Zapier can no longer access that app on your behalf.
+
+**The fix:**
+1. Go to Zapier → "My Apps" (left sidebar) → find the app showing the error
+2. Click "Reconnect" next to that app and sign in again
+3. Go back to your Zap and click "Test" — it should work now
+
+**Copy-paste this code** (if you're building a custom integration):
+```python
+import requests
+
+resp = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+if resp.status_code == 401:
+    new_token = refresh_oauth_token(refresh_token)
+    resp = requests.get(url, headers={"Authorization": f"Bearer {new_token}"})
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code fix](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 401 Unauthorized error from Zapier when my Zap tries to run.
+> The error message says: "authentication failed" or "Invalid or expired access token"
+> My Zap connects to [App Name] and was working fine before.
+> Please walk me through how to reconnect the app in Zapier and fix this auth error.
+
+**What to expect:** The AI should guide you through reconnecting the expired app in Zapier's "My Apps" page and explain why the token expired.
+
+**If it doesn't work**, add this follow-up:
+> I reconnected the app but I'm still getting 401 errors. Here's what I see: [paste error]. What else could be wrong?
+
+**Best AI tools for this:** Claude (best at explaining OAuth token expiry), ChatGPT-4 (good step-by-step Zapier walkthroughs), Cursor (if you're writing custom token refresh code)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to deal with tokens and OAuth? Here's how to fix Zapier 401 errors in popular automation tools:
+
+### Zapier
+1. Go to zapier.com → click "My Apps" in the left sidebar → find the app with the red "Disconnected" badge
+2. Click "Reconnect" → sign in to the app again with your credentials → authorize Zapier
+3. Go back to your Zap → click "Test & Review" on the action step to confirm the connection works
+
+### Make (Integromat)
+1. Open your scenario → click the module showing the auth error → click the connection dropdown
+2. Click "Add" or "Reconnect" → sign in to the app and grant permissions
+3. Run the scenario once to verify the new connection is working
+
+### n8n
+1. Open your workflow → click the node with the credential error → go to the "Credential" section
+2. Click "Create New Credential" or re-authenticate the existing one → sign in and authorize
+3. Click "Execute Node" to test the new credentials
+
+### Power Automate
+1. Go to make.powerautomate.com → "Data" → "Connections" → find the connection showing an error icon
+2. Click the three dots → "Fix connection" → sign in again with your account
+3. Go back to your flow → click "Test" to verify the connection is restored
+
+**Which tool should you use?** Zapier's "My Apps" page makes reconnection the fastest — you can see all disconnected apps in one place and fix them in seconds.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"401 Unauthorized"`
+- `"authentication failed"`
+- `"Invalid or expired access token"`
+- `"App disconnected"` in your Zap error log
+
+**What it means in plain English:** The app you connected to Zapier has "forgotten" that you gave it permission. This happens when passwords change, tokens expire, or the app's security settings reset. You just need to reconnect it.
+
+**Most common cause:** You changed your password on the connected app (like Google, Slack, or Salesforce), which invalidated Zapier's saved login token.
+
+</div>
+
 ## What Causes Zapier 401
 
 Zapier returns HTTP 401 when the access token in the `Authorization` header is invalid, expired, or missing. Zapier access tokens expire after 10 hours and use rotating refresh tokens — each time you refresh, a new refresh token is returned (the old one is invalidated). This rotating behavior means you must store the latest refresh token after every refresh.

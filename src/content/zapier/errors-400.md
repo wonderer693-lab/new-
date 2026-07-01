@@ -20,6 +20,94 @@ keywords:
   - "zapier http 400"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Zapier rejected your Zap configuration because something in the setup is invalid or missing.
+
+**The fix:**
+1. Open your Zap and check each step for missing or incorrect fields
+2. Make sure all required fields are filled in — look for red error highlights
+3. Re-test the Zap step by step using the "Test" button on each action
+
+**Copy-paste this code** (if you're building a custom integration):
+```python
+import json, requests
+
+payload = {"title": "My Zap", "description": "Auto task", "trigger": "new_lead"}
+resp = requests.post(url, headers=headers, json=payload)
+if resp.status_code == 400:
+    print("Fix:", resp.json().get("errors"))
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code fix](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 400 Bad Request error from Zapier when I try to save or run my Zap.
+> The error message says: "invalid configuration" or "Malformed request"
+> I'm setting up a Zap that connects [App A] to [App B].
+> Please walk me through how to find and fix the bad field in my Zap step settings.
+
+**What to expect:** The AI should help you identify which Zap step has the wrong data and show you how to correct it.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. Here's the exact error message I'm seeing: [paste error]. What else could be wrong?
+
+**Best AI tools for this:** Claude (great at explaining Zapier step configs), ChatGPT-4 (good at spotting missing fields), Cursor (if you're writing custom API code)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to dig through error messages? Here's how to fix Zapier 400 errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click each step and look for red-highlighted fields (these are invalid or missing)
+2. Click "Test & Review" on the trigger step, then test each action step one by one to find the broken one
+3. In Zap History (left sidebar → "Zap History"), find the failed run and click it to see the exact field that caused the 400 error
+
+### Make (Integromat)
+1. Open your scenario → right-click the module that failed → "Run this module only" to isolate the error
+2. Check the module's input fields for empty or incorrectly mapped values
+3. Open the "History" tab → find the failed run → click "Detail" to see which field was rejected
+
+### n8n
+1. Open your workflow → click the node that failed → check the "Parameters" panel for missing required fields
+2. Click "Execute Node" to re-run just that step and see the exact error in the output panel
+3. In "Executions" (left sidebar), find the failed run and expand the error details to identify the bad field
+
+### Power Automate
+1. Open your flow → click "Run History" → find the failed run and click it
+2. Look for the action with a red "X" → expand it to see which input field was invalid
+3. Edit the failed action → check all required fields and dynamic content mappings for errors
+
+**Which tool should you use?** Zapier's step-by-step test button makes it the easiest to find 400 errors — just test each step until one fails.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"400 Bad Request"`
+- `"invalid configuration"`
+- `"Malformed request"`
+- `"Missing required field"` in your Zap error log
+
+**What it means in plain English:** Zapier is saying your Zap setup has something wrong — a missing field, a wrong value, or a broken connection. It's like filling out a form and forgetting a required box.
+
+**Most common cause:** A Zap step has an empty required field, or a field is mapped to data that doesn't match what the action expects (like putting text in a number field).
+
+</div>
+
 ## What Causes Zapier 400
 
 Zapier returns HTTP 400 when your request body is malformed JSON, missing required parameters, or contains invalid data types. This is a client-side error — your integration is sending something Zapier's API cannot parse or accept. Zapier's platform expects specific field names and data structures for each endpoint.

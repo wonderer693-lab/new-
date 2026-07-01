@@ -20,6 +20,95 @@ keywords:
   - "zapier http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Zapier is rate limiting your API calls because your Zaps are running too many actions too fast.
+
+**The fix:**
+1. Wait 60 seconds — Zapier's cooldown period usually clears on its own
+2. Slow down your Zap triggers — add a "Delay by Zapier" step between actions
+3. If you have many Zaps running at once, stagger their schedules so they don't all fire at the same time
+
+**Copy-paste this code** (if you're building a custom integration):
+```python
+import time, requests
+
+resp = requests.get(url, headers=headers)
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 60))
+    time.sleep(wait)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code fix](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from Zapier.
+> The error message says: "Rate limit exceeded" with a Retry-After header.
+> My Zaps are running too many API calls and Zapier is throttling me.
+> Please give me a step-by-step fix to slow down my Zaps and avoid hitting this rate limit again.
+
+**What to expect:** The AI should show you how to add delays between Zap actions, reduce polling frequency, and set up retry logic.
+
+**If it doesn't work**, add this follow-up:
+> I added delays but I'm still getting 429 errors. Here's my Zap setup: [describe your Zaps]. What else can I do?
+
+**Best AI tools for this:** Claude (great at explaining rate limit strategies), ChatGPT-4 (good at Zapier scheduling tips), Cursor (if you're writing custom retry code)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write retry code? Here's how to handle Zapier rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → add a "Delay by Zapier" step before the action that's getting rate limited (set to 60 seconds)
+2. In your Zap settings, change the trigger polling interval to a longer time (e.g., every 15 minutes instead of every 5)
+3. Go to "Zap History" (left sidebar) → check if multiple Zaps are failing at the same time → stagger their schedules
+
+### Make (Integromat)
+1. Open your scenario → right-click the module getting rate limited → "Add error handler" → choose "Retry"
+2. Set the retry interval to 60 seconds and max retries to 3
+3. Add a "Sleep" module (60 seconds) between API-heavy modules to space out requests
+
+### n8n
+1. Open your workflow → click the node getting 429 errors → go to "Settings" → enable "Retry on Fail"
+2. Set "Wait Between Tries" to 60000ms (60 seconds) and "Max Tries" to 3
+3. Add a "Wait" node (60 seconds) before the rate-limited node to slow down the workflow
+
+### Power Automate
+1. Open your flow → click the action getting throttled → go to "Settings" → enable "Retry Policy"
+2. Set to "Exponential interval" with count 3 and minimum interval 60 seconds
+3. Add a "Delay" action (60 seconds) before the throttled action to space out requests
+
+**Which tool should you use?** Zapier's built-in "Delay by Zapier" step is the simplest fix — just drag it in before the failing action and set 60 seconds.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"rate limit"`
+- `"Rate limit exceeded"`
+- `"Too many requests, please slow down"` in your Zap error log
+
+**What it means in plain English:** Zapier is telling you to slow down. Your Zaps are making too many API calls in a short time, and Zapier is temporarily pausing you to protect its servers.
+
+**Most common cause:** Multiple Zaps running at the same time, or a single Zap with a very fast trigger (like "every 1 minute") that fires too many actions per hour.
+
+</div>
+
 ## What Causes Zapier 429
 
 Zapier's API platform enforces rate limits to protect its infrastructure. The exact limits depend on your Zapier plan: Free/Starter plans have tighter limits, while Professional/Team/Company plans have higher caps. When you exceed the limit, Zapier returns HTTP 429 with a `Retry-After` header indicating the cooldown period in seconds.
