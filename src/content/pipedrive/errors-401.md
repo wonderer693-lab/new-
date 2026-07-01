@@ -20,6 +20,95 @@ keywords:
   - "pipedrive http 401"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Pipedrive API token is wrong, expired, or in the wrong place.
+
+**The fix:**
+1. Go to Pipedrive Settings > API and copy your token again
+2. For v1 API: put the token in the URL as `?api_token=YOUR_TOKEN`
+3. For v2 API: put the token in the header as `Authorization: Bearer YOUR_TOKEN`
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+TOKEN = "your_api_token_here"
+resp = requests.get(
+    f"https://api.pipedrive.com/v1/deals?api_token={TOKEN}"
+)
+print(resp.status_code)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 401 Unauthorized error from the Pipedrive API.
+> The error message is: "Invalid API token or OAuth access token"
+> I have an API token but I'm not sure if I'm using it correctly.
+> Please give me a step-by-step fix with working Python code for both v1 and v2 authentication.
+
+**What to expect:** The AI should show you the correct way to pass your token for each API version and help you refresh OAuth tokens.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 401 errors. Here's my code: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining auth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Pipedrive authentication errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Pipedrive connection step
+2. Click "Reconnect" to re-authorize your Pipedrive account — this refreshes your token
+3. Test the connection by clicking "Continue" — Zapier will confirm if auth is working
+
+### Make (Integromat)
+1. Open your scenario → click the Pipedrive module → click the connection dropdown
+2. Click "Reauthorize" to refresh your Pipedrive connection
+3. Run the scenario once to verify the 401 error is gone
+
+### n8n
+1. Open your workflow → click the Pipedrive node → go to "Credentials"
+2. Click "Edit" on your Pipedrive credentials → re-enter your API token or re-run OAuth
+3. Click "Save" and test the node to confirm authentication works
+
+### Power Automate
+1. Open your flow → click the Pipedrive action → go to "My connections"
+2. Click the three dots on your Pipedrive connection → "Fix connection"
+3. Re-enter your credentials and test the flow
+
+**Which tool should you use?** Zapier makes re-authentication easiest — just click "Reconnect" and it handles token refresh automatically.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"401 Unauthorized"`
+- `"Invalid API token or OAuth access token"`
+- `"invalid token"`
+- `"HTTP 401"` in your integration logs
+
+**What it means in plain English:** Pipedrive doesn't recognize who you are. Your API token is wrong, expired, or you're putting it in the wrong place.
+
+**Most common cause:** Using an old or copied token, or mixing up v1 and v2 authentication methods.
+
+</div>
+
 ## What Causes Pipedrive 401
 
 Pipedrive returns HTTP 401 when the API token or OAuth access token is missing, invalid, or expired. Pipedrive supports two authentication methods: (1) API token as a query parameter (`?api_token=...`) for v1, and (2) OAuth Bearer token in the `Authorization` header for v2. Using the wrong method for the API version results in 401.

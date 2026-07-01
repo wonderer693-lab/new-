@@ -20,6 +20,99 @@ keywords:
   - "pipedrive http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Too many API calls to Pipedrive — you've hit the rate limit and Pipedrive is telling you to slow down.
+
+**The fix:**
+1. Wait for the number of seconds shown in the `Retry-After` header (usually 10 seconds)
+2. Slow down your requests — add a delay between calls
+3. Switch to v2 endpoints — they use 50% fewer rate limit tokens
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(
+    "https://api.pipedrive.com/v1/deals?api_token=TOKEN"
+)
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 10))
+    time.sleep(wait)
+    resp = requests.get(
+        "https://api.pipedrive.com/v1/deals?api_token=TOKEN"
+    )
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from the Pipedrive API.
+> The error message is: "Too Many Requests" with a Retry-After header.
+> My integration makes frequent API calls and keeps hitting the rate limit.
+> Please give me a step-by-step fix with working Python code that handles Pipedrive rate limiting with exponential backoff.
+
+**What to expect:** The AI should give you a retry function with exponential backoff and jitter, plus tips to reduce token consumption using v2 endpoints.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 429 errors. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Pipedrive rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Pipedrive action step
+2. Enable "Auto-retry on error" in the step settings (Zapier auto-retries 429 errors up to 3 times)
+3. If you're hitting limits frequently, add a "Delay by Zapier" step before the Pipedrive action (set to 10 seconds)
+
+### Make (Integromat)
+1. Open your scenario → right-click the Pipedrive module → "Add error handler"
+2. Choose "Retry" → set interval to 10 seconds, max retries to 3
+3. For bulk operations, add a "Sleep" module (10 seconds) between Pipedrive calls
+
+### n8n
+1. Open your workflow → click the Pipedrive node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 10000ms, "Max Tries" to 3
+3. For bulk operations, add a "Wait" node (10 seconds) between Pipedrive nodes
+
+### Power Automate
+1. Open your flow → click the Pipedrive action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. For bulk operations, add a "Delay" action (10 seconds) before the Pipedrive action
+
+**Which tool should you use?** Zapier has the best built-in retry for Pipedrive — it handles 429 errors automatically without any configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"Rate limit exceeded"`
+- `"Too Many Requests"` with a `Retry-After` header
+- `"HTTP 429"` in your integration logs
+
+**What it means in plain English:** Pipedrive is telling you to slow down. You're making too many API calls in a short time. Wait a few seconds and try again.
+
+**Most common cause:** Bulk imports or sync jobs that fire too many requests at once without pausing between them, or using v1 endpoints that cost more rate limit tokens.
+
+</div>
+
 ## What Causes Pipedrive 429
 
 Pipedrive enforces API rate limits using a token bucket system. Each API call consumes tokens based on the endpoint — v1 endpoints typically consume 1-2 tokens per call, while v2 endpoints can consume 50% fewer tokens. When the bucket is empty, Pipedrive returns HTTP 429 with a `Retry-After` header (typically 10 seconds).

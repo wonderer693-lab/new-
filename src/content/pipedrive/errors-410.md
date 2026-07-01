@@ -20,6 +20,98 @@ keywords:
   - "pipedrive http 410"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** The Pipedrive API endpoint you're calling has been permanently removed — it's part of the v1 to v2 migration.
+
+**The fix:**
+1. Change your URL from `/v1/` to `/v2/` (e.g., `/v1/deals` becomes `/v2/deals`)
+2. Switch from `?api_token=TOKEN` to `Authorization: Bearer TOKEN` header
+3. Update pagination from page-based to cursor-based
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+# OLD (410 Gone):
+# resp = requests.get("https://api.pipedrive.com/v1/deals?api_token=TOKEN")
+
+# NEW (v2 endpoint):
+resp = requests.get(
+    "https://api.pipedrive.com/v2/deals",
+    headers={"Authorization": "Bearer TOKEN"}
+)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 410 Gone error from the Pipedrive API.
+> The error message is: "Old resource permanently unavailable (deprecated v1 endpoints)"
+> My integration uses v1 endpoints and I need to migrate to v2.
+> Please give me a step-by-step migration guide with code examples for the most common endpoints.
+
+**What to expect:** The AI should give you a mapping of v1 to v2 endpoints and updated code with v2 authentication and cursor-based pagination.
+
+**If it doesn't work**, add this follow-up:
+> The migration didn't work. Here's my v1 code: [paste your code]. Please convert it to v2.
+
+**Best AI tools for this:** Claude (best at explaining API migrations), ChatGPT-4 (good code conversion), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Pipedrive v1 deprecation in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Pipedrive action step
+2. Reconnect your Pipedrive account — Zapier's latest Pipedrive integration uses v2 endpoints automatically
+3. Re-map your fields if the v2 field names differ from v1
+
+### Make (Integromat)
+1. Open your scenario → click the Pipedrive module
+2. Update the module to the latest version — Make updates Pipedrive modules to use v2 endpoints
+3. Check the module settings for any changed field names or pagination options
+
+### n8n
+1. Open your workflow → click the Pipedrive node
+2. In the node settings, switch the "API Version" from v1 to v2
+3. Update authentication from API token to OAuth/Bearer token if required
+
+### Power Automate
+1. Open your flow → click the Pipedrive action
+2. Check for a newer version of the Pipedrive connector — update if available
+3. Reconfigure any fields that changed between v1 and v2
+
+**Which tool should you use?** Zapier handles v2 migration automatically when you reconnect — no manual URL changes needed.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"410 Gone"`
+- `"Old resource permanently unavailable (deprecated v1 endpoints)"`
+- `"endpoint deprecated"`
+- `"HTTP 410"` in your integration logs
+
+**What it means in plain English:** The Pipedrive API page you're trying to reach has been permanently shut down. It's not coming back. You need to switch to the new v2 version.
+
+**Most common cause:** Using old v1 API endpoints that Pipedrive has removed as part of their migration to v2.
+
+</div>
+
 ## What Causes Pipedrive 410
 
 Pipedrive returns HTTP 410 when you call a v1 API endpoint that has been permanently removed and replaced by a v2 equivalent. The 410 "Gone" status means the resource is permanently unavailable and will never return — you must migrate to the v2 endpoint.

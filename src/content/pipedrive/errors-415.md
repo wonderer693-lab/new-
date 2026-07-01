@@ -20,6 +20,96 @@ keywords:
   - "pipedrive http 415"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Pipedrive doesn't accept your request — the feature you're trying to use isn't available on your plan.
+
+**The fix:**
+1. Check which Pipedrive plan you're on at Settings > Company > Subscription
+2. See if the feature you need (webhooks, email sync, etc.) requires a higher plan
+3. Upgrade your plan or use an alternative approach (like polling instead of webhooks)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.get(
+    "https://api.pipedrive.com/v1/webhooks?api_token=TOKEN"
+)
+if resp.status_code == 415:
+    print("Feature not on your plan — check Settings > Subscription")
+    print("Alternative: use polling instead of webhooks")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 415 error from the Pipedrive API.
+> The error message is: "Feature is not enabled for the account"
+> I'm trying to use webhooks but my plan might not support them.
+> Please give me code to detect which features are available and suggest fallback approaches.
+
+**What to expect:** The AI should give you feature detection code and alternative approaches when premium features aren't available on your plan.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. Here's the endpoint I'm calling: [paste URL]. Is there an alternative way to do this?
+
+**Best AI tools for this:** Claude (best at explaining plan features), ChatGPT-4 (good fallback code), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Pipedrive feature-not-enabled errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → check the error log for 415 errors on Pipedrive steps
+2. Check your Pipedrive plan at Settings > Company > Subscription to see if the feature is included
+3. If the feature isn't available, switch to a different Zapier trigger (use "New Deal" polling instead of webhooks)
+
+### Make (Integromat)
+1. Open your scenario → check the history for 415 errors
+2. Verify your Pipedrive plan supports the feature you're using
+3. Replace the webhook module with a polling module (e.g., "Watch Deals" instead of "Watch Webhooks")
+
+### n8n
+1. Open your workflow → check the execution log for 415 status codes
+2. Check if your Pipedrive plan includes the feature at Settings > Subscription
+3. Switch from webhook triggers to polling triggers if webhooks aren't available on your plan
+
+### Power Automate
+1. Open your flow → check run history for 415 failures
+2. Verify your Pipedrive subscription includes the feature
+3. Use a "Recurrence" trigger with a "Get items" action instead of webhook-based triggers
+
+**Which tool should you use?** Zapier has the best fallback options — it offers both webhook and polling triggers for Pipedrive, so you can switch easily.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"415 Unsupported Media Type"`
+- `"Feature is not enabled for the account"`
+- `"content-type"` errors in Pipedrive context
+- `"HTTP 415"` in your integration logs
+
+**What it means in plain English:** The Pipedrive feature you're trying to use isn't included in your subscription plan. Despite the technical-sounding name, it's not about content types — it's about your plan level.
+
+**Most common cause:** Trying to use webhooks, email sync, or advanced features on a basic Pipedrive plan that doesn't include them.
+
+</div>
+
 ## What Causes Pipedrive 415
 
 Pipedrive returns HTTP 415 when you attempt to use an API feature that is not enabled on your Pipedrive subscription plan. Despite the HTTP status code name "Unsupported Media Type", Pipedrive uses 415 to indicate that a specific feature (not the content type) is not available on your plan.
