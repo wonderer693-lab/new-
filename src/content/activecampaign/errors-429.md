@@ -20,6 +20,95 @@ keywords:
   - "activecampaign http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Too many API calls to ActiveCampaign. You're sending more than 5 requests per second and getting blocked.
+
+**The fix:**
+1. Wait 60 seconds before trying again
+2. Add a delay between requests (at least 200ms between each call)
+3. If doing a bulk import, split it into smaller batches with pauses
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+headers = {"Api-Token": "YOUR_TOKEN"}
+resp = requests.get("https://{account}.api-us1.com/api/3/contacts", headers=headers)
+if resp.status_code == 429:
+    time.sleep(60)  # Wait 60 seconds, then retry
+    resp = requests.get("https://{account}.api-us1.com/api/3/contacts", headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from the ActiveCampaign API.
+> The error message is: "Rate limit exceeded"
+> I'm running a bulk contact sync that makes many API calls in a loop.
+> Please give me a step-by-step fix with working Python code that handles rate limiting with delays and retries.
+
+**What to expect:** The AI should give you a throttling function with delays between requests and exponential backoff for retries.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 429 errors even with delays. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle ActiveCampaign rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the ActiveCampaign action step
+2. Enable "Auto-retry on error" in the step settings (Zapier retries 429 errors automatically)
+3. If hitting limits often, add a "Delay by Zapier" step before the action (set to 1 second)
+
+### Make (Integromat)
+1. Open your scenario → right-click the ActiveCampaign module → "Add error handler"
+2. Choose "Retry" → set interval to 5 seconds, max retries to 3
+3. For bulk operations, add a "Sleep" module (1 second) between ActiveCampaign calls
+
+### n8n
+1. Open your workflow → click the ActiveCampaign node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 5000ms, "Max Tries" to 3
+3. For bulk operations, add a "Wait" node (1 second) between ActiveCampaign nodes
+
+### Power Automate
+1. Open your flow → click the ActiveCampaign action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. For bulk operations, add a "Delay" action (1 second) before the ActiveCampaign action
+
+**Which tool should you use?** Zapier has the best built-in retry — it handles 429 errors automatically without any configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"rate limit"`
+- `"Rate limit exceeded"`
+- `"HTTP 429"` in your integration logs
+
+**What it means in plain English:** ActiveCampaign is telling you to slow down. You're making too many API calls too fast. Wait a bit and try again with pauses between requests.
+
+**Most common cause:** Bulk imports or sync jobs that fire hundreds of requests in a loop without any delay between them.
+
+</div>
+
 ## What Causes ActiveCampaign 429
 
 ActiveCampaign returns HTTP 429 when your integration exceeds the API rate limit. ActiveCampaign's rate limits are 5 requests per second for most accounts, with higher limits available on Enterprise plans. The limit applies per API token, not per IP address.

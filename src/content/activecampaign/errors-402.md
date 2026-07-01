@@ -20,6 +20,94 @@ keywords:
   - "activecampaign http 402"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your ActiveCampaign plan doesn't allow this API feature, or your subscription has a billing issue.
+
+**The fix:**
+1. Log into ActiveCampaign → Settings → Billing
+2. Check for overdue invoices or an expired payment method
+3. Update your payment info or upgrade your plan to restore API access
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+headers = {"Api-Token": "YOUR_TOKEN"}
+resp = requests.get("https://{account}.api-us1.com/api/3/contacts", headers=headers)
+if resp.status_code == 402:
+    print("Billing issue — fix payment in ActiveCampaign Settings > Billing")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 402 Payment Required error from the ActiveCampaign API.
+> The error message is: "Account payment issues"
+> My integration was working before but now all API calls fail with 402.
+> Please tell me what this means and how to fix it step by step.
+
+**What to expect:** The AI should explain that this is a billing problem (not a code problem) and walk you through checking your ActiveCampaign subscription.
+
+**If it doesn't work**, add this follow-up:
+> I've updated my payment method but I'm still getting 402 errors. How long does it take for API access to come back?
+
+**Best AI tools for this:** ChatGPT-4 (good at explaining billing flows), Claude (clear step-by-step guidance)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to check ActiveCampaign plan limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → check if the ActiveCampaign step shows a 402 error in the task history
+2. Log into ActiveCampaign web app → Settings → Billing to verify your subscription is active
+3. Once billing is fixed, re-test the Zap step — no Zapier changes needed
+
+### Make (Integromat)
+1. Open your scenario → check the history for 402 errors on ActiveCampaign modules
+2. Verify your ActiveCampaign subscription at Settings → Billing in the web app
+3. After fixing billing, click "Run once" to test the scenario again
+
+### n8n
+1. Open your workflow → check execution logs for 402 status codes on ActiveCampaign nodes
+2. Confirm your ActiveCampaign plan is active and paid at Settings → Billing
+3. Re-execute the workflow manually after billing is resolved
+
+### Power Automate
+1. Open your flow → check run history for failed ActiveCampaign actions with 402 status
+2. Go to ActiveCampaign web app → Settings → Billing and fix any payment issues
+3. Re-run the flow after billing is resolved
+
+**Which tool should you use?** This error is always fixed in ActiveCampaign's billing page — no automation tool changes needed. Just fix the payment and re-run.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"402 Payment Required"`
+- `"upgrade required"`
+- `"Account payment issues"`
+- `"Subscription expired"` in your integration logs
+
+**What it means in plain English:** ActiveCampaign is blocking your API access because of a billing problem. Your subscription may have expired, your credit card may have been declined, or you need to upgrade your plan.
+
+**Most common cause:** A credit card on file expired or a trial period ended without adding a payment method.
+
+</div>
+
 ## What Causes ActiveCampaign 402
 
 ActiveCampaign returns HTTP 402 when the account has an active billing issue — typically an expired subscription, failed payment, or account suspension. This is a rarely-seen error in API integrations because ActiveCampaign blocks all API access when billing is not current.
