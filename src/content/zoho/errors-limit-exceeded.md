@@ -19,6 +19,95 @@ keywords:
   - "zoho api general limit exceeded"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You've exceeded Zoho's API credit limit — either the per-minute rate limit, daily call cap, or concurrent job limit for your plan.
+
+**The fix:**
+1. Wait a few minutes for the rate limit window to reset
+2. Check your Zoho plan's limits (Free: 250/min, Standard: 1,000/min, Professional: 5,000/min)
+3. Reduce the number of API calls — batch requests and use UPSERT instead of separate INSERT + UPDATE
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, random, requests
+
+resp = requests.get(url, headers=headers)
+if resp.json().get("code") == "LIMIT_EXCEEDED":
+    wait = 60 + random.randint(0, 10)
+    time.sleep(wait)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "LIMIT_EXCEEDED" error from the Zoho CRM API.
+> The error message is: "General limit exceeded"
+> I'm running an integration that makes many API calls to Zoho.
+> Please give me a step-by-step fix with working Python code that implements exponential backoff and checks my plan's rate limits.
+
+**What to expect:** The AI should give you a retry function with exponential backoff and help you identify which Zoho limit you're hitting (per-minute, daily, or concurrent).
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting LIMIT_EXCEEDED errors. Here's my Zoho edition and how many calls I make per minute: [details]. Please help me optimize.
+
+**Best AI tools for this:** Claude (best at explaining API limits), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Zoho API limit errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Zoho CRM action step
+2. Enable "Auto-retry on error" in the step settings — Zapier retries on limit errors up to 3 times
+3. Add a "Delay by Zapier" step (1-2 minutes) before the Zoho action to spread out requests
+
+### Make (Integromat)
+1. Open your scenario → right-click the Zoho CRM module → "Add error handler"
+2. Choose "Retry" → set interval to 120 seconds (2 minutes), max retries to 3
+3. For bulk operations, add a "Sleep" module (1 minute) between Zoho calls to stay under the rate limit
+
+### n8n
+1. Open your workflow → click the Zoho CRM node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 120000ms (2 minutes), "Max Tries" to 3
+3. Reduce workflow concurrency — set "Concurrency Limit" to 1 in workflow settings to avoid parallel bursts
+
+### Power Automate
+1. Open your flow → click the Zoho action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. Add a "Delay" action (1-2 minutes) before the Zoho action to space out API calls
+
+**Which tool should you use?** Make has the best error handling for Zoho — its retry handler with sleep intervals handles rate limits well.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"LIMIT_EXCEEDED"` in the API response
+- `"API credit limit"` exceeded in your integration logs
+- `"General limit exceeded"` from Zoho
+- Your Zoho integration suddenly stops working after a burst of activity
+
+**What it means in plain English:** You've used up your Zoho API allowance for this time window. Your plan has a limit on how many calls you can make per minute or per day. Wait and try again, or upgrade your plan.
+
+**Most common cause:** Bulk operations or sync jobs that fire too many API calls at once, or multiple integrations sharing the same Zoho account.
+
+</div>
+
 ## What Causes Zoho LIMIT_EXCEEDED
 
 Zoho returns `LIMIT_EXCEEDED` when any API usage metric exceeds its quota — this includes the per-request rate limit (requests per minute), concurrent bulk job limits, or daily API call counts. Unlike `TOO_MANY_REQUESTS` (specific to daily credits), `LIMIT_EXCEEDED` is a catch-all for various throttling scenarios.

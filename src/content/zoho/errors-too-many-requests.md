@@ -19,6 +19,93 @@ keywords:
   - "zoho api daily credit limit exceeded"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Too many total API calls to Zoho. You've used up your daily credit allowance for your Zoho plan.
+
+**The fix:**
+1. Wait for credits to replenish (they reset on a rolling 24-hour basis, not at midnight)
+2. Use UPSERT instead of separate INSERT + UPDATE to cut your API calls in half
+3. Check your plan's daily limit — Free: 500/day, Standard: 5,000/day, Professional: 10,000/day
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.get(f"{base_url}/settings/org", headers=headers)
+limit_info = resp.json()
+print(f"Daily credit limit: {limit_info.get('api_limit')}")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "TOO_MANY_REQUESTS" error from the Zoho CRM API.
+> The error message is: "Daily credit limit exceeded"
+> I'm running a Zoho integration that makes many API calls throughout the day.
+> Please give me a step-by-step fix with working Python code that monitors remaining credits, uses UPSERT to reduce calls, and implements retry logic for when credits run low.
+
+**What to expect:** The AI should give you code that checks remaining credits before each call, switches to UPSERT to halve credit usage, and pauses when credits are low.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still running out of daily credits. Here's my Zoho edition and how many calls I make per day: [details]. Please help me optimize or decide if I need to upgrade.
+
+**Best AI tools for this:** Claude (best at explaining API credit systems), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Zoho rate limit errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Zoho CRM action step
+2. Enable "Auto-retry on error" — Zapier will retry when credits become available
+3. Reduce Zap frequency — change polling triggers from every 5 minutes to every 15-30 minutes to use fewer credits
+
+### Make (Integromat)
+1. Open your scenario → click the Zoho CRM module
+2. Switch from "Create a Record" + "Update a Record" to a single "Upsert a Record" module to cut API calls in half
+3. Increase the scenario scheduling interval (e.g., from every 5 minutes to every 30 minutes) to reduce daily call volume
+
+### n8n
+1. Open your workflow → click the Zoho CRM node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 3600000ms (1 hour), "Max Tries" to 2
+3. Add a "Function" node before Zoho to batch multiple records into a single API call
+
+### Power Automate
+1. Open your flow → click the Zoho action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3 and max interval 1 hour
+3. Reduce trigger frequency — change recurrence triggers from every 5 minutes to every 30 minutes
+
+**Which tool should you use?** Make is best for reducing credit usage — its UPSERT module and flexible scheduling help you stay within limits.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"TOO_MANY_REQUESTS"` in the API response
+- `"rate limit"` exceeded in your integration logs
+- `"Daily credit limit exceeded"` from Zoho
+- Your integration works in the morning but stops working later in the day
+
+**What it means in plain English:** You've used up all your Zoho API credits for today. Each Zoho plan has a daily limit. Once you hit it, you have to wait for credits to come back (on a rolling 24-hour basis).
+
+**Most common cause:** Integrations that poll Zoho too frequently, bulk syncs that process thousands of records, or multiple tools sharing the same Zoho account's credit pool.
+
+</div>
+
 ## What Causes Zoho TOO_MANY_REQUESTS
 
 Zoho enforces a daily credit-based API quota per org. Each API call consumes credits based on the operation type (GET, POST, PUT, DELETE, and UPSERT have different costs). When your org exhausts its daily credit allocation, Zoho returns `TOO_MANY_REQUESTS` for all subsequent calls until the rolling 24-hour window resets.

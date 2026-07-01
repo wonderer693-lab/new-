@@ -19,6 +19,97 @@ keywords:
   - "zoho api access token is invalid"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Zoho OAuth token expired or is invalid. Zoho tokens only last 1 hour, and yours ran out.
+
+**The fix:**
+1. Use your refresh token to get a new access token
+2. Store the new token and use it for future requests
+3. Refresh tokens automatically before they expire (every 50 minutes)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://accounts.zoho.com/oauth/v2/token", data={
+    "refresh_token": REFRESH_TOKEN,
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "grant_type": "refresh_token",
+})
+new_token = resp.json()["access_token"]
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting an "INVALID_OAUTHTOKEN" error from the Zoho CRM API.
+> The error message is: "Access token is invalid or expired"
+> I have a refresh token but I'm not sure how to use it to get a new access token.
+> Please give me a step-by-step fix with working Python code that auto-refreshes the token before it expires.
+
+**What to expect:** The AI should give you a token manager class that tracks expiry and refreshes automatically, so you never hit this error again.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. My refresh token also seems invalid. Here's what I tried: [paste your code]. Please help me re-authorize.
+
+**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Zoho OAuth token errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Zoho CRM connection in "Accounts"
+2. Click "Reconnect" to refresh the OAuth token — Zapier handles the refresh automatically
+3. If reconnection fails, disconnect and re-authorize the Zoho account from scratch
+
+### Make (Integromat)
+1. Open your scenario → go to "Connections" → find your Zoho connection
+2. Click "Reauthorize" to refresh the OAuth token
+3. If that fails, delete the connection and create a new one by going through the Zoho OAuth flow again
+
+### n8n
+1. Open your workflow → click the Zoho CRM node → go to "Credentials"
+2. Click "Reconnect" to refresh the OAuth token
+3. If the refresh token is revoked, delete the credential and create a new one with fresh OAuth authorization
+
+### Power Automate
+1. Open your flow → click the Zoho connection reference
+2. Go to "Data" → "Connections" → find Zoho → click "Fix connection"
+3. Re-authenticate with your Zoho account to get fresh tokens
+
+**Which tool should you use?** Zapier handles Zoho token refresh automatically — just reconnect and it takes care of the rest.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"INVALID_OAUTHTOKEN"` in the API response
+- `"Access token is invalid or expired"`
+- `"token expired"` in your integration logs
+- HTTP 200 response with `"code":"INVALID_OAUTHTOKEN"` (Zoho returns 200 even for errors)
+
+**What it means in plain English:** Your Zoho access token ran out of time. Zoho tokens only last 1 hour. You need to get a fresh one using your refresh token.
+
+**Most common cause:** Using the same access token for more than 1 hour without refreshing it, or copying a token from one environment to another.
+
+</div>
+
 ## What Causes Zoho INVALID_OAUTHTOKEN
 
 Zoho returns `INVALID_OAUTHTOKEN` when the access token in the `Authorization` header is expired, revoked, or malformed. Zoho access tokens have a fixed 1-hour lifetime, after which they must be refreshed using the refresh token. The error also occurs if the refresh token itself has been revoked or if you've exceeded the maximum of 15 active access tokens per refresh token.

@@ -19,6 +19,93 @@ keywords:
   - "zoho api record with same unique"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You're trying to create a Zoho record that already exists — the email, name, or another unique field matches an existing record.
+
+**The fix:**
+1. Check the error message — it tells you which field is a duplicate (look for `api_name`)
+2. Search Zoho for the existing record before creating a new one
+3. Use the UPSERT endpoint instead of INSERT — it updates existing records instead of failing
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+payload = {
+    "data": [{"Last_Name": "Smith", "Email": "smith@example.com"}],
+    "duplicate_check_fields": ["Email"]
+}
+resp = requests.post(f"{base_url}/Leads/upsert", headers=headers, json=payload)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "DUPLICATE_DATA" error from the Zoho CRM API.
+> The error message is: "Record with same unique field value already exists"
+> I'm trying to create a new Lead/Contact but Zoho says it's a duplicate.
+> Please give me a step-by-step fix with working Python code that uses UPSERT with duplicate_check_fields to handle existing records.
+
+**What to expect:** The AI should give you code that uses the UPSERT endpoint to either create new records or update existing ones, avoiding the duplicate error entirely.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting DUPLICATE_DATA errors. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Zoho API patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Zoho duplicate data errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Zoho CRM "Create Record" action step
+2. Change the action to "Find or Create Record" — this searches for existing records first and only creates if none found
+3. Set the search field to the unique field (e.g., Email) so Zapier checks for duplicates before creating
+
+### Make (Integromat)
+1. Open your scenario → replace the Zoho "Create a Record" module with "Search Records"
+2. Add a router: if search returns results → "Update a Record"; if empty → "Create a Record"
+3. Set the search criteria to match the unique field (e.g., Email equals the incoming email)
+
+### n8n
+1. Open your workflow → add a Zoho CRM "Search" node before the "Create" node
+2. Set the search criteria to the unique field (e.g., `Email:equals:value`)
+3. Add an IF node: if search results exist → route to "Update" node; if empty → route to "Create" node
+
+### Power Automate
+1. Open your flow → add a Zoho "List Records" action before the "Create Record" action
+2. Set a filter query to search for the unique field value (e.g., `Email eq 'test@example.com'`)
+3. Add a Condition: if results count > 0 → "Update Record"; else → "Create Record"
+
+**Which tool should you use?** Zapier's "Find or Create" action is the simplest — it handles duplicates in one step without any extra logic.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"DUPLICATE_DATA"` in the API response
+- `"Record with same unique field value already exists"`
+- `"record already exists"` in your integration logs
+- The error response includes `"details":{"api_name":"Email"}` telling you which field is the duplicate
+
+**What it means in plain English:** Zoho already has a record with the same email, name, or other unique value. You can't create another one — you need to update the existing record instead.
+
+**Most common cause:** Bulk imports or sync jobs that try to create records without checking if they already exist in Zoho.
+
+</div>
+
 ## What Causes Zoho DUPLICATE_DATA
 
 Zoho returns `DUPLICATE_DATA` when you attempt to create a record with a value that conflicts with an existing unique field constraint. Every module has a set of unique fields (e.g., `Email` on Contacts, `Account_Name` on Accounts) that prevent duplicate records. The error also triggers for custom unique fields configured in Zoho settings.

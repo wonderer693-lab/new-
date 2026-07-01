@@ -19,6 +19,94 @@ keywords:
   - "zoho api required field missing in"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** A required field is missing from your Zoho API request. Zoho won't create the record without it.
+
+**The fix:**
+1. Check the error message — it tells you exactly which field is missing (look for `api_name`)
+2. Add the missing field to your request (most often it's `Last_Name`)
+3. Make sure the field value is not empty or null
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+payload = {"data": [{
+    "Last_Name": "Smith",
+    "Company": "Acme Corp",
+    "Email": "smith@example.com"
+}]}
+resp = requests.post(f"{base_url}/Leads", headers=headers, json=payload)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "MANDATORY_NOT_FOUND" error from the Zoho CRM API.
+> The error message is: "required field not found" and the missing field is "Last_Name".
+> I'm trying to create a new Lead/Contact in Zoho.
+> Please give me a step-by-step fix with working Python code that fetches all mandatory fields from Zoho and validates the payload before sending.
+
+**What to expect:** The AI should give you code that dynamically fetches required fields from Zoho's schema and validates your data before making the API call.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting MANDATORY_NOT_FOUND for a custom field. Here's the field name: [field name]. Please help me find the correct api_name.
+
+**Best AI tools for this:** Claude (best at explaining Zoho field schemas), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Zoho mandatory field errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Zoho CRM "Create Record" action step
+2. Check the required fields — Zapier marks them with a red asterisk (*)
+3. Map values to all required fields (at minimum: Last_Name for Leads/Contacts, Account_Name for Accounts)
+
+### Make (Integromat)
+1. Open your scenario → click the Zoho "Create a Record" module
+2. Look for fields marked as "Required" in the module configuration
+3. Fill in all required fields — use a "Set" module before Zoho to provide default values for any that might be empty
+
+### n8n
+1. Open your workflow → click the Zoho CRM "Create" node
+2. Check the node's field list for required fields (marked with *)
+3. Add a "Set" node before the Zoho node to ensure all required fields have values, even if they're defaults
+
+### Power Automate
+1. Open your flow → click the Zoho "Create Record" action
+2. Check for required fields in the action's input form — they'll be marked as required
+3. Add a "Compose" action before the Zoho step to set default values for any fields that might be empty
+
+**Which tool should you use?** Zapier is the easiest — it clearly marks required fields and won't let you save the step without filling them in.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"MANDATORY_NOT_FOUND"` in the API response
+- `"required field missing"` or `"required field not found"`
+- `"required field missing"` with `"details":{"api_name":"Last_Name"}`
+- Your record creation fails and the error points to a specific field name
+
+**What it means in plain English:** Zoho needs certain fields filled in before it can create a record. You left one of those fields blank or forgot to include it. The error tells you which field is missing.
+
+**Most common cause:** Forgetting to include `Last_Name` (required for Leads and Contacts) or using the wrong field name (like `LastName` instead of `Last_Name`).
+
+</div>
+
 ## What Causes Zoho MANDATORY_NOT_FOUND
 
 Zoho returns `MANDATORY_NOT_FOUND` when an API request omits a required field that Zoho's module schema mandates. Each Zoho module (Leads, Contacts, Accounts, etc.) has its own set of mandatory fields defined in the CRM settings, and Zoho validates every request against this schema before processing.
