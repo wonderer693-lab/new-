@@ -25,6 +25,95 @@ keywords:
   Existing retry logic may no longer work. See <a href="#2026-changes">2026 changes</a> below.
 </div>
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You're sending too many requests to HubSpot's API too fast, and HubSpot is temporarily blocking you.
+
+**The fix:**
+1. Wait for the number of seconds shown in the `Retry-After` header (usually 10 seconds)
+2. Slow down your requests — don't send more than 11 per second
+3. If you're doing a bulk import, split it into smaller batches
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(url, headers=headers)
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 10))
+    time.sleep(wait)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from the HubSpot API.
+> The error message is: "You have reached your ten second limit"
+> I'm using a custom integration that makes API calls to HubSpot.
+> Please give me a step-by-step fix with working Python code that handles rate limiting.
+
+**What to expect:** The AI should give you a retry function with exponential backoff and explain HubSpot's rate limits.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 429 errors. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle HubSpot rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the HubSpot action step
+2. Enable "Auto-retry on error" in the step settings (Zapier auto-retries 429 errors up to 3 times)
+3. If you're hitting limits frequently, add a "Delay by Zapier" step before the HubSpot action (set to 10 seconds)
+
+### Make (Integromat)
+1. Open your scenario → right-click the HubSpot module → "Add error handler"
+2. Choose "Retry" → set interval to 10 seconds, max retries to 3
+3. For bulk operations, add a "Sleep" module (10 seconds) between HubSpot calls
+
+### n8n
+1. Open your workflow → click the HubSpot node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 10000ms, "Max Tries" to 3
+3. For bulk operations, add a "Wait" node (10 seconds) between HubSpot nodes
+
+### Power Automate
+1. Open your flow → click the HubSpot action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. For bulk operations, add a "Delay" action (10 seconds) before the HubSpot action
+
+**Which tool should you use?** Zapier has the best built-in retry for HubSpot — it handles 429 errors automatically without any configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"You have reached your ten second limit"`
+- `"429 Too Many Requests"`
+- `"Rate limit exceeded. Please retry after X seconds"`
+- `"HTTP 429"` in your integration logs
+
+**What it means in plain English:** HubSpot is telling you to slow down. You're making too many API calls in a short time. Wait a few seconds and try again.
+
+**Most common cause:** Bulk imports or sync jobs that fire too many requests at once without pausing between them.
+
+</div>
+
 ## What Causes HubSpot 429
 
 HubSpot enforces rate limits per API key/application. Hitting the limit returns HTTP 429 with a `Retry-After` header.
