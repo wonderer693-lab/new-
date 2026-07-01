@@ -19,6 +19,94 @@ keywords:
   - "slack api invalid auth credentials"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your Slack bot token or user token is wrong. It might be mistyped, copied from the wrong workspace, or missing characters.
+
+**The fix:**
+1. Check that your token starts with `xoxb-` (bot) or `xoxp-` (user)
+2. Make sure there are no extra spaces or missing characters
+3. If in doubt, regenerate the token from your Slack app settings
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://slack.com/api/auth.test",
+    headers={"Authorization": f"Bearer {TOKEN.strip()}"})
+if resp.json().get("error") == "invalid_auth":
+    print("Token is not recognized — check format or regenerate it")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting an "invalid_auth" error from the Slack API.
+> The response is: {"ok":false,"error":"invalid_auth"}
+> I'm using a bot token that starts with xoxb-.
+> Please give me a step-by-step fix with working Python code to validate and fix my Slack token.
+
+**What to expect:** The AI should walk you through checking your token format, testing it against Slack's auth.test endpoint, and regenerating it if needed.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I regenerated the token but still get invalid_auth. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Slack auth), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix invalid_auth in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Slack action step
+2. Go to "Account" → click "Reconnect" → sign in again to get a fresh token
+3. Test the step to confirm the connection works
+
+### Make (Integromat)
+1. Open your scenario → click the Slack module → go to "Connection"
+2. Click "Create a new connection" → re-authorize with your Slack workspace
+3. Run the scenario once to verify the new token works
+
+### n8n
+1. Open your workflow → click the Slack node → go to "Credentials"
+2. Delete the old credential → click "Create New" → complete the OAuth flow
+3. Execute the node to confirm the connection is live
+
+### Power Automate
+1. Open your flow → click the Slack action → go to "Connection"
+2. Click "Add new connection" → sign in with your Slack workspace
+3. Save and run the flow to test the new connection
+
+**Which tool should you use?** Zapier is the easiest — just click "Reconnect" and it handles the rest.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `{"ok":false,"error":"invalid_auth"}`
+- `{"ok":false,"error":"not_authed"}`
+- `{"ok":false}` with no error field but auth is failing
+- Your Slack integration stopped working after you changed workspaces or regenerated a token
+
+**What it means in plain English:** Slack doesn't recognize your token. It could be mistyped, from the wrong workspace, or missing some characters from a bad copy-paste.
+
+**Most common cause:** Copying a token incorrectly (missing characters, extra spaces) or using a token from one Slack workspace on a different workspace's API.
+
+</div>
+
 ## What Causes Slack invalid_auth
 
 Slack returns the `invalid_auth` error when the `Authorization` header contains a token that Slack cannot recognize as valid. This is the most common Slack authentication error — it means the token is malformed, mistyped, expired, or belongs to a different workspace.

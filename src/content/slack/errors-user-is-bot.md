@@ -19,6 +19,95 @@ keywords:
   - "slack api bot user tried to"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You're trying to perform an action that bots can't do. Some Slack API methods only work with user tokens, not bot tokens.
+
+**The fix:**
+1. Check if your token starts with `xoxb-` (bot) — you need `xoxp-` (user) for this method
+2. Re-install your Slack app with user token scopes to get an `xoxp-` token
+3. Use the user token instead of the bot token for this specific API call
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://slack.com/api/users.setPresence",
+    headers={"Authorization": f"Bearer {USER_TOKEN}"},
+    json={"presence": "auto"})
+if resp.json().get("error") == "user_is_bot":
+    print("This method needs a user token (xoxp-), not a bot token (xoxb-)")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "user_is_bot" error from the Slack API.
+> The response is: {"ok":false,"error":"user_is_bot"}
+> I'm using a bot token (xoxb-) to call users.setPresence.
+> Please give me a step-by-step fix with working Python code that shows how to use a user token instead.
+
+**What to expect:** The AI should explain the difference between bot and user tokens and show you how to get a user token through Slack's OAuth flow.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I got a user token but still get user_is_bot. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Slack token types), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix user_is_bot in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Slack action step
+2. Go to "Account" → click "Reconnect" → during authorization, make sure to approve user token scopes
+3. Test the step to confirm the connection includes user-level permissions
+
+### Make (Integromat)
+1. Open your scenario → click the Slack module → go to "Connection"
+2. Click "Create a new connection" → during OAuth, approve the user scopes when prompted
+3. Run the scenario once to verify the user token is working
+
+### n8n
+1. Open your workflow → click the Slack node → go to "Credentials"
+2. Click "Create New" → during OAuth, ensure user scopes are included in the authorization
+3. Execute the node to confirm the user token has the right permissions
+
+### Power Automate
+1. Open your flow → click the Slack action → go to "Connection"
+2. Click "Add new connection" → approve user-level permissions during sign-in
+3. Save and run the flow to test the new connection
+
+**Which tool should you use?** The fix is the same for all tools — you need to re-authorize with user token scopes, not just bot scopes.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `{"ok":false,"error":"user_is_bot"}`
+- `{"ok":false,"error":"not_allowed"}`
+- Your bot token works for posting messages but fails for user-specific actions like setting presence
+- You get this error on methods like `users.setPresence`, `users.profile.set`, or `admin.*` endpoints
+
+**What it means in plain English:** You're using a bot token to call a Slack method that only works with user tokens. Bot tokens and user tokens have different permissions — some actions can only be done on behalf of a real person, not a bot.
+
+**Most common cause:** Using a bot token (`xoxb-`) on a method that requires a user token (`xoxp-`), like setting user presence or updating a user profile.
+
+</div>
+
 ## What Causes Slack user_is_bot
 
 Slack returns the `user_is_bot` error when a bot token (`xoxb-*`) is used to call a method that is restricted to user tokens (`xoxp-*` or `xoxs-*`). Certain Slack API methods — particularly those involving user presence, user status, or admin-level operations — are not available to bot users and require a user-level OAuth token.

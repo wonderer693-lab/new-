@@ -19,6 +19,97 @@ keywords:
   - "slack api http 429 with retry-after"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Slack is throttling your API calls. You're hitting a specific method's rate limit and Slack is telling you to slow down.
+
+**The fix:**
+1. Wait for the number of seconds in the `Retry-After` header (usually 30-60 seconds)
+2. Add delays between your API calls so you don't hit the limit again
+3. Enable auto-retry in your automation tool if available
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.post("https://slack.com/api/conversations.list",
+    headers={"Authorization": f"Bearer {TOKEN}"})
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 60))
+    time.sleep(wait)
+    resp = requests.post("https://slack.com/api/conversations.list",
+        headers={"Authorization": f"Bearer {TOKEN}"})
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "rate_limited" error from the Slack API with HTTP 429.
+> The response is: {"ok":false,"error":"rate_limited"} and there's a Retry-After header.
+> I'm calling conversations.list too frequently.
+> Please give me a step-by-step fix with working Python code that handles Slack rate limiting with retry logic.
+
+**What to expect:** The AI should give you a retry function that reads the Retry-After header, waits the right amount of time, and tries again.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting rate_limited after adding delays. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Slack rate limiting in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the Slack action step
+2. Enable "Auto-retry on error" in the step settings (Zapier retries on rate limits automatically)
+3. If you're still hitting limits, add a "Delay by Zapier" step (set to 60 seconds) before the Slack action
+
+### Make (Integromat)
+1. Open your scenario → right-click the Slack module → "Add error handler"
+2. Choose "Retry" → set interval to 60 seconds, max retries to 3
+3. For bulk operations, add a "Sleep" module (60 seconds) between Slack calls
+
+### n8n
+1. Open your workflow → click the Slack node
+2. In "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 60000ms, "Max Tries" to 3
+3. For bulk operations, add a "Wait" node (60 seconds) between Slack nodes
+
+### Power Automate
+1. Open your flow → click the Slack action
+2. In "Settings" → enable "Retry Policy" → set to "Exponential interval" with count 3
+3. For bulk operations, add a "Delay" action (60 seconds) before the Slack action
+
+**Which tool should you use?** Zapier has the best built-in retry for Slack — it handles rate limits automatically without extra configuration.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `{"ok":false,"error":"rate_limited"}` with HTTP status 429
+- `{"ok":false,"error":"rate_limited"}` and a `Retry-After` header in the response
+- HTTP 429 in your integration logs when calling Slack
+- Your Slack integration works sometimes but fails randomly with rate limit errors
+
+**What it means in plain English:** Slack is telling you to slow down. You're calling a specific API method too many times in a short period. Wait for the time shown in the Retry-After header and try again.
+
+**Most common cause:** Calling low-tier methods like `conversations.list` or `users.list` too frequently, or running multiple processes that all hit the same Slack endpoint at once.
+
+</div>
+
 ## What Causes Slack rate_limited
 
 Slack returns HTTP 429 with a `Retry-After` header when your app exceeds the per-method rate limit tier. Slack assigns each API method to a rate limit tier (Tier 1, 2, 3, or 4). Tier 1 methods (e.g., `conversations.list`, `users.list`) allow as little as 1 request per minute for non-marketplace apps, while Tier 4 methods allow up to 100 requests per minute.

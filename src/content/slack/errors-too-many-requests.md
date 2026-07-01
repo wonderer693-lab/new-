@@ -19,6 +19,98 @@ keywords:
   - "slack api rate limit exceeded without"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Too many Slack API calls in a burst. You're sending requests too fast across all Slack endpoints at once, and Slack is temporarily blocking you.
+
+**The fix:**
+1. Wait 30-60 seconds and try again
+2. Add at least a 1-second delay between every Slack API call
+3. Don't fire multiple Slack requests at the exact same time
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.post("https://slack.com/api/chat.postMessage",
+    headers={"Authorization": f"Bearer {TOKEN}"},
+    json={"channel": "C12345", "text": "Hello"})
+if resp.json().get("error") == "too_many_requests":
+    time.sleep(30)
+    resp = requests.post("https://slack.com/api/chat.postMessage",
+        headers={"Authorization": f"Bearer {TOKEN}"},
+        json={"channel": "C12345", "text": "Hello"})
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a "too_many_requests" error from the Slack API.
+> The response is: {"ok":false,"error":"too_many_requests"} (with HTTP 200, not 429).
+> I'm making multiple Slack API calls at the same time from different parts of my app.
+> Please give me a step-by-step fix with working Python code that spaces out Slack API requests to avoid burst limits.
+
+**What to expect:** The AI should give you a rate limiter that adds delays between requests and explains the difference between Slack's burst limits and per-method limits.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I added delays but still get too_many_requests. Here's what I tried: [paste your code]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle Slack burst rate limits in popular automation tools:
+
+### Zapier
+1. Open your Zap → add a "Delay by Zapier" step before each Slack action
+2. Set the delay to 2-5 seconds to space out your requests
+3. If you have multiple Slack steps, add a delay between each one
+
+### Make (Integromat)
+1. Open your scenario → add a "Sleep" module (2-5 seconds) between Slack modules
+2. Right-click each Slack module → "Add error handler" → choose "Retry" with a 30-second interval
+3. Avoid running multiple Slack modules in parallel — chain them one after another
+
+### n8n
+1. Open your workflow → add a "Wait" node (2-5 seconds) between Slack nodes
+2. In each Slack node's "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 30000ms
+3. Make sure Slack nodes run one at a time, not in parallel branches
+
+### Power Automate
+1. Open your flow → add a "Delay" action (2-5 seconds) before each Slack action
+2. In each Slack action's "Settings" → enable "Retry Policy" → set to "Fixed interval" with count 3
+3. Avoid having multiple Slack actions trigger at the exact same time
+
+**Which tool should you use?** Make (Integromat) gives you the most control over timing between Slack calls.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `{"ok":false,"error":"too_many_requests"}` (usually with HTTP 200, not 429)
+- `{"ok":false,"error":"ratelimited"}` in your integration logs
+- Your Slack integration works fine for single requests but fails when processing many at once
+- Errors appear randomly during busy periods and then resolve on their own
+
+**What it means in plain English:** You're sending too many Slack API requests at the same time. Unlike the per-method rate limit, this is a global burst limit — it counts all your requests together, not just one method.
+
+**Most common cause:** A bot that processes many incoming messages at once, or a migration script that pulls data from multiple Slack endpoints without pausing between calls.
+
+</div>
+
 ## What Causes Slack too_many_requests
 
 Slack returns the `too_many_requests` error (not to be confused with HTTP 429 `rate_limited`) when your app exceeds Slack's rate limits but Slack does not provide a `Retry-After` header. This error appears in the response body as `{"ok":false,"error":"too_many_requests"}` with HTTP status 200 — Slack often returns 200 with an error field rather than using HTTP status codes for non-429 rate limit issues.
