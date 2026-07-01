@@ -20,6 +20,94 @@ keywords:
   - "hubspot http 414"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your HubSpot API request URL is too long (too many parameters).
+
+**The fix:**
+1. Stop putting long lists of IDs in the URL — use POST with a request body instead
+2. Split large requests into smaller batches of 100 records each
+3. Use the batch/read endpoint (`POST /crm/v3/objects/contacts/batch/read`) instead of GET with query params
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+ids = [1, 2, 3, 4, 5]  # your list of record IDs
+resp = requests.post("https://api.hubapi.com/crm/v3/objects/contacts/batch/read",
+    headers=headers, json={"inputs": [{"id": i} for i in ids]})
+results = resp.json().get("results", [])
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 414 URI Too Long error from the HubSpot API.
+> The error says "Request-URI Too Large."
+> I'm passing hundreds of contact IDs as query parameters in a GET request.
+> Please give me code that uses the POST batch/read endpoint instead, with batching for large ID lists.
+
+**What to expect:** The AI should give you code that sends IDs in the request body via POST instead of the URL, and splits large lists into batches of 100.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 414 errors. Here's my current URL: [paste it]. Please help me convert this to a POST request.
+
+**Best AI tools for this:** Claude (best at explaining batch patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle HubSpot 414 URL too long errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → check if your HubSpot action is passing too many IDs in a single step
+2. Split your records into smaller groups using "Looping by Zapier" — process 100 records at a time
+3. Use the "Find Multiple Contacts" action instead of passing a long list of IDs in the URL
+
+### Make (Integromat)
+1. Open your scenario → add an "Array Aggregator" module before the HubSpot module to group records into batches of 100
+2. Replace any GET-based HubSpot modules with POST-based ones (batch read, search)
+3. Use the "Iterator" module to process each batch separately with a delay between them
+
+### n8n
+1. Open your workflow → add a "Split In Batches" node before the HubSpot node
+2. Set the batch size to 100 records
+3. Replace GET requests with the HubSpot "Search" or "Batch Read" nodes that use POST with a request body
+
+### Power Automate
+1. Open your flow → add a "Select" action to trim your ID list, then use "Apply to each" to process in groups of 100
+2. Replace any "Get records" actions that use long query strings with "Search records" actions
+3. Use the "Batch" action if available, or loop through smaller groups with a "Delay" action between them
+
+**Which tool should you use?** n8n has the best built-in batch splitting — the "Split In Batches" node handles this pattern perfectly.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"414 URI Too Long"`
+- `"Request-URI Too Large"`
+- `"Request URI exceeds limits"`
+- `"HTTP 414"` in your integration logs
+
+**What it means in plain English:** The web address (URL) you're sending to HubSpot is too long. This usually happens when you try to look up too many records at once by putting all their IDs in the URL.
+
+**Most common cause:** Passing hundreds of record IDs as query parameters in a GET request instead of using a POST request with the IDs in the body.
+
+</div>
+
 ## What Causes HubSpot 414
 
 HubSpot returns HTTP 414 when the request URI (URL + query parameters) exceeds the maximum allowed length. HubSpot's API enforces a URI length limit (typically around 8 KB). This most commonly occurs when passing many IDs as query parameters for lookup operations.

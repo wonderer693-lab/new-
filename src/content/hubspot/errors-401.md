@@ -18,6 +18,97 @@ keywords:
   - "hubspot oauth refresh token"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your HubSpot API key or OAuth token is expired or wrong.
+
+**The fix:**
+1. Check if your OAuth token has expired (they last 6 hours by default)
+2. Refresh your token using the refresh token — or re-connect your app
+3. If using a private app token, check if it was revoked in HubSpot settings
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post("https://api.hubapi.com/oauth/v1/token", data={
+    "grant_type": "refresh_token",
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "refresh_token": REFRESH_TOKEN,
+})
+new_token = resp.json()["access_token"]
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 401 Unauthorized error from the HubSpot API.
+> The error message says "Invalid API key" and "authentication failed."
+> I'm using OAuth tokens with a refresh token flow.
+> Please give me code that detects expired tokens, refreshes them automatically, and retries the original request.
+
+**What to expect:** The AI should give you a token refresh function with automatic retry logic that handles expired access tokens gracefully.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. My refresh token might also be invalid. How do I re-authorize the OAuth flow from scratch?
+
+**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle HubSpot 401 authentication errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the HubSpot action step
+2. Click "Reconnect" next to your HubSpot account — this refreshes the OAuth token
+3. If reconnection fails, go to Zapier Settings → Connected Accounts → HubSpot → Disconnect, then reconnect from scratch
+
+### Make (Integromat)
+1. Open your scenario → click the HubSpot module
+2. Click the connection dropdown → "Reauthorize" to refresh the OAuth token
+3. If that fails, go to Make Settings → Connections → HubSpot → Delete, then create a new connection with fresh credentials
+
+### n8n
+1. Open your workflow → click the HubSpot node
+2. In the "Credentials" section → click "Reconnect" to refresh the OAuth token
+3. If using API key auth, generate a new private app token in HubSpot Settings → Integrations → Private Apps, then update the credential in n8n
+
+### Power Automate
+1. Open your flow → click the HubSpot action
+2. Click the three dots menu → "My connections" → sign in again to refresh the token
+3. If that fails, go to Power Automate Settings → Data → Connections → HubSpot → Edit connection, and re-authenticate
+
+**Which tool should you use?** Zapier has the simplest re-auth flow — just click "Reconnect" and you're done in one click.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"401 Unauthorized"`
+- `"Invalid API key"`
+- `"authentication failed"`
+- `"Authentication token not found"` in your integration logs
+
+**What it means in plain English:** HubSpot doesn't recognize who you are. Your access token expired, was revoked, or was never set up correctly. You need to log in again or get a fresh token.
+
+**Most common cause:** OAuth access tokens expire after 6 hours. If your integration doesn't refresh them automatically, it will start failing with 401 errors.
+
+</div>
+
 ## What Causes HubSpot 401
 
 HubSpot API 401 means your request lacks valid authentication. Common causes:

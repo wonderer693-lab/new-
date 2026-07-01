@@ -19,6 +19,94 @@ keywords:
   - "hubspot api partial success for batch"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Some records in your bulk update succeeded but others failed silently.
+
+**The fix:**
+1. Check the `results` array in the response — each item has its own status code
+2. Filter out the items where `status` is not 200 (those are the failures)
+3. Retry only the failed records instead of the whole batch
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.post(url, headers=headers, json=payload)
+if resp.status_code == 207:
+    failures = [r for r in resp.json()["results"] if r["status"] != 200]
+    print(f"{len(failures)} records failed — retry these individually")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 207 Multi-Status response from the HubSpot batch API.
+> Some records in my batch upsert succeeded but others failed.
+> The error message says "partial success" and I don't know which records failed.
+> Please give me Python code that parses the results array, identifies failures, and retries only the failed records.
+
+**What to expect:** The AI should give you code that loops through the `results` array, separates successes from failures, and retries only the failed items.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. Here's the response body I'm getting: [paste your JSON]. Please help me identify which records failed and why.
+
+**Best AI tools for this:** Claude (best at explaining batch error handling), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle HubSpot 207 partial success in popular automation tools:
+
+### Zapier
+1. Open your Zap → click the HubSpot action step that does batch operations
+2. Add a "Filter by Zapier" step after the HubSpot action — set it to continue only if the status is 200
+3. Add a "Paths by Zapier" step to route failed records to a separate path that retries them individually
+
+### Make (Integromat)
+1. Open your scenario → right-click the HubSpot module → "Add error handler"
+2. Choose "Ignore" so the scenario continues even if some records fail
+3. Add a "JSON Parse" module after the HubSpot module to extract the `results` array, then use a "Router" to separate success from failure items
+
+### n8n
+1. Open your workflow → click the HubSpot node
+2. In "Settings" → enable "Continue On Fail" so the workflow doesn't stop on 207
+3. Add a "Function" node after the HubSpot node to filter the results array and pass only failed records to a retry node
+
+### Power Automate
+1. Open your flow → click the HubSpot action
+2. In "Settings" → set "Run after" to include "has failed" so the next step runs even on 207
+3. Add a "Parse JSON" action to read the response body, then use a "Filter array" action to separate failed records by their status code
+
+**Which tool should you use?** Make has the best error handling for batch operations — its JSON parsing and routing make it easy to separate successes from failures.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"207 Multi-Status"`
+- `"partial success"`
+- `"some records failed"`
+- `"HTTP 207"` in your integration logs
+
+**What it means in plain English:** Your batch request went through, but not everything worked. Some records were saved, and some had problems. You need to check which ones failed.
+
+**Most common cause:** Batch imports where some records have duplicate emails (409), missing fields (400), or invalid data — while the rest succeed just fine.
+
+</div>
+
 ## What Causes HubSpot 207 Multi-Status
 
 HubSpot returns HTTP 207 Multi-Status when using batch endpoints (like `POST /crm/v3/objects/contacts/batch/upsert` or `POST /crm/v3/objects/contacts/batch/read`) with multi-status error handling enabled. Unlike 200 (all success) or 400 (all fail), 207 indicates a mixed result — some individual records succeeded while others failed.

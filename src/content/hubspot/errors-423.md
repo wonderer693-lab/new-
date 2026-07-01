@@ -20,6 +20,95 @@ keywords:
   - "hubspot http 423"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** A HubSpot record is locked because another process is editing it.
+
+**The fix:**
+1. Wait at least 2-3 seconds before trying again
+2. Slow down your updates — don't send more than 1 write per second to the same record
+3. Use batch endpoints to combine multiple updates into a single request
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.patch(url, headers=headers, json=payload)
+if resp.status_code == 423:
+    print("Record locked — waiting 3 seconds")
+    time.sleep(3)
+    resp = requests.patch(url, headers=headers, json=payload)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 423 Locked error from the HubSpot API.
+> The error says "Resource is locked" and "concurrent modification."
+> I'm updating the same contact record multiple times in quick succession.
+> Please give me code that adds a delay between writes and retries automatically when a 423 occurs.
+
+**What to expect:** The AI should give you a retry function with a 2-3 second delay that handles locked records gracefully and prevents rapid-fire writes.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 423 errors even with delays. I have multiple threads updating the same record. How do I add a write queue?
+
+**Best AI tools for this:** Claude (best at explaining concurrency patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle HubSpot 423 locked record errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → add a "Delay by Zapier" step before each HubSpot write action
+2. Set the delay to 3 seconds to avoid triggering the system lock
+3. If you have multiple HubSpot actions in a row, add a delay between each one
+
+### Make (Integromat)
+1. Open your scenario → add a "Sleep" module (3 seconds) before each HubSpot write module
+2. Right-click the HubSpot module → "Add error handler" → choose "Retry" with a 3-second interval and max 3 retries
+3. For bulk operations, use the batch update module instead of individual update modules
+
+### n8n
+1. Open your workflow → add a "Wait" node (3000ms) before each HubSpot write node
+2. In the HubSpot node "Settings" → enable "Retry on Fail" → set "Wait Between Tries" to 3000ms, "Max Tries" to 3
+3. Combine multiple updates into a single "Batch Update" node instead of separate write nodes
+
+### Power Automate
+1. Open your flow → add a "Delay" action (3 seconds) before each HubSpot write action
+2. In the HubSpot action "Settings" → set "Retry Policy" to "Exponential interval" with count 3
+3. If updating the same record multiple times, combine the updates into a single action with all fields mapped at once
+
+**Which tool should you use?** Make has the best retry handler for 423 errors — its error handler with retry interval handles locked records automatically.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"423 Locked"`
+- `"Resource is locked"`
+- `"concurrent modification"`
+- `"Attempting to sync large volume too quickly"` in your integration logs
+
+**What it means in plain English:** HubSpot put a temporary lock on a record because too many things are trying to edit it at the same time. Wait a few seconds and try again.
+
+**Most common cause:** Sending rapid updates to the same contact, deal, or company record — like 5 updates in 1 second — which triggers HubSpot's write lock.
+
+</div>
+
 ## What Causes HubSpot 423
 
 HubSpot returns HTTP 423 when a special rate-limit mechanism called a "system lock" is triggered. This lock activates when HubSpot detects a large volume of requests targeting the same object or the same account within a short timeframe — typically around 4-5 requests per second to the same resource. The lock lasts approximately 2 seconds.

@@ -20,6 +20,94 @@ keywords:
   - "hubspot http 409"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** You're trying to create a HubSpot record that already exists.
+
+**The fix:**
+1. Use "upsert" (create or update) instead of "create" — this updates existing records instead of failing
+2. Search for the record first by email before trying to create it
+3. If it exists, update it instead of creating a new one
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+payload = {"inputs": [{"properties": {"email": "test@example.com", "lastname": "Test"}}], "idProperty": "email"}
+resp = requests.post("https://api.hubapi.com/crm/v3/objects/contacts/batch/upsert",
+    headers=headers, json=payload)
+print("Created or updated successfully" if resp.status_code in (200, 207) else "Failed")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 409 Conflict error from the HubSpot API when creating contacts.
+> The error says "Contact already exists" and "duplicate email."
+> I'm using POST /crm/v3/objects/contacts to create new contacts.
+> Please give me code that uses upsert instead of create, so it updates existing contacts instead of failing.
+
+**What to expect:** The AI should give you code using the batch upsert endpoint with `idProperty: "email"` that creates new records and updates existing ones without errors.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 409 errors in batch operations. Here's my payload: [paste it]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining upsert vs. create), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to handle HubSpot 409 duplicate errors in popular automation tools:
+
+### Zapier
+1. Open your Zap → replace the "Create Contact" HubSpot action with "Find or Create Contact"
+2. The "Find or Create" action searches by email first — if the contact exists, it updates; if not, it creates
+3. Map your fields the same way as before — Zapier handles the deduplication automatically
+
+### Make (Integromat)
+1. Open your scenario → replace the "Create a Contact" module with "Search for a Contact"
+2. Add a "Router" after the search — Path 1: if found, use "Update a Contact"; Path 2: if not found, use "Create a Contact"
+3. Alternatively, use the "Upsert" module if available in your HubSpot connection — it handles find-or-create in one step
+
+### n8n
+1. Open your workflow → add a HubSpot "Search" node before the "Create" node
+2. Search by email — if a result exists, route to an "Update" node; if not, route to the "Create" node
+3. Use an "IF" node to branch: condition = `{{$json.results.length}} > 0`
+
+### Power Automate
+1. Open your flow → add a "Search records" HubSpot action before the "Create record" action
+2. Add a "Condition" action — if search returns results, use "Update record" instead of "Create record"
+3. In the "Update" branch, map the same fields and use the record ID from the search result
+
+**Which tool should you use?** Zapier's "Find or Create" action is the simplest — it handles deduplication in a single step with no extra logic needed.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"409 Conflict"`
+- `"Contact already exists"`
+- `"duplicate email"`
+- `"CONFLICT"` in your integration logs
+
+**What it means in plain English:** You're trying to add a record that's already in HubSpot. The email address (or other unique field) is already used by another contact.
+
+**Most common cause:** Running an import script twice without checking for existing records, or two different tools trying to create the same contact at the same time.
+
+</div>
+
 ## What Causes HubSpot 409
 
 HubSpot returns HTTP 409 when attempting to create a record that duplicates an existing record on a unique property (most commonly `email` for Contacts). HubSpot enforces uniqueness on `email` for Contacts, `dealname` for Deals (within the same pipeline), and custom unique properties you've configured.
