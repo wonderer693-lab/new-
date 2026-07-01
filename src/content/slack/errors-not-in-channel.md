@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack not_in_channel
 
-Slack returns the `not_in_channel` error when your bot token attempts to read messages, send messages, or perform channel operations in a channel where the bot user has not been added as a member. Slack bots can only access channels they've been explicitly invited to (for private channels) or have joined (for public channels).
+Slack returns the `not_in_channel` error when your bot token attempts to read messages, send messages, or perform channel operations in a channel where the bot user has not been added as a member. Slack bots can only access channels they've been explicitly invited to (for private channels) or have joined (for public channels). See all [Slack API errors](/slack/) in our complete reference.
+
+Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Mailchimp 403](/mailchimp/errors/403).
 
 The error appears as `{"ok":false,"error":"not_in_channel"}`. This applies to both public and private channels — bots do not automatically have access to all channels in a workspace. The bot must be a member of the channel to read history, listen to messages, or post messages.
 
@@ -190,6 +192,8 @@ def post_to_channel(channel_id, text):
 - Install your Slack app with `chat:write.public` scope to post to public channels without joining
 - For private channels, ensure the installation process includes an invitation step
 - Store the list of channels the bot has joined and verify against this list before posting
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

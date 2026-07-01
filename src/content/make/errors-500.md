@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 500
 
-Make (formerly Integromat) returns HTTP 500 when its internal infrastructure encounters an error processing your request — database failures, upstream service timeouts, or transient server issues. These are server-side errors outside your control. Make runs on a multi-tenant cloud platform, and 500 errors typically indicate a temporary infrastructure problem rather than an issue with your integration.
+Make (formerly Integromat) returns HTTP 500 when its internal infrastructure encounters an error processing your request — database failures, upstream service timeouts, or transient server issues. These are server-side errors outside your control. Make runs on a multi-tenant cloud platform, and 500 errors typically indicate a temporary infrastructure problem rather than an issue with your integration. See all [Make API errors](/make/) in our complete reference.
+
+Similar server issues occur with [Pipedrive 500](/pipedrive/errors/500), [Zapier 500](/zapier/errors/500), and [Salesforce 503](/salesforce/errors/503).
 
 The response body is usually `{"error":"Internal Server Error"}` with no additional detail. Make's infrastructure handles millions of scenario executions daily, and 500 errors are rare during normal operations.
 
@@ -168,6 +170,8 @@ if consecutive_500s > 3:
 - Add a circuit breaker that pauses after 3 consecutive 500s
 - Log the full request URL and timestamp with each 500 to identify patterns
 - Keep Make API client libraries updated to the latest version
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

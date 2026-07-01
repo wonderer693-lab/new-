@@ -120,6 +120,8 @@ You might be dealing with this issue if you see any of these:
 
 A mass HubSpot deal update (a territory reassignment, for example) generates one webhook per deal; your middleware forwards each to Slack as a single notification. Within seconds Slack returns `429 ratelimited`, half the notifications are never delivered, and sales reps miss the very deals they were being notified about.
 
+See all [Slack API errors](/slack/) or [HubSpot API errors](/hubspot/) for more troubleshooting. Related: [Slack not_in_channel](/slack/errors/not_in_channel), [Slack rate_limited](/slack/errors/rate_limited).
+
 ## Root Cause
 
 - **HubSpot webhooks** fire in parallel for bulk operations: HubSpot caps webhook delivery concurrency — up to 10 simultaneous POSTs in flight per subscription — so a 50-deal update produces a near-instant Slack burst.

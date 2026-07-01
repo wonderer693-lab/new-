@@ -117,6 +117,8 @@ You might be dealing with this issue if you see any of these:
 
 A HubSpot-triggered Slack notification intermittently fails with `{"ok":false,"error":"not_in_channel"}`. Public channels work; private channels fail; DMs sometimes work, sometimes don't. The integration looked perfect in setup but breaks the moment you target a private `#deals-west` channel.
 
+See all [Slack API errors](/slack/) or [HubSpot API errors](/hubspot/) for more troubleshooting. Related: [Slack not_in_channel](/slack/errors/not_in_channel), [Slack rate_limited](/slack/errors/rate_limited).
+
 ## Root Cause
 
 - **`chat:write` alone is not enough** for private channels. A Slack bot must be a member of the channel to post; `chat:write` only grants it the ability to post *where it's already a member*.

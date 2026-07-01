@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 401
 
-Make returns HTTP 401 when the `Authorization` header contains an invalid, expired, or missing API token. Make uses token-based authentication with the `Authorization: Token <your_token>` header format. A 401 means either the token was mistyped, has been revoked, or the header format is incorrect.
+Make returns HTTP 401 when the `Authorization` header contains an invalid, expired, or missing API token. Make uses token-based authentication with the `Authorization: Token <your_token>` header format. A 401 means either the token was mistyped, has been revoked, or the header format is incorrect. See all [Make API errors](/make/) in our complete reference.
+
+Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Slack invalid_auth](/slack/errors/invalid_auth).
 
 The response is `{"error":"Unauthorized"}`. This is distinct from 403 (forbidden) — 401 means the server doesn't recognize your credentials at all.
 
@@ -176,6 +178,8 @@ MAKE_TOKEN = os.environ.get("MAKE_API_TOKEN")
 - Set up monitoring for 401 responses and alert the team immediately
 - Document the required `Token` header format (not `Bearer`) in your integration guide
 - Rotate tokens quarterly and during staff transitions
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

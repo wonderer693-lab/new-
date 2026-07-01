@@ -109,7 +109,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack invalid_auth
 
-Slack returns the `invalid_auth` error when the `Authorization` header contains a token that Slack cannot recognize as valid. This is the most common Slack authentication error — it means the token is malformed, mistyped, expired, or belongs to a different workspace.
+Slack returns the `invalid_auth` error when the `Authorization` header contains a token that Slack cannot recognize as valid. This is the most common Slack authentication error — it means the token is malformed, mistyped, expired, or belongs to a different workspace. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Zoho INVALID_OAUTHTOKEN](/zoho/errors/invalid-oauthtoken).
 
 The error appears as `{"ok":false,"error":"invalid_auth"}`. Valid Slack tokens start with `xoxb-` (bot tokens) or `xoxp-` (user tokens), followed by a unique string. A common mistake is using a token from one workspace against a different workspace's API, or using a token that was truncated during copy-paste.
 
@@ -180,6 +182,8 @@ print(f"Re-install required: {install_url}")
 - Validate token format with a regex before making any API calls
 - Implement token rotation alerts — if a 401/`invalid_auth` appears, notify the team immediately
 - Use Slack's OAuth v2 flow (not v1) which provides clearer error messages
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

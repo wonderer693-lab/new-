@@ -121,6 +121,8 @@ You might be dealing with this issue if you see any of these:
 
 A marketer bulk-tags 100 ActiveCampaign contacts in the admin UI; ActiveCampaign fires a webhook for every changed contact; your middleware immediately sends a Slack notification each, and 99% of those calls return `{"ok":false,"error":"ratelimited"}` from Slack. On-call sees one notification in Slack and 99 failed webhooks on the ActiveCampaign webhook log — the team thinks only one contact was tagged.
 
+See all [Slack API errors](/slack/) or [ActiveCampaign API errors](/activecampaign/) for more troubleshooting. Related: [Slack rate_limited](/slack/errors/rate_limited), [ActiveCampaign 429](/activecampaign/errors/429).
+
 ## Root Cause
 
 - **ActiveCampaign webhooks fire per-record, synchronously during bulk operations**: there is no batch webhook payload. Each contact update is its own POST to your endpoint within seconds.

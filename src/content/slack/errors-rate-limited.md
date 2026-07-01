@@ -112,7 +112,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack rate_limited
 
-Slack returns HTTP 429 with a `Retry-After` header when your app exceeds the per-method rate limit tier. Slack assigns each API method to a rate limit tier (Tier 1, 2, 3, or 4). Tier 1 methods (e.g., `conversations.list`, `users.list`) allow as little as 1 request per minute for non-marketplace apps, while Tier 4 methods allow up to 100 requests per minute.
+Slack returns HTTP 429 with a `Retry-After` header when your app exceeds the per-method rate limit tier. Slack assigns each API method to a rate limit tier (Tier 1, 2, 3, or 4). Tier 1 methods (e.g., `conversations.list`, `users.list`) allow as little as 1 request per minute for non-marketplace apps, while Tier 4 methods allow up to 100 requests per minute. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Pipedrive 429](/pipedrive/errors/429).
 
 The response is HTTP 429 with header `Retry-After: <seconds>` and body `{"ok":false,"error":"rate_limited"}`. This is distinct from `too_many_requests` (burst limit without `Retry-After`) — `rate_limited` always includes a `Retry-After` header telling you exactly how long to wait.
 
@@ -189,6 +191,8 @@ effective_limit = SLACK_TIERS[mytier] * LIMIT_MULTIPLIER
 - Use Slack's `cursor` pagination to get all results in one call instead of multiple calls
 - Implement a central rate limiter that tracks calls per method per minute
 - For Tier 1 methods especially, cache aggressively and re-fetch only when needed
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

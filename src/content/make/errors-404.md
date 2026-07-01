@@ -109,7 +109,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 404
 
-Make returns HTTP 404 when the requested resource does not exist at the specified URL. This can mean the resource ID is wrong, the endpoint path is incorrect, the resource was deleted, or the request is being made in the wrong organization context (Make isolates resources per organization).
+Make returns HTTP 404 when the requested resource does not exist at the specified URL. This can mean the resource ID is wrong, the endpoint path is incorrect, the resource was deleted, or the request is being made in the wrong organization context (Make isolates resources per organization). See all [Make API errors](/make/) in our complete reference.
+
+Similar not-found issues occur with [HubSpot 404](/hubspot/errors/404), [Salesforce 404](/salesforce/errors/404), and [Pipedrive 404](/pipedrive/errors/404).
 
 The response is `{"error":"Resource not found"}`. Since Make's API is organized hierarchically (`/organizations/{org_id}/...`), a common cause is using an ID from one organization while authenticated against another. Resources like scenarios, webhooks, and connections all belong to a specific organization.
 
@@ -177,6 +179,8 @@ except Exception as e:
 - Implement a resource lookup/refresh function that retrieves the current state before acting
 - Catch 404 responses and clean up any stale references in your local database
 - Use Make's listing endpoints to programmatically verify resource existence
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

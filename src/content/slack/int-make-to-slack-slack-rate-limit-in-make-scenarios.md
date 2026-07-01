@@ -117,6 +117,8 @@ You might be dealing with this issue if you see any of these:
 
 A Make scenario iterates 50 fresh rows from a CRM and tries to notify a Slack channel each row, but only the first message lands; the remainder error out with `chat.postMessage` returning HTTP 429 `{"error":"ratelimited"}`. Make flags those executions as failed, so end users see 49 red execution lines per run plus an aggrieved Slack team pinging on real-time alerts they missed.
 
+See all [Slack API errors](/slack/) or [Make API errors](/make/) for more troubleshooting. Related: [Slack rate_limited](/slack/errors/rate_limited), [Make 401](/make/errors/401).
+
 ## Root Cause
 
 Slack's Web API applies **tiered rate limits per method**, not globally. `chat.postMessage` is **Tier 3**: ~1 request per second per method per workspace, enforced on a rolling short window. Other Slack endpoints have different tiers, so total workspace capacity varies.

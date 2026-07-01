@@ -121,6 +121,8 @@ You might be dealing with this issue if you see any of these:
 
 You discover a Make scenario that posts HubSpot deals to Slack has been paused for several days. Make's status indicator reads "Connection Error" on the Slack module, but no one saw it because no email alert was configured. Notification history dropped while the scenario was paused; the underlying events were lost; by the time a human looked, traffic had been silent for 72 hours.
 
+See all [Make API errors](/make/) or [Slack API errors](/slack/) for more troubleshooting. Related: [Make 401](/make/errors/401) for auth failures, [Slack invalid_auth](/slack/errors/invalid_auth) for token issues.
+
 ## Root Cause
 
 - **Make connection state**: connections are per-account modules. When the Slack connection's `xoxb` token is revoked (admin click of "Revoke" in Slack app config) or refreshed by Make's internal rotation and the refresh fails, Make pauses the scenario.

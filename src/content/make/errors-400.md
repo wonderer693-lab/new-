@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 400
 
-Make returns HTTP 400 when the request contains invalid JSON, missing required parameters, or incorrectly typed values. This is a client-side validation error — the request was received but could not be processed due to malformed or invalid content.
+Make returns HTTP 400 when the request contains invalid JSON, missing required parameters, or incorrectly typed values. This is a client-side validation error — the request was received but could not be processed due to malformed or invalid content. See all [Make API errors](/make/) in our complete reference.
+
+Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [Zapier 400](/zapier/errors/400).
 
 The response typically includes `{"error":"Invalid request parameters"}`. Since Make's API manages complex resources like scenarios, webhooks, and connections, the validation rules can be strict — wrong parameter names, nested objects, or data types all trigger 400.
 
@@ -194,6 +196,8 @@ payload = {
 - Log the exact request body alongside every 400 response for rapid debugging
 - Test payloads against Make's API playground or a development organization first
 - Implement integration tests that verify payload structure against known-good examples
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

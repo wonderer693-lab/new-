@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 403
 
-Make returns HTTP 403 when the authenticated token has insufficient permissions for the requested operation. Make's API uses token-based authentication with scoped permissions — not all tokens can access all endpoints. A token created for read-only access will 403 on write operations, and a token for one organization will 403 when used against another.
+Make returns HTTP 403 when the authenticated token has insufficient permissions for the requested operation. Make's API uses token-based authentication with scoped permissions — not all tokens can access all endpoints. A token created for read-only access will 403 on write operations, and a token for one organization will 403 when used against another. See all [Make API errors](/make/) in our complete reference.
+
+Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Slack not_in_channel](/slack/errors/not_in_channel).
 
 The response is `{"error":"Forbidden"}`. Unlike 401 (invalid credentials), a 403 means your token is valid but lacks sufficient authorization for that specific endpoint or resource.
 
@@ -171,6 +173,8 @@ def call_make(org, endpoint):
 - Add a permission check on startup — test a representative endpoint and fail fast if 403
 - Use dedicated service accounts rather than personal user tokens for automated integrations
 - Audit token permissions quarterly — remove unused scopes and rotate tokens
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

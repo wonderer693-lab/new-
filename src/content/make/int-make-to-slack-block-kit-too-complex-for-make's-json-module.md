@@ -114,6 +114,8 @@ You might be dealing with this issue if you see any of these:
 
 A Make scenario builds a Slack message with nested Block Kit (Sections containing `mrkdwn`, accessory images, conditional `actions`) using Make's structured Slack module. Each iteration the scenario fails with `invalid_blocks` from Slack and the entire Slack payload is discarded. The Make UI makes it easy to drop a comma or bracket in the deeply nested JSON, and the user-friendliest browsing field doesn't surface the syntax error until a real Slack call attempts to render it.
 
+See all [Make API errors](/make/) or [Slack API errors](/slack/) for more troubleshooting. Related: [Make 400](/make/errors/400) for data format issues, [Slack rate_limited](/slack/errors/rate_limited) for message sending limits.
+
 ## Root Cause
 
 - **Make's Slack "Send a Message" module** lets you build the `blocks` array through structured fields. Behind the scenes it concatenates your values to JSON; an unescaped quote inside a variable yields malformed JSON.

@@ -109,7 +109,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack token_revoked
 
-Slack returns the `token_revoked` error when the OAuth token your app is using has been explicitly revoked by a user or workspace admin. The error appears as `{"ok":false,"error":"token_revoked"}` on any API call. Once revoked, the token is permanently invalid — there is no way to "un-revoke" it.
+Slack returns the `token_revoked` error when the OAuth token your app is using has been explicitly revoked by a user or workspace admin. The error appears as `{"ok":false,"error":"token_revoked"}` on any API call. Once revoked, the token is permanently invalid — there is no way to "un-revoke" it. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Zoho INVALID_OAUTHTOKEN](/zoho/errors/invalid-oauthtoken).
 
 Users can revoke tokens from Slack's App Management page, and workspace admins can revoke tokens from the admin dashboard. Common reasons include a user uninstalling your app, an admin de-authorizing it, or a security policy that periodically revokes unused OAuth grants.
 
@@ -182,6 +184,8 @@ install_url = "https://slack.com/oauth/v2/authorize?" + urlencode({
 - Set up a periodic health check that tests the token every hour and alerts if revoked
 - Store the `installed_at` timestamp and warn users if no successful API call has been made in 30+ days
 - In enterprise grids, handle workspace-level token management where tokens can be independently revoked per workspace
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

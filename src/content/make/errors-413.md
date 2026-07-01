@@ -108,7 +108,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 413
 
-Make returns HTTP 413 when the request body exceeds its maximum payload size limits. Make enforces a maximum request body size (typically 10 MB for most endpoints, but may be lower for specific operations). This error commonly occurs when uploading large files, sending extensive JSON payloads with many bundles, or including Base64-encoded content that expands significantly in size.
+Make returns HTTP 413 when the request body exceeds its maximum payload size limits. Make enforces a maximum request body size (typically 10 MB for most endpoints, but may be lower for specific operations). This error commonly occurs when uploading large files, sending extensive JSON payloads with many bundles, or including Base64-encoded content that expands significantly in size. See all [Make API errors](/make/) in our complete reference.
+
+Similar payload size issues occur with [HubSpot 414](/hubspot/errors/414) for URI length limits.
 
 The response is `{"error":"Payload too large"}`. This is a hard limit — splitting the payload into smaller chunks is the only solution. Make also has per-field size limits, so even if the total payload is under the limit, individual fields exceeding their maximum can trigger this error.
 
@@ -178,6 +180,8 @@ with open("large_file.bin", "rb") as f:
 - Compress files before uploading (lower resolution, use efficient formats like CSV instead of Base64)
 - Monitor Content-Length header before sending and warn if it exceeds limits
 - For file transfers, use Make's dedicated file handling modules instead of raw API calls
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

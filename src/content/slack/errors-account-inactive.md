@@ -109,7 +109,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack account_inactive
 
-Slack returns the `account_inactive` error when the Slack user account associated with your OAuth token has been deactivated, disabled, or removed from the workspace. Unlike `token_revoked` (which means the app was uninstalled), `account_inactive` means the user behind the token no longer has an active account.
+Slack returns the `account_inactive` error when the Slack user account associated with your OAuth token has been deactivated, disabled, or removed from the workspace. Unlike `token_revoked` (which means the app was uninstalled), `account_inactive` means the user behind the token no longer has an active account. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar account issues occur with [Salesforce 404](/salesforce/errors/404) and [HubSpot 404](/hubspot/errors/404).
 
 The error appears as `{"ok":false,"error":"account_inactive"}`. This can happen when a user is deactivated by an admin, the user deletes their own account, or the user is removed from the workspace during an SCIM provisioning sync. The token itself may be perfectly valid — it's the underlying user account that's gone.
 
@@ -179,6 +181,8 @@ print(f"Re-authorize required — send admin to: {install_url}")
 - Set up monitoring for `account_inactive` errors — they indicate a user management issue that needs manual resolution
 - For app installations, suggest the workspace admin install the app rather than a regular user
 - Maintain a fallback admin user ID that can re-authorize the integration if the primary account is deactivated
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

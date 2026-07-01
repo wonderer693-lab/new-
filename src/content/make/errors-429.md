@@ -111,7 +111,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Make 429
 
-Make enforces rate limits at the organization level. When your organization exceeds its allowed requests-per-minute, Make returns HTTP 429 with a `Retry-After` header. Each Make plan (Free, Pro, Teams, Enterprise) has a different API call quota, visible in the `license.apiLimit` field returned by the organization endpoint.
+Make enforces rate limits at the organization level. When your organization exceeds its allowed requests-per-minute, Make returns HTTP 429 with a `Retry-After` header. Each Make plan (Free, Pro, Teams, Enterprise) has a different API call quota, visible in the `license.apiLimit` field returned by the organization endpoint. See all [Make API errors](/make/) in our complete reference.
+
+Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Slack rate_limited](/slack/errors/rate_limited).
 
 The response is `{"error":"Rate limit exceeded"}`. Make typically enforces a 1-minute cooldown window. The organization-level limit applies to all API calls made by any user or integration within your Make organization.
 
@@ -182,6 +184,8 @@ class MakeRateLimiter:
 - Upgrade your Make plan if you consistently need more API calls per minute
 - Use Make's built-in batch processing modules instead of per-bundle API calls
 - Monitor rate limit headers on every response and throttle proactively
+
+This error also affects integrations. See our [Make to Slack integration errors](/integrations/make-to-slack/) for common cross-tool issues.
 
 ## Official Documentation
 

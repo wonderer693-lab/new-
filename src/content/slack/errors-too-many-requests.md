@@ -113,7 +113,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack too_many_requests
 
-Slack returns the `too_many_requests` error (not to be confused with HTTP 429 `rate_limited`) when your app exceeds Slack's rate limits but Slack does not provide a `Retry-After` header. This error appears in the response body as `{"ok":false,"error":"too_many_requests"}` with HTTP status 200 — Slack often returns 200 with an error field rather than using HTTP status codes for non-429 rate limit issues.
+Slack returns the `too_many_requests` error (not to be confused with HTTP 429 `rate_limited`) when your app exceeds Slack's rate limits but Slack does not provide a `Retry-After` header. This error appears in the response body as `{"ok":false,"error":"too_many_requests"}` with HTTP status 200 — Slack often returns 200 with an error field rather than using HTTP status codes for non-429 rate limit issues. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Pipedrive 429](/pipedrive/errors/429).
 
 This typically happens with Slack's "burst" rate limits (not the tier-based per-method limits). Burst limits apply across all methods globally — hitting 30+ requests in a few seconds to any Slack API method can trigger this, even if you're within per-method tier limits.
 
@@ -202,6 +204,8 @@ def slack_api_call(method, **kwargs):
 - Avoid burst patterns — stagger parallel requests by at least 500ms each
 - Use Slack's Web API only for actions, not for data polling (use Events API instead)
 - Implement a token bucket or leaky bucket rate limiter that paces all outgoing Slack calls
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

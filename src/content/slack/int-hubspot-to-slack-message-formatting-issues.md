@@ -120,6 +120,8 @@ You might be dealing with this issue if you see any of these:
 
 HubSpot deal updates pushed to Slack look like walls of plain text: amounts show as `1000000` instead of `$1,000,000`, dates bleed through as raw ISO strings, and line breaks collapse so two deals blur into one unreadable line. Recipients ignore these notifications, which defeats the point of the integration.
 
+See all [Slack API errors](/slack/) or [HubSpot API errors](/hubspot/) for more troubleshooting. Related: [Slack not_in_channel](/slack/errors/not_in_channel), [Slack rate_limited](/slack/errors/rate_limited).
+
 ## Root Cause
 
 - **Slack renders text via mrkdwn**, not CommonMark. Use `*bold*` (not `**bold**`) and `_italic_` (not `*italic*`). HubSpot field values piped straight in are not mrkdwn-escaped, so `*` characters from product names break formatting.

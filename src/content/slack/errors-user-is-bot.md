@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack user_is_bot
 
-Slack returns the `user_is_bot` error when a bot token (`xoxb-*`) is used to call a method that is restricted to user tokens (`xoxp-*` or `xoxs-*`). Certain Slack API methods — particularly those involving user presence, user status, or admin-level operations — are not available to bot users and require a user-level OAuth token.
+Slack returns the `user_is_bot` error when a bot token (`xoxb-*`) is used to call a method that is restricted to user tokens (`xoxp-*` or `xoxs-*`). Certain Slack API methods — particularly those involving user presence, user status, or admin-level operations — are not available to bot users and require a user-level OAuth token. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar bot limitations occur with [Salesforce 403](/salesforce/errors/403) for permission-restricted actions.
 
 The error response is `{"ok":false,"error":"user_is_bot"}`. This is a permission model distinction: bot tokens act as the bot app itself, while user tokens act on behalf of a specific Slack user. Methods like `users.setPresence`, `admin.*`, and `users.profile.set` all require user tokens.
 
@@ -186,6 +188,8 @@ auth_url = f"https://slack.com/oauth/v2/authorize?client_id={CLIENT_ID}&scope={S
 - Route API calls to the correct token based on the method requirements
 - Add a check at integration startup: validate that you have a user token if you call user-only methods
 - Use Slack's `auth.test` method to verify token type and available scopes on startup
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 

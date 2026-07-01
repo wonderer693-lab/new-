@@ -110,7 +110,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Slack is_archived
 
-Slack returns the `is_archived` error when you attempt to post a message, upload a file, or perform any write operation on a channel that has been archived. Archived channels are read-only — no member (including bots) can send new messages or modify the channel in any way.
+Slack returns the `is_archived` error when you attempt to post a message, upload a file, or perform any write operation on a channel that has been archived. Archived channels are read-only — no member (including bots) can send new messages or modify the channel in any way. See all [Slack API errors](/slack/) in our complete reference.
+
+Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Mailchimp 403](/mailchimp/errors/403).
 
 The error appears as `{"ok":false,"error":"is_archived"}`. Channels are archived by workspace admins or members with permission. This is a permanent state unless an admin explicitly un-archives the channel. Archived channels still appear in `conversations.list` with `is_archived: true` but reject all write operations.
 
@@ -183,6 +185,8 @@ if is_channel_archived(channel_id, headers):
 - Set up a monitor that periodically scans channels your bot uses and alerts if any become archived
 - Implement a fallback channel for critical notifications when primary channel is archived
 - For user-facing messages, use ephemeral messages or DMs as a fallback
+
+This error also affects integrations. See our [HubSpot to Slack](/integrations/hubspot-to-slack/), [Make to Slack](/integrations/make-to-slack/), and [ActiveCampaign to Slack](/integrations/activecampaign-to-slack/) integration error guides.
 
 ## Official Documentation
 
