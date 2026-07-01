@@ -20,6 +20,92 @@ keywords:
   - "make http 413"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Your data payload is too large for Make to process — you're sending more than Make can handle in one request.
+
+**The fix:**
+1. Split your data into smaller chunks (batches of 500 records or less)
+2. Compress files before uploading (use CSV instead of Base64 when possible)
+3. Use Make's file transfer modules instead of raw API calls for large files
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+batch_size = 500
+for i in range(0, len(all_records), batch_size):
+    batch = all_records[i:i+batch_size]
+    requests.post(url, headers=headers, json={"data": batch})
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 413 Payload Too Large error from Make (Integromat).
+> The error message is: "Payload too large — data size exceeded"
+> I'm trying to send a large amount of data through Make but it's too big.
+> Please give me a step-by-step fix to split the data into smaller chunks.
+
+**What to expect:** The AI should give you code to batch your data and explain Make's payload size limits.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 413 errors. Here's my payload size: [paste size]. Please help me reduce it further.
+
+**Best AI tools for this:** Claude (best at explaining batching strategies), ChatGPT-4 (good at chunking code), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Make 413 errors in popular automation tools:
+
+### Make (Integromat)
+1. Open your scenario → check if you're sending large data in a single module
+2. Add an "Iterator" module to split large arrays into smaller bundles
+3. Use Make's built-in "HTTP" module with chunked requests for large file transfers
+
+### Zapier
+1. Open your Zap → check if the action step is sending too much data at once
+2. Add a "Looping by Zapier" step to process records in smaller batches
+3. Use Zapier's "Formatter" to compress or reduce data size before sending
+
+### n8n
+1. Open your workflow → check the node sending the large payload
+2. Add a "Split In Batches" node to divide your data into chunks of 500 or less
+3. Use n8n's "HTTP Request" node with streaming enabled for large files
+
+### Power Automate
+1. Open your flow → check if the action is sending too much data
+2. Add an "Apply to each" loop with a batch size limit to process data in chunks
+3. Use the "Compose" action to split large data before passing it to the next step
+
+**Which tool should you use?** Make's own Iterator module is best — it splits arrays into manageable bundles automatically.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"413 Payload Too Large"`
+- `"data size exceeded"`
+- `"Payload too large"`
+- `"Request body exceeds maximum size"` in your Make logs
+
+**What it means in plain English:** You're trying to send too much data at once. Make has a size limit (usually 10 MB). Split your data into smaller pieces and send them one at a time.
+
+**Most common cause:** Uploading large files, sending thousands of records in one request, or including large Base64-encoded content in API calls.
+
+</div>
+
 ## What Causes Make 413
 
 Make returns HTTP 413 when the request body exceeds its maximum payload size limits. Make enforces a maximum request body size (typically 10 MB for most endpoints, but may be lower for specific operations). This error commonly occurs when uploading large files, sending extensive JSON payloads with many bundles, or including Base64-encoded content that expands significantly in size.

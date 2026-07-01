@@ -20,6 +20,93 @@ keywords:
   - "make http 404"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** The Make scenario or module resource you're trying to access doesn't exist — it may have been deleted or you have the wrong ID.
+
+**The fix:**
+1. Open your Make scenario list and confirm the scenario still exists
+2. Check the scenario ID or module ID you're referencing — make sure it matches
+3. If the resource was deleted, recreate it or update your reference to point to a valid one
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import requests
+
+resp = requests.get(f"https://api.make.com/api/v2/scenarios/{scenario_id}", headers=headers)
+if resp.status_code == 404:
+    print(f"Scenario {scenario_id} not found — check ID or recreate")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 404 Not Found error from Make (Integromat).
+> The error message is: "Resource not found"
+> I'm trying to access a Make scenario or module but it says it doesn't exist.
+> Please give me a step-by-step fix to verify the resource ID and find the correct one.
+
+**What to expect:** The AI should help you list your existing scenarios and modules to find the correct IDs.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 404 errors. Here's the ID I'm using: [paste ID]. Please help me find the right one.
+
+**Best AI tools for this:** Claude (best at explaining Make resource IDs), ChatGPT-4 (good at listing resources), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Make 404 errors in popular automation tools:
+
+### Make (Integromat)
+1. Open Make → go to "Scenarios" → confirm the scenario you're referencing is listed
+2. Click the scenario → check the URL bar for the correct scenario ID number
+3. If the scenario was deleted, recreate it or update any references to point to a valid scenario
+
+### Zapier
+1. Open your Zap → click the Make action step → check the scenario ID field
+2. Use the dropdown to select an existing scenario instead of typing an ID manually
+3. Test the step to confirm Zapier can find the scenario
+
+### n8n
+1. Open your workflow → click the Make node → check the scenario ID parameter
+2. Use the "Search" feature to find existing scenarios instead of hardcoding IDs
+3. Execute the node to verify n8n can locate the resource
+
+### Power Automate
+1. Open your flow → click the Make action → verify the scenario or module ID
+2. Use the dynamic content picker to select an existing resource from your Make account
+3. Run a test to confirm Power Automate can access the resource
+
+**Which tool should you use?** Make's own UI is best — browse your scenarios list to confirm what exists and get the correct IDs.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"404 Not Found"`
+- `"not found"`
+- `"Resource not found"`
+- `"Scenario or module does not exist"` in your Make logs
+
+**What it means in plain English:** Make can't find what you're looking for. The scenario, module, or resource ID you're using doesn't exist — it may have been deleted or you have a typo.
+
+**Most common cause:** Referencing a scenario or module ID that was deleted, or using an ID from one organization while authenticated against another.
+
+</div>
+
 ## What Causes Make 404
 
 Make returns HTTP 404 when the requested resource does not exist at the specified URL. This can mean the resource ID is wrong, the endpoint path is incorrect, the resource was deleted, or the request is being made in the wrong organization context (Make isolates resources per organization).

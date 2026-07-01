@@ -20,6 +20,94 @@ keywords:
   - "make http 400"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Make rejected your scenario configuration because something in your setup is wrong or missing.
+
+**The fix:**
+1. Open your scenario in Make and check each module for red error icons
+2. Make sure every required field is filled in — no blank boxes
+3. Check that your data types match (numbers where numbers go, text where text goes)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import json, requests
+
+payload = {"name": "My Scenario", "organizationId": 12345}
+resp = requests.post(url, headers=headers, json=payload)
+if resp.status_code == 400:
+    print(f"Fix this: {resp.json().get('error')}")
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 400 Bad Request error from Make (Integromat).
+> The error message is: "Invalid request parameters"
+> I'm trying to configure a scenario module in Make.
+> Please give me a step-by-step fix to find and correct the invalid settings.
+
+**What to expect:** The AI should walk you through checking each module's required fields and data types in your Make scenario.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 400 errors. Here's what my module settings look like: [paste your settings]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining Make module settings), ChatGPT-4 (good at spotting missing fields), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Make 400 errors in popular automation tools:
+
+### Make (Integromat)
+1. Open your scenario → look for modules with a red warning icon
+2. Click each flagged module → fill in all required fields marked with an asterisk (*)
+3. Use the "Run once" button to test — Make will highlight exactly which field is wrong
+
+### Zapier
+1. Open your Zap → click the action step showing the error
+2. Check that all required fields are filled in and match the expected format
+3. Use Zapier's "Test" button to validate your step before turning on the Zap
+
+### n8n
+1. Open your workflow → click the node showing the error
+2. Check the "Parameters" panel — make sure all required fields have valid values
+3. Click "Execute Node" to test — n8n will show the exact field that failed validation
+
+### Power Automate
+1. Open your flow → click the action with the error
+2. Check that all required fields are filled and use the correct data type
+3. Use "Test" mode to run the flow and see which field is causing the 400 error
+
+**Which tool should you use?** Make's own UI is best for this — it highlights invalid fields directly in the scenario editor with red icons.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"400 Bad Request"`
+- `"Invalid request parameters"`
+- `"invalid data"`
+- `"Missing required field"` in your Make scenario logs
+
+**What it means in plain English:** Make is saying your setup has something wrong — a missing field, a wrong data type, or bad formatting. Fix the highlighted fields and try again.
+
+**Most common cause:** A module in your scenario has a blank required field or the wrong type of data (like text where a number should be).
+
+</div>
+
 ## What Causes Make 400
 
 Make returns HTTP 400 when the request contains invalid JSON, missing required parameters, or incorrectly typed values. This is a client-side validation error — the request was received but could not be processed due to malformed or invalid content.

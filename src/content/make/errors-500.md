@@ -20,6 +20,94 @@ keywords:
   - "make http 500"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Make's server had an internal error — this is on Make's side, not yours.
+
+**The fix:**
+1. Wait 30 seconds and retry your scenario — most 500 errors are temporary
+2. Check Make's status page at status.make.com to see if there's an outage
+3. If it keeps failing, add a retry with a delay in your scenario settings
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(url, headers=headers)
+if resp.status_code >= 500:
+    time.sleep(30)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 500 Internal Server Error from Make (Integromat).
+> The error message is: "Internal Server Error — server error"
+> I'm running a Make scenario and Make's server is returning an error.
+> Please give me a step-by-step fix to retry the scenario and check Make's status.
+
+**What to expect:** The AI should help you set up retry logic and show you how to monitor Make's system status.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 500 errors. Here's when it happens: [paste timing details]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining retry strategies), ChatGPT-4 (good at status monitoring), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Make 500 errors in popular automation tools:
+
+### Make (Integromat)
+1. Open your scenario → right-click the failing module → "Add error handler"
+2. Choose "Retry" → set interval to 30 seconds, max retries to 3
+3. Check status.make.com to see if Make is experiencing an outage before troubleshooting further
+
+### Zapier
+1. Open your Zap → click the Make action step → enable "Auto-retry on error"
+2. Zapier will automatically retry 500 errors up to 3 times with delays
+3. If errors persist, check Make's status page and wait for the outage to resolve
+
+### n8n
+1. Open your workflow → click the Make node → in "Settings" enable "Retry on Fail"
+2. Set "Wait Between Tries" to 30000ms and "Max Tries" to 3
+3. Monitor status.make.com for ongoing incidents before debugging your workflow
+
+### Power Automate
+1. Open your flow → click the Make action → in "Settings" enable "Retry Policy"
+2. Set to "Exponential interval" with count 3 (Power Automate will retry with increasing delays)
+3. Check status.make.com for outages — if Make is down, wait for resolution
+
+**Which tool should you use?** Make's own error handlers are best — add a retry handler directly in your scenario.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"500 Internal Server Error"`
+- `"server error"`
+- `"Internal Server Error"`
+- `"Make API unavailable"` in your logs
+
+**What it means in plain English:** Make's servers are having a problem. This is not your fault. Wait a bit and try again — most 500 errors fix themselves in under a minute.
+
+**Most common cause:** Temporary infrastructure issues on Make's side, upstream service timeouts, or platform deployments that briefly disrupt processing.
+
+</div>
+
 ## What Causes Make 500
 
 Make (formerly Integromat) returns HTTP 500 when its internal infrastructure encounters an error processing your request — database failures, upstream service timeouts, or transient server issues. These are server-side errors outside your control. Make runs on a multi-tenant cloud platform, and 500 errors typically indicate a temporary infrastructure problem rather than an issue with your integration.

@@ -20,6 +20,95 @@ keywords:
   - "make http 429"
 ---
 
+<div class="quick-fix">
+
+## Quick Fix (TL;DR) <span class="audience-badge audience-badge--no-code">No Code</span>
+
+**The problem:** Make is rate limiting your API calls — you're making too many requests too fast.
+
+**The fix:**
+1. Wait 60 seconds for Make's rate limit to reset (check the `Retry-After` header)
+2. Slow down your scenario — add delays between API calls
+3. Reduce how often your scenario runs (change from every 1 minute to every 5 minutes)
+
+**Copy-paste this code** (if you're using a code editor):
+```python
+import time, requests
+
+resp = requests.get(url, headers=headers)
+if resp.status_code == 429:
+    wait = int(resp.headers.get("Retry-After", 60))
+    time.sleep(wait)
+    resp = requests.get(url, headers=headers)
+```
+
+**Still stuck?** Try the [AI prompt below](#fix-this-with-ai) or use a [no-code tool](#no-code-fix).
+
+</div>
+
+<div class="ai-prompt">
+
+## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
+
+Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+
+> I'm getting a 429 Too Many Requests error from Make (Integromat).
+> The error message is: "Rate limit exceeded"
+> I'm running a Make scenario that makes many API calls and it's hitting the rate limit.
+> Please give me a step-by-step fix to reduce scenario frequency and add delays.
+
+**What to expect:** The AI should help you adjust your scenario scheduling and add proper delays between API calls.
+
+**If it doesn't work**, add this follow-up:
+> The fix didn't work. I'm still getting 429 errors. Here's my scenario schedule: [paste settings]. Please debug this.
+
+**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good at scheduling optimization), Cursor (if you want inline code fixes)
+
+</div>
+
+## No-Code Fix <span class="audience-badge audience-badge--low-code">Low Code</span>
+
+Don't want to write code? Here's how to fix Make 429 errors in popular automation tools:
+
+### Make (Integromat)
+1. Open your scenario → click the scheduling clock icon → increase the interval (e.g., from 1 min to 5 min)
+2. Add a "Sleep" module between API calls to pause for 10-30 seconds
+3. Right-click modules → "Add error handler" → choose "Retry" with a 60-second interval
+
+### Zapier
+1. Open your Zap → add a "Delay by Zapier" step before the Make action (set to 60 seconds)
+2. Reduce Zap frequency — change from "Instant" to "Every 15 minutes" in the trigger settings
+3. Enable "Auto-retry on error" in the Make action step settings
+
+### n8n
+1. Open your workflow → click the trigger node → increase the polling interval
+2. Add a "Wait" node (60 seconds) between Make API calls
+3. In node settings → enable "Retry on Fail" → set wait time to 60000ms
+
+### Power Automate
+1. Open your flow → click the trigger → increase the recurrence interval
+2. Add a "Delay" action (60 seconds) before the Make action
+3. In the Make action settings → enable "Retry Policy" → set to "Fixed interval" with 60-second waits
+
+**Which tool should you use?** Make's own scheduling settings are best — adjust the scenario frequency directly in the Make UI.
+
+<div class="error-match">
+
+## If You See This Error <span class="audience-badge audience-badge--no-code">No Code</span>
+
+You might be dealing with this issue if you see any of these messages:
+
+- `"429 Too Many Requests"`
+- `"rate limit"`
+- `"Rate limit exceeded"`
+- `"Organization API limit reached"` in your Make logs
+
+**What it means in plain English:** Make is telling you to slow down. You're making too many API calls in a short time. Wait a minute and reduce how often your scenarios run.
+
+**Most common cause:** Scenarios running too frequently (every 1 minute) or making too many individual API calls instead of batching them.
+
+</div>
+
 ## What Causes Make 429
 
 Make enforces rate limits at the organization level. When your organization exceeds its allowed requests-per-minute, Make returns HTTP 429 with a `Retry-After` header. Each Make plan (Free, Pro, Teams, Enterprise) has a different API call quota, visible in the `license.apiLimit` field returned by the organization endpoint.
