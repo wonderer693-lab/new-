@@ -208,3 +208,5 @@ for record in records:
 - [Zoho MANDATORY_NOT_FOUND](/zoho/errors/MANDATORY_NOT_FOUND) — Required field missing in request
 - [Zoho LIMIT_EXCEEDED](/zoho/errors/LIMIT_EXCEEDED) — General API limit reached
 - [Zoho INVALID_OAUTHTOKEN](/zoho/errors/INVALID_OAUTHTOKEN) — Access token expired or invalid
+
+See all [Zoho API errors](/zoho/) in our complete reference. Similar duplicate issues occur with [HubSpot 409](/hubspot/errors/409) and [Salesforce 409](/salesforce/errors/409) for conflict errors. This error also affects integrations — see our [Zoho to Mailchimp integration errors](/integrations/zoho-to-mailchimp/) for common cross-tool issues.

@@ -185,3 +185,5 @@ if "webhooks" not in enabled_features:
 - [Pipedrive 402 Payment Required](/pipedrive/errors/402) — Company account not open (trial expired)
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
 - [Pipedrive 404 Not Found](/pipedrive/errors/404) — Resource unavailable
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar content-type issues occur with [HubSpot 400](/hubspot/errors/400) for request format errors. This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

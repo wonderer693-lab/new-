@@ -197,3 +197,5 @@ for field in mandatory:
 - [Zoho DUPLICATE_DATA](/zoho/errors/DUPLICATE_DATA) — Record with same unique field value already exists
 - [Zoho LIMIT_EXCEEDED](/zoho/errors/LIMIT_EXCEEDED) — General API limit reached
 - [Zoho INVALID_OAUTHTOKEN](/zoho/errors/INVALID_OAUTHTOKEN) — Access token expired or invalid
+
+See all [Zoho API errors](/zoho/) in our complete reference. Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [Mailchimp 400](/mailchimp/errors/400). This error also affects integrations — see our [Zoho to Mailchimp integration errors](/integrations/zoho-to-mailchimp/) for common cross-tool issues.

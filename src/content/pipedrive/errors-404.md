@@ -196,3 +196,5 @@ def get_deal(deal_id):
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
 - [Pipedrive 410 Gone](/pipedrive/errors/410) — Deprecated v1 endpoint
 - [Pipedrive 400 Bad Request](/pipedrive/errors/400) — Request not understood
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar not-found issues occur with [HubSpot 404](/hubspot/errors/404), [Salesforce 404](/salesforce/errors/404), and [Mailchimp 404](/mailchimp/errors/404). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

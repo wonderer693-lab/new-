@@ -198,3 +198,5 @@ If persistent, log the exact request that triggered the 500 and contact Pipedriv
 - [Pipedrive 503 Maintenance](/pipedrive/errors/503) — Scheduled maintenance
 - [Pipedrive 429 Rate Limit](/pipedrive/errors/429) — Rate limit exceeded
 - [Pipedrive 400 Bad Request](/pipedrive/errors/400) — Request not understood
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar server issues occur with [Make 500](/make/errors/500), [Zapier 500](/zapier/errors/500), and [Salesforce 503](/salesforce/errors/503). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

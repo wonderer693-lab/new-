@@ -204,3 +204,5 @@ time.sleep(1)  # At least 1 second between calls
 - [Pipedrive 429 Rate Limit](/pipedrive/errors/429) — Rate limit exceeded
 - [Pipedrive 402 Payment Required](/pipedrive/errors/402) — Company account not open
 - [Pipedrive 415 Feature Not Enabled](/pipedrive/errors/415) — Feature not enabled for account
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [HubSpot 403](/hubspot/errors/403), and [Mailchimp 403](/mailchimp/errors/403). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

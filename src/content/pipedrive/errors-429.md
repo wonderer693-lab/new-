@@ -225,3 +225,5 @@ while True:
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
 - [Pipedrive 500 Internal Server Error](/pipedrive/errors/500) — Generic server error
 - [Pipedrive 503 Service Unavailable](/pipedrive/errors/503) — Scheduled maintenance
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Slack rate_limited](/slack/errors/rate_limited). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

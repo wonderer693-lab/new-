@@ -209,3 +209,5 @@ payload = json.dumps({"title": "test"})  # Produces valid JSON
 - [Pipedrive 401 Unauthorized](/pipedrive/errors/401) — Invalid API token
 - [Pipedrive 422 Unprocessable Entity](/pipedrive/errors/422) — Webhooks limit reached
 - [Pipedrive 404 Not Found](/pipedrive/errors/404) — Resource unavailable
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [Mailchimp 400](/mailchimp/errors/400). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

@@ -225,3 +225,5 @@ A 10,000-contact Zoho-to-Mailchimp sync routinely stalls after a few hundred rec
 - [Salesforce daily API limit exhausted by AC sync](/integrations/salesforce-to-activecampaign/errors/salesforce-daily-api-limit-exhausted-by-ac-sync)
 - [Zoho CRM API Reference](/zoho)
 - [Mailchimp API Reference](/mailchimp)
+
+See all [Zoho API errors](/zoho/) or [Mailchimp API errors](/mailchimp/) for more troubleshooting. Related: [Zoho too-many-requests](/zoho/errors/too-many-requests) for rate limits, [Mailchimp 429](/mailchimp/errors/429) for Mailchimp rate limits.

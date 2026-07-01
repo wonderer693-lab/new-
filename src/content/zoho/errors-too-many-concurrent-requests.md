@@ -223,3 +223,5 @@ async def convert_lead(lead_id):
 - [Zoho TOO_MANY_REQUESTS](/zoho/errors/TOO_MANY_REQUESTS) — Daily credit limit exceeded
 - [Zoho LIMIT_EXCEEDED](/zoho/errors/LIMIT_EXCEEDED) — General API limit reached
 - [Zoho Access Denied (OAuth throttle)](/zoho/errors/access-denied-oauth-throttle) — OAuth token request throttled
+
+See all [Zoho API errors](/zoho/) in our complete reference. Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Salesforce 429](/salesforce/errors/429), and [Slack rate_limited](/slack/errors/rate_limited). This error also affects integrations — see our [Zoho to Mailchimp integration errors](/integrations/zoho-to-mailchimp/) for common cross-tool issues.

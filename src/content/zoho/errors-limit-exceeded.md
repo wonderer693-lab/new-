@@ -196,3 +196,5 @@ If you consistently hit limits with normal usage, your plan may be undersized. F
 - [Zoho TOO_MANY_REQUESTS](/zoho/errors/TOO_MANY_REQUESTS) — Daily credit limit exceeded
 - [Zoho TOO_MANY_CONCURRENT_REQUESTS](/zoho/errors/TOO_MANY_CONCURRENT_REQUESTS) — Exceeded parallel request limit
 - [Zoho Access Denied (OAuth throttle)](/zoho/errors/access-denied-oauth-throttle) — OAuth token request throttled
+
+See all [Zoho API errors](/zoho/) in our complete reference. Similar limit issues occur with [Salesforce 429](/salesforce/errors/429) and [ActiveCampaign 402](/activecampaign/errors/402) for plan limits. This error also affects integrations — see our [Zoho to Mailchimp integration errors](/integrations/zoho-to-mailchimp/) for common cross-tool issues.

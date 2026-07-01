@@ -189,3 +189,5 @@ for inc in incidents:
 - [Pipedrive 500 Internal Server Error](/pipedrive/errors/500) — Generic server error
 - [Pipedrive 429 Rate Limit](/pipedrive/errors/429) — Rate limit exceeded
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar availability issues occur with [Salesforce 503](/salesforce/errors/503) and [Make 500](/make/errors/500). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

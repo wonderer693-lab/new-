@@ -180,3 +180,5 @@ Access Pipedrive Settings > Company > Billing to update payment method, upgrade 
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
 - [Pipedrive 415 Feature Not Enabled](/pipedrive/errors/415) — Feature not enabled for account
 - [Pipedrive 503 Service Unavailable](/pipedrive/errors/503) — Scheduled maintenance
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar billing issues occur with [ActiveCampaign 402](/activecampaign/errors/402) for plan-limited features. This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

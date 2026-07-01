@@ -213,3 +213,5 @@ access_token = r.get("zoho_token")
 - [Zoho INVALID_OAUTHTOKEN](/zoho/errors/INVALID_OAUTHTOKEN) — Access token expired or invalid
 - [Zoho TOO_MANY_REQUESTS](/zoho/errors/TOO_MANY_REQUESTS) — Daily credit limit exceeded
 - [Zoho LIMIT_EXCEEDED](/zoho/errors/LIMIT_EXCEEDED) — General API limit reached
+
+See all [Zoho API errors](/zoho/) in our complete reference. Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Slack invalid_auth](/slack/errors/invalid_auth). This error also affects integrations — see our [Zoho to Mailchimp integration errors](/integrations/zoho-to-mailchimp/) for common cross-tool issues.

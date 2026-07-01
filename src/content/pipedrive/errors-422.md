@@ -191,3 +191,5 @@ if len(webhooks) >= MAX_WEBHOOKS:
 - [Pipedrive 400 Bad Request](/pipedrive/errors/400) — Request not understood
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
 - [Pipedrive 429 Rate Limit](/pipedrive/errors/429) — Rate limit exceeded
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Salesforce 400](/salesforce/errors/400), and [ActiveCampaign 422](/activecampaign/errors/422). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

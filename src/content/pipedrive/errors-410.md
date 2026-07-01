@@ -210,3 +210,5 @@ while True:
 - [Pipedrive 404 Not Found](/pipedrive/errors/404) — Resource unavailable
 - [Pipedrive 400 Bad Request](/pipedrive/errors/400) — Request not understood
 - [Pipedrive 429 Rate Limit](/pipedrive/errors/429) — Rate limit exceeded
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar deprecation issues occur with [Make 404](/make/errors/404) for removed endpoints. This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

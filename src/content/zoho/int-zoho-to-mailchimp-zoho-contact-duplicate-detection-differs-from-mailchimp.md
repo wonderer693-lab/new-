@@ -214,3 +214,5 @@ You run a sync from Zoho CRM contacts into a Mailchimp audience and partway thro
 - [Zoho OAuth token expires every hour](/integrations/zoho-to-mailchimp/errors/zoho-oauth-token-expires-every-hour)
 - [Zoho CRM API Reference](/zoho)
 - [Mailchimp API Reference](/mailchimp)
+
+See all [Zoho API errors](/zoho/) or [Mailchimp API errors](/mailchimp/) for more troubleshooting. Related: [Zoho duplicate-data](/zoho/errors/duplicate-data) for duplicate handling, [Mailchimp 400](/mailchimp/errors/400) for validation errors.

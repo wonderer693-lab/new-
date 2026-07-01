@@ -207,3 +207,5 @@ def refresh_pipedrive_oauth(refresh_token, client_id, client_secret):
 - [Pipedrive 403 Forbidden](/pipedrive/errors/403) — Request not allowed
 - [Pipedrive 400 Bad Request](/pipedrive/errors/400) — Request not understood
 - [Pipedrive 429 Rate Limit](/pipedrive/errors/429) — Rate limit exceeded
+
+See all [Pipedrive API errors](/pipedrive/) in our complete reference. Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [HubSpot 401](/hubspot/errors/401), and [Slack invalid_auth](/slack/errors/invalid_auth). This error also affects integrations — see our [Pipedrive to Mailchimp integration errors](/integrations/pipedrive-to-mailchimp/) for common cross-tool issues.

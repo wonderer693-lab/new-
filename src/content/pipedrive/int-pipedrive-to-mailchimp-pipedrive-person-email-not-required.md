@@ -223,3 +223,5 @@ You onboard a list of Pipedrive persons into a Mailchimp audience for the first 
 - [Email field mismatch (Salesforce ↔ Mailchimp)](/integrations/salesforce-to-mailchimp/errors/email-field-mismatch)
 - [Pipedrive API Reference](/pipedrive)
 - [Mailchimp API Reference](/mailchimp)
+
+See all [Pipedrive API errors](/pipedrive/) or [Mailchimp API errors](/mailchimp/) for more troubleshooting. Related: [Pipedrive 400](/pipedrive/errors/400) for data format issues, [Mailchimp 400](/mailchimp/errors/400) for validation errors.

@@ -222,3 +222,5 @@ After migrating your Pipedrive integration from v1 to v2, every Mailchimp merge 
 - [Custom field type mismatch (Salesforce ↔ Mailchimp)](/integrations/salesforce-to-mailchimp/errors/custom-field-type-mismatch)
 - [Pipedrive API Reference](/pipedrive)
 - [Mailchimp API Reference](/mailchimp)
+
+See all [Pipedrive API errors](/pipedrive/) or [Mailchimp API errors](/mailchimp/) for more troubleshooting. Related: [Pipedrive 400](/pipedrive/errors/400) for data format issues, [Pipedrive 422](/pipedrive/errors/422) for validation errors.
