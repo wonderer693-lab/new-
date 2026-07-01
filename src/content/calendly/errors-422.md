@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Calendly API 422: Validation error"
+title: "Calendly API 422 Error: Validation Failed — Fix & Prevention"
 description: "Fix Calendly API 422 error. Validation error — invalid request body. Check required fields and data types."
 tool: "calendly"
 errorCode: "422"

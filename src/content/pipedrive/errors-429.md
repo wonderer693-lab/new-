@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Pipedrive API 429: Rate limit exceeded"
+title: "Pipedrive API 429 Error: Rate Limit Exceeded — Fix & Prevention"
 description: "Fix Pipedrive API 429 (429 Too Many Requests) error. Rate limit exceeded. Wait for Retry-After seconds (typically 10s penalty)."
 tool: "pipedrive"
 errorCode: "429"

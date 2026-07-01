@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Make API 429: Rate limit exceeded"
+title: "Make API 429 Error: Rate Limit Exceeded — Fix & Prevention"
 description: "Fix Make API 429 error. Rate limit exceeded — organization-level limit hit. Wait 1 minute for the limit to reset."
 tool: "make"
 errorCode: "429"

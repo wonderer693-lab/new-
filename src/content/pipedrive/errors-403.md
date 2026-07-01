@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Pipedrive API 403: Request not allowed"
+title: "Pipedrive API 403 Error: Request Not Allowed — Fix & Prevention"
 description: "Fix Pipedrive API 403 (403 Forbidden) error. Request not allowed — user reached entity limit or Cloudflare block after rate limit abuse. For rate limit blocks: wait penalty period, fix misconfiguration causing excessive requests."
 tool: "pipedrive"
 errorCode: "403"

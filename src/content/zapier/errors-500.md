@@ -1,7 +1,7 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Zapier API 500: Server error"
-description: "Fix Zapier API 500 (5XX) error. Server error. Retry with backoff."
+title: "Zapier API 500 Error: Internal Server Error — Fix & Prevention"
+description: "Fix Zapier API 500 (5XX) server errors. Retry with exponential backoff, check webhook payload size, and monitor Zapier status page."
 tool: "zapier"
 errorCode: "500"
 errorName: "5XX"

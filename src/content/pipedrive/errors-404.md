@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Pipedrive API 404: Resource unavailable"
+title: "Pipedrive API 404 Error: Resource Unavailable — Fix & Prevention"
 description: "Fix Pipedrive API 404 (404 Not Found) error. Resource unavailable. Verify resource ID, endpoint path, and API version."
 tool: "pipedrive"
 errorCode: "404"

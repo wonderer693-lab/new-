@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Zapier API 400: Malformed request"
+title: "Zapier API 400 Error: Malformed Request — Fix & Prevention Guide"
 description: "Fix Zapier API 400 error. Malformed request. Check request body format and required parameters."
 tool: "zapier"
 errorCode: "400"

@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Make API 401: Unauthorized"
+title: "Make API 401 Error: Unauthorized — Fix Authentication Issues"
 description: "Fix Make API 401 error. Unauthorized — invalid or missing token. Verify API token is valid and has required scopes."
 tool: "make"
 errorCode: "401"

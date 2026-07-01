@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Calendly API 429: Rate limit exceeded"
+title: "Calendly API 429 Error: Rate Limit Exceeded — Fix & Prevention"
 description: "Fix Calendly API 429 error. Rate limit exceeded. Implement exponential backoff."
 tool: "calendly"
 errorCode: "429"

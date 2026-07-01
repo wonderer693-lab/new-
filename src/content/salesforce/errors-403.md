@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Salesforce API 403: Request refused"
+title: "Salesforce API 403 Error: Request Refused — Fix & Prevention Guide"
 description: "Fix Salesforce API 403 (403 Forbidden) error. Request refused — resource not accessible to user. Check /limits endpoint for remaining allocations."
 tool: "salesforce"
 errorCode: "403"

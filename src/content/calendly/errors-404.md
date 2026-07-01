@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Calendly API 404: Resource not found"
+title: "Calendly API 404 Error: Resource Not Found — Fix & Prevention"
 description: "Fix Calendly API 404 error. Resource not found. Verify UUID format and resource existence."
 tool: "calendly"
 errorCode: "404"

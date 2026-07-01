@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Make API 404: Resource not found"
+title: "Make API 404 Error: Resource Not Found — Fix & Prevention"
 description: "Fix Make API 404 error. Resource not found. Verify resource ID and organization context."
 tool: "make"
 errorCode: "404"

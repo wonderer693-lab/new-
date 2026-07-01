@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Make API 500: Server error"
+title: "Make API 500 Error: Internal Server Error — Fix & Prevention"
 description: "Fix Make API 500 (5XX) error. Server error. Retry with exponential backoff."
 tool: "make"
 errorCode: "500"

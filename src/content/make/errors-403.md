@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Make API 403: Forbidden"
+title: "Make API 403 Error: Forbidden Request — Fix & Prevention Guide"
 description: "Fix Make API 403 error. Forbidden — insufficient permissions. Check that token has the required scopes for the endpoint."
 tool: "make"
 errorCode: "403"

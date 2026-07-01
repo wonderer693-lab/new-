@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Zapier API 429: Rate limit exceeded"
+title: "Zapier API 429 Error: Rate Limit Exceeded — Fix & Prevention"
 description: "Fix Zapier API 429 error. Rate limit exceeded. Wait 60 seconds (cooldown)."
 tool: "zapier"
 errorCode: "429"

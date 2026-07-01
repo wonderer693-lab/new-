@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Calendly API 409: Conflict"
+title: "Calendly API 409 Error: Conflict — Fix & Prevention Guide"
 description: "Fix Calendly API 409 error. Conflict — resource already exists. Check for existing resources before creating duplicates."
 tool: "calendly"
 errorCode: "409"

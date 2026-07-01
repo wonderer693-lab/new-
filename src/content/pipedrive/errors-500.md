@@ -1,6 +1,6 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Pipedrive API 500: Generic server error"
+title: "Pipedrive API 500 Error: Generic Server Error — Fix & Prevention"
 description: "Fix Pipedrive API 500 (500 Internal Server Error) error. Generic server error. Retry with exponential backoff."
 tool: "pipedrive"
 errorCode: "500"

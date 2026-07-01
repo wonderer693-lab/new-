@@ -1,7 +1,7 @@
 ---
 layout: "../../layouts/ErrorCodeLayout.astro"
-title: "Make API 413: Payload too large"
-description: "Fix Make API 413 error. Payload too large. Reduce request body size."
+title: "Make API 413 Error: Payload Too Large — Fix & Prevention Guide"
+description: "Fix Make API 413 error. Payload too large. Reduce request body size below 10MB limit and compress JSON payloads."
 tool: "make"
 errorCode: "413"
 errorName: "413"
