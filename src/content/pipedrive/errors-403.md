@@ -9,7 +9,7 @@ httpStatus: 403
 category: "permission"
 severity: "high"
 priority: 1
-lastUpdated: "2026-06-29"
+lastUpdated: '2026-04-22'
 lastReviewed: "2026-06-29"
 pageType: "error-code"
 author: "API Integration Hub"

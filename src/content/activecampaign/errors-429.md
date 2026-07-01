@@ -9,7 +9,7 @@ httpStatus: 429
 category: "rate-limit"
 severity: "high"
 priority: 1
-lastUpdated: "2026-06-29"
+lastUpdated: '2026-04-17'
 lastReviewed: "2026-06-29"
 pageType: "error-code"
 author: "API Integration Hub"

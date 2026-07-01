@@ -9,7 +9,7 @@ httpStatus: 400
 category: "validation"
 severity: "medium"
 priority: 2
-lastUpdated: "2026-06-29"
+lastUpdated: '2026-04-27'
 lastReviewed: "2026-06-29"
 pageType: "error-code"
 author: "API Integration Hub"

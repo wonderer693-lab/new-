@@ -40,6 +40,8 @@ const robotsDirective = frontmatter.noindex
   <meta name="description" content={frontmatter.description} />
   <meta name="robots" content={robotsDirective} />
   {keywords && <meta name="keywords" content={keywords} />}
+  <!-- Google Search Console verification — replace content value with your GSC verification code -->
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_VERIFICATION_CODE" />
   {frontmatter.author && <meta name="author" content={frontmatter.author} />}
   <link rel="canonical" href={canonical} />
   <link rel="sitemap" type="application/xml" href={`${url.origin}/sitemap-index.xml`} />
@@ -68,7 +70,7 @@ const robotsDirective = frontmatter.noindex
       '@type': 'TechArticle',
       headline: frontmatter.title,
       description: frontmatter.description,
-      author: { '@type': 'Person', name: frontmatter.author || 'API Integration Hub' },
+      author: { '@type': 'Person', name: frontmatter.author || 'O.M. Binmsaad' },
       dateModified: frontmatter.lastUpdated,
       datePublished: frontmatter.lastUpdated,
       publisher: { '@type': 'Organization', name: 'API Integration Hub' },

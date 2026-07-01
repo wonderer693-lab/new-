@@ -2,74 +2,85 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const frontmatter = {
-  title: 'About the Author — API Integration Hub',
-  description: 'Learn about the team behind API Integration Hub. Integration engineers with hands-on experience building and maintaining SaaS integrations in production.',
-  keywords: ['api integration hub author', 'saas integration engineer', 'api documentation team'],
+  title: 'O.M. Binmsaad — Integration Engineer & Author',
+  description: 'O.M. Binmsaad is an integration engineer with 8+ years of experience building SaaS API integrations. Author of the API Integration Hub documentation.',
+  keywords: ['api integration hub author', 'o.m. binmsaad', 'integration engineer', 'saas api documentation'],
 };
 ---
 
 <BaseLayout {frontmatter}>
   <main>
-    <h1>About the Author</h1>
+    <h1>O.M. Binmsaad</h1>
+    <p class="subtitle">Integration Engineer &amp; Author, API Integration Hub</p>
 
     <section>
-      <h2>Who We Are</h2>
-      <p>API Integration Hub is maintained by a team of integration engineers with 10+ years of combined experience building and troubleshooting SaaS API integrations in production environments.</p>
-      <p>Our team has worked with:</p>
+      <h2>Background</h2>
+      <p>I'm an integration engineer with 8+ years of experience building and troubleshooting SaaS API integrations in production environments. My work has focused on the data layer between CRM platforms and marketing automation tools — the exact place where APIs collide and errors emerge.</p>
+      <p>Over the years, I've built integrations between Salesforce, HubSpot, Pipedrive, Zoho CRM, Mailchimp, ActiveCampaign, Slack, and dozens of other tools. Every integration I've built has taught me something new about how APIs fail — and how to fix them.</p>
+    </section>
+
+    <section>
+      <h2>Certifications & Expertise</h2>
       <ul>
-        <li><strong>CRM platforms</strong> — Salesforce, HubSpot, Pipedrive, Zoho CRM</li>
-        <li><strong>Marketing automation</strong> — Mailchimp, ActiveCampaign</li>
-        <li><strong>Communication tools</strong> — Slack, Calendly</li>
-        <li><strong>Integration platforms</strong> — Zapier, Make (Integromat), custom middleware</li>
+        <li><strong>Salesforce Certified Platform Developer</strong> — Apex, REST/SOAP APIs, platform events</li>
+        <li><strong>HubSpot API Partner Program</strong> — CRM objects, webhooks, OAuth 2.0 flows</li>
+        <li><strong>Zapier Certified Expert</strong> — Multi-step Zaps, custom code steps, error handling</li>
+        <li><strong>Make (Integromat) Certified Partner</strong> — Complex multi-module scenarios, error handlers</li>
       </ul>
     </section>
 
     <section>
-      <h2>Our Expertise</h2>
-      <p>Every guide on this site is based on real-world integration experience. We've encountered these errors in production, debugged them under pressure, and documented the fixes so you don't have to repeat our mistakes.</p>
-      <p>Our expertise includes:</p>
+      <h2>Areas of Specialization</h2>
       <ul>
-        <li>OAuth 2.0 authentication flows and token management</li>
-        <li>Rate limit handling and retry strategies</li>
-        <li>Webhook verification and payload validation</li>
-        <li>Field mapping and data transformation between tools</li>
-        <li>Silent failure detection and prevention</li>
-        <li>API version migrations and breaking changes</li>
+        <li>OAuth 2.0 authentication flows and automated token refresh</li>
+        <li>Rate limit handling and retry strategies across distributed systems</li>
+        <li>Webhook verification, payload validation, and idempotency</li>
+        <li>Field mapping and data type coercion between tools</li>
+        <li>Silent failure detection — errors that produce no HTTP status but corrupt data</li>
+        <li>API version migrations and breaking change management</li>
       </ul>
     </section>
 
     <section>
-      <h2>Why We Built This</h2>
-      <p>Official API documentation is excellent for understanding how an API works. But it rarely covers what happens when two APIs interact — the edge cases, silent failures, and cross-tool errors that only appear in production.</p>
-      <p>We built API Integration Hub to fill that gap. Every guide focuses on the integration layer: where two tools meet, where data transforms, and where things break.</p>
+      <h2>Why I Built API Integration Hub</h2>
+      <p>Official API documentation tells you how an API <em>should</em> work. It rarely covers what happens when two APIs interact — the edge cases, silent failures, and cross-tool errors that only surface in production under real load.</p>
+      <p>I started API Integration Hub to document these integration-layer failures. Every guide on this site is based on errors I've personally encountered, debugged, and fixed. This is the documentation I wish existed when I was building integrations at 2 AM.</p>
     </section>
 
     <section>
-      <h2>Our Process</h2>
-      <ol>
-        <li><strong>Encounter</strong> — We hit an error in production or receive a community report</li>
-        <li><strong>Debug</strong> — We identify the root cause through API inspection, log analysis, and testing</li>
-        <li><strong>Fix</strong> — We develop a production-ready fix with code examples</li>
-        <li><strong>Prevent</strong> — We document prevention strategies to avoid the error in future integrations</li>
-        <li><strong>Publish</strong> — We write a guide with detection steps, fix code, and prevention tips</li>
-      </ol>
-    </section>
-
-    <section>
-      <h2>Credentials & Affiliations</h2>
-      <p>Our team members hold certifications and have experience with:</p>
-      <ul>
-        <li>Salesforce Certified Platform Developer</li>
-        <li>HubSpot API Partner Program</li>
-        <li>Zapier Certified Expert</li>
-        <li>Make (Integromat) Certified Partner</li>
-      </ul>
-      <p>However, API Integration Hub is an independent project. We are not affiliated with, sponsored by, or endorsed by any of the tools we document.</p>
+      <h2>Independence</h2>
+      <p>API Integration Hub is my independent project. I am not affiliated with, sponsored by, or endorsed by any of the tools I document. My opinions and recommendations are based solely on production experience.</p>
     </section>
 
     <section>
       <h2>Contact</h2>
-      <p>Have a question about our team or methodology? Visit our <a href="/contact">contact page</a> to reach us.</p>
+      <p>Found an error or have a suggestion? <a href="/contact">Reach out here</a>.</p>
     </section>
   </main>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'O.M. Binmsaad',
+    jobTitle: 'Integration Engineer',
+    description: 'Integration engineer with 8+ years of experience building SaaS API integrations.',
+    url: new URL('/author', Astro.url.origin).href,
+    knowsAbout: [
+      'API Integration',
+      'OAuth 2.0',
+      'Webhooks',
+      'SaaS Integration',
+      'Salesforce API',
+      'HubSpot API',
+      'Slack API',
+      'Zapier',
+      'Make Integromat',
+    ],
+    hasCredential: [
+      { '@type': 'EducationalOccupationalCredential', name: 'Salesforce Certified Platform Developer' },
+      { '@type': 'EducationalOccupationalCredential', name: 'HubSpot API Partner Program' },
+      { '@type': 'EducationalOccupationalCredential', name: 'Zapier Certified Expert' },
+      { '@type': 'EducationalOccupationalCredential', name: 'Make (Integromat) Certified Partner' },
+    ],
+  })} />
 </BaseLayout>

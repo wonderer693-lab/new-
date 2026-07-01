@@ -9,7 +9,7 @@ httpStatus: 401
 category: "authentication"
 severity: "high"
 priority: 1
-lastUpdated: "2026-06-29"
+lastUpdated: '2026-05-10'
 lastReviewed: "2026-06-29"
 pageType: "error-code"
 author: "API Integration Hub"

@@ -9,7 +9,7 @@ httpStatus: 503
 category: "server"
 severity: "critical"
 priority: 1
-lastUpdated: "2026-06-29"
+lastUpdated: '2026-04-27'
 lastReviewed: "2026-06-29"
 pageType: "error-code"
 author: "API Integration Hub"
