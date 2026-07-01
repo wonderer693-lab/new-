@@ -113,7 +113,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 401
 
-Salesforce returns HTTP 401 when the session ID or OAuth token used for authentication is invalid or expired. This is the most common Salesforce API error. The error code is typically `INVALID_SESSION_ID` with the message "Session expired or invalid".
+Salesforce returns HTTP 401 when the session ID or OAuth token used for authentication is invalid or expired. See all [Salesforce API errors](/salesforce/) in our complete reference. This is the most common Salesforce API error. The error code is typically `INVALID_SESSION_ID` with the message "Session expired or invalid".
 
 A 401 can be caused by session timeout (default 2 hours, configurable down to 15 minutes), password expiry (invalidates all sessions including API-only sessions), MFA enforcement, instance URL hardcoding after org migration, or OAuth token revocation by an admin. The response body is `[{"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"}]`.
 
@@ -208,6 +208,8 @@ url = f"{instance_url}/services/data/v60.0/sobjects/Contact"
 - Create a dedicated integration user with API-only access and no password expiry
 - Implement auto-refresh: detect INVALID_SESSION_ID → refresh token → retry the request
 - Store tokens in memory only, refresh from the refresh token before expiry
+- Similar auth issues occur with [HubSpot 401](/hubspot/errors/401), [Slack invalid_auth](/slack/errors/invalid_auth), and [Zoho INVALID_OAUTHTOKEN](/zoho/errors/invalid-oauthtoken).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

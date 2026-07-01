@@ -119,14 +119,14 @@ You might be dealing with this issue if you see any of these:
 
 ## The Problem
 
-Contacts created in Salesforce without a primary Email are dropped quietly on the way to Mailchimp. The Mailchimp audience is short by contact count with no exceptions in the integration logs. Because Mailchimp keys every member on `email_address`, a blank email from Salesforce simply has no member record; since middleware treats "no email" as a skip and logs it as success at best — or not at all — the absence is invisible.
+Contacts created in Salesforce without a primary Email are dropped quietly on the way to Mailchimp. See all [Salesforce API errors](/salesforce/) or [Mailchimp API errors](/mailchimp/) for more troubleshooting. The Mailchimp audience is short by contact count with no exceptions in the integration logs. Because Mailchimp keys every member on `email_address`, a blank email from Salesforce simply has no member record; since middleware treats "no email" as a skip and logs it as success at best — or not at all — the absence is invisible.
 
 ## Root Cause
 
 - **Mailchimp key**: `email_address` is mandatory in `POST /lists/{id}/members`. The API returns `400 Resource Not Found`-style errors only when the field is missing; some middleware categorizes missing-email as "skip" rather than "error."
 - **Salesforce**: the `Email` standard field is **not required** at the database level. Admins can enforce it via Validation Rule but rarely do by default for "Lead" records.
 - **Alternate email fields** (`Alternate_Email__c`, `Personal_Email__c`) introduce ambiguity: middleware may only map one of them.
-- **Mailchimp subscriber hash** is the MD5 of the normalized lowercase email — without email there is no hash, so `PUT /members/{hash}` has no target.
+- **Mailchimp subscriber hash** is the MD5 of the normalized lowercase email — without email there is no hash, so `PUT /members/{hash}` has no target. Related: [Salesforce 400](/salesforce/errors/400) for data format issues, [Mailchimp 400](/mailchimp/errors/400) for validation errors.
 
 | Salesforce state | Middleware behavior | Mailchimp result |
 |---|---|---|

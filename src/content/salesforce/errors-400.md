@@ -111,7 +111,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 400
 
-Salesforce returns HTTP 400 when the request body is malformed, contains invalid JSON or XML, or has invalid field values that fail server-side parsing. The response includes an `errorCode` and `message` that pinpoints the problem — common codes include `MALFORMED_ID`, `INVALID_FIELD`, `INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST`, and `FIELD_INTEGRITY_EXCEPTION`.
+Salesforce returns HTTP 400 when the request body is malformed, contains invalid JSON or XML, or has invalid field values that fail server-side parsing. See all [Salesforce API errors](/salesforce/) in our complete reference. The response includes an `errorCode` and `message` that pinpoints the problem — common codes include `MALFORMED_ID`, `INVALID_FIELD`, `INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST`, and `FIELD_INTEGRITY_EXCEPTION`.
 
 The response body looks like `[{"message":"field integrity exception: unknown","errorCode":"FIELD_INTEGRITY_EXCEPTION","fields":["CustomField__c"]}]`. Unlike 422 (which some APIs use for validation), Salesforce uses 400 for both syntax and validation errors across all REST API operations.
 
@@ -207,6 +207,8 @@ payload = {"LastName": "Test", "LeadSource": "Web"}
 - Log both the full request body and the full error response for debugging
 - Fetch picklist values from the describe endpoint rather than hardcoding them
 - Test with a single record before bulk operations using the same payload structure
+- Similar validation issues occur with [HubSpot 400](/hubspot/errors/400), [Mailchimp 400](/mailchimp/errors/400), and [Pipedrive 400](/pipedrive/errors/400).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

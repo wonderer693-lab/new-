@@ -111,7 +111,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 420
 
-Salesforce returns HTTP 420 when the Salesforce Edge network cannot route the request to the correct instance. This is an infrastructure-level error that indicates a problem with Salesforce's global load balancing and routing layer — not an issue with the request itself.
+Salesforce returns HTTP 420 when the Salesforce Edge network cannot route the request to the correct instance. See all [Salesforce API errors](/salesforce/) in our complete reference. This is an infrastructure-level error that indicates a problem with Salesforce's global load balancing and routing layer — not an issue with the request itself.
 
 The 420 status code is unique to Salesforce. It means the request reached Salesforce's edge network, but the routing information needed to forward it to the correct pod (e.g., `na1`, `eu2`) is unavailable. This can happen during network maintenance, DNS propagation delays after org migration, or regional routing disruptions.
 
@@ -205,6 +205,8 @@ else:
 - Monitor Salesforce Trust status for planned maintenance windows
 - Use a CDN or proxy layer that can failover between Salesforce instances
 - Contact Salesforce support to report persistent 420 errors — they may indicate a pod routing issue
+- Similar throttling issues occur with [HubSpot 429](/hubspot/errors/429) and [Zoho too-many-requests](/zoho/errors/too-many-requests).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

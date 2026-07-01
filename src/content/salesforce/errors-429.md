@@ -111,7 +111,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 429
 
-Salesforce returns HTTP 429 when the daily API request limit or concurrent request limit is exceeded. The error code is `REQUEST_LIMIT_EXCEEDED` for daily limits. Salesforce enforces two types of limits: daily API calls per org (e.g., 15,000–1,000,000+ depending on edition) and concurrent request limits (typically 25–100 simultaneous long-running requests).
+Salesforce returns HTTP 429 when the daily API request limit or concurrent request limit is exceeded. See all [Salesforce API errors](/salesforce/) in our complete reference. The error code is `REQUEST_LIMIT_EXCEEDED` for daily limits. Salesforce enforces two types of limits: daily API calls per org (e.g., 15,000–1,000,000+ depending on edition) and concurrent request limits (typically 25–100 simultaneous long-running requests).
 
 The response contains `[{"message":"API limit exceeded","errorCode":"REQUEST_LIMIT_EXCEEDED"}]`. Daily limits reset at org timezone midnight. Concurrent limits apply to requests running longer than 5 seconds. The `/limits` endpoint shows your current daily usage and remaining capacity.
 
@@ -229,6 +229,8 @@ fields = cache.get_sobject_fields("Contact", headers)  # 1 API call, cached afte
 - Cache reference data (picklists, field definitions, user info) with TTL-based expiry
 - Use Streaming API or Platform Events instead of polling for real-time changes
 - Monitor `/limits` daily and set up alerts when usage exceeds 80% of the allocation
+- Similar rate limit issues occur with [HubSpot 429](/hubspot/errors/429), [Slack rate_limited](/slack/errors/rate_limited), and [Pipedrive 429](/pipedrive/errors/429).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

@@ -110,7 +110,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 404
 
-Salesforce returns HTTP 404 when the requested resource does not exist at the specified URL. This can be caused by an invalid record ID, a wrong API version, a mistyped endpoint path, or referencing a record that has been deleted or whose ID format is incorrect.
+Salesforce returns HTTP 404 when the requested resource does not exist at the specified URL. See all [Salesforce API errors](/salesforce/) in our complete reference. This can be caused by an invalid record ID, a wrong API version, a mistyped endpoint path, or referencing a record that has been deleted or whose ID format is incorrect.
 
 Salesforce uses 18-character record IDs (the 15-character ID + 3-character suffix) for all records. A 404 with `NOT_FOUND` error code means the ID doesn't map to any record in the system. API versions follow the pattern `/services/data/v{version}/` — using a version number that doesn't exist also returns 404.
 
@@ -199,6 +199,8 @@ url = f"{instance_url}/services/data/v{latest_version}/sobjects/Contact"
 - Use the latest stable API version, avoid deprecated versions
 - Never hardcode record IDs — fetch them dynamically from SOQL queries
 - Handle 404 by re-querying for fresh IDs rather than retrying the same request
+- Similar not-found issues occur with [HubSpot 404](/hubspot/errors/404), [Mailchimp 404](/mailchimp/errors/404), and [Pipedrive 404](/pipedrive/errors/404).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

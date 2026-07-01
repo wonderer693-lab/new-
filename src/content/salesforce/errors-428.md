@@ -111,7 +111,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 428
 
-Salesforce returns HTTP 428 when a request requires conditional headers (like `If-Match` or `If-None-Match`) but they are missing. This is part of Salesforce's support for HTTP conditional requests, primarily used with the REST API's composite resources and some SObject endpoints that support optimistic concurrency.
+Salesforce returns HTTP 428 when a request requires conditional headers (like `If-Match` or `If-None-Match`) but they are missing. See all [Salesforce API errors](/salesforce/) in our complete reference. This is part of Salesforce's support for HTTP conditional requests, primarily used with the REST API's composite resources and some SObject endpoints that support optimistic concurrency.
 
 The 428 status code means "Precondition Required" — the endpoint requires a precondition header to process the request. Salesforce uses this for operations that need to ensure the resource hasn't changed since it was last read, preventing lost-update problems. The response typically contains `[{"message":"Precondition Required","errorCode":"PRECONDITION_REQUIRED"}]`.
 
@@ -228,6 +228,8 @@ resp = requests.post(
 - Check API documentation for endpoints that require conditional headers
 - Test update operations with and without If-Match to understand which endpoints require it
 - Log 428 responses with the endpoint and resource ID to identify patterns
+- Similar precondition issues occur with [HubSpot 423](/hubspot/errors/423).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

@@ -111,7 +111,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 409
 
-Salesforce returns HTTP 409 when the request conflicts with the current state of the resource. The most common cause is an API version incompatibility — attempting to use an API feature that isn't available in the specified version. It can also occur with duplicate detection rules, where creating a record would create a duplicate that violates an org's duplicate rule.
+Salesforce returns HTTP 409 when the request conflicts with the current state of the resource. See all [Salesforce API errors](/salesforce/) in our complete reference. The most common cause is an API version incompatibility — attempting to use an API feature that isn't available in the specified version. It can also occur with duplicate detection rules, where creating a record would create a duplicate that violates an org's duplicate rule.
 
 The response contains `[{"message":"API version x not supported for this resource","errorCode":"API_VERSION_NOT_SUPPORTED"}]`. This is distinct from 400 (invalid payload) — 409 means the request is valid but can't be applied due to the resource's current state.
 
@@ -198,6 +198,8 @@ print(f"Using latest version: v{latest}")
 - Review Salesforce API release notes for breaking changes each season
 - Use the `Sforce-Duplicate-Rule-Header` header to control duplicate rule behavior
 - Query for existing records before inserting to avoid duplicate rule triggers
+- Similar conflict issues occur with [HubSpot 409](/hubspot/errors/409) and [Calendly 409](/calendly/errors/409).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

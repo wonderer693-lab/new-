@@ -115,7 +115,7 @@ You might be dealing with this issue if you see any of these messages:
 
 
 
-INVALID_SESSION_ID is the most common Salesforce API error. It means your session/OAuth token is not valid for the endpoint you're calling.
+INVALID_SESSION_ID is the most common Salesforce API error. It means your session/OAuth token is not valid for the endpoint you're calling. See all [Salesforce API errors](/salesforce/) in our complete reference.
 
 
 
@@ -242,6 +242,8 @@ instance_url = oauth_response['instance_url']  # e.g., https://yourdomain.my.sal
 - Implement auto-refresh: detect INVALID_SESSION_ID → refresh token → retry
 
 - Don't cache access_token longer than 30 minutes
+- Similar auth issues occur with [HubSpot 401](/hubspot/errors/401), [Slack invalid_auth](/slack/errors/invalid_auth), and [Zoho INVALID_OAUTHTOKEN](/zoho/errors/invalid-oauthtoken).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 
 

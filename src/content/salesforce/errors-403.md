@@ -111,7 +111,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 403
 
-Salesforce returns HTTP 403 when the authenticated user does not have permission to access the requested resource or when an API limit has been exhausted. The response includes an `errorCode` that distinguishes between permission issues (`REQUEST_NOT_AUTHORIZED`, `INSUFFICIENT_ACCESS`) and limit issues (`API_LIMIT_EXCEEDED`, `STORAGE_LIMIT_EXCEEDED`).
+Salesforce returns HTTP 403 when the authenticated user does not have permission to access the requested resource or when an API limit has been exhausted. See all [Salesforce API errors](/salesforce/) in our complete reference. The response includes an `errorCode` that distinguishes between permission issues (`REQUEST_NOT_AUTHORIZED`, `INSUFFICIENT_ACCESS`) and limit issues (`API_LIMIT_EXCEEDED`, `STORAGE_LIMIT_EXCEEDED`).
 
 The response looks like `[{"message":"Insufficient permissions","errorCode":"INSUFFICIENT_ACCESS_OR_READONLY","fields":[]}]`. Unlike 401 (invalid session), 403 means the session is valid but the user's profile or permission set doesn't grant access to the specific object, field, or operation.
 
@@ -200,6 +200,8 @@ if check_object_access("CustomObject__c"):
 - Monitor the `/limits` endpoint daily to track API consumption and avoid limit exhaustion
 - Set up alerts in Salesforce for API limit usage above 80%
 - Document all objects and fields the integration needs and verify access during setup
+- Similar permission issues occur with [HubSpot 403](/hubspot/errors/403), [Slack not_in_channel](/slack/errors/not_in_channel), and [Mailchimp 403](/mailchimp/errors/403).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

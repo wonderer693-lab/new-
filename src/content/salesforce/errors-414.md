@@ -110,7 +110,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 414
 
-Salesforce returns HTTP 414 when the combined URI path and headers exceed 16,384 bytes (16 KB). This limit applies to the entire HTTP request line and header section — not just the URL. Long SOQL queries in the query string are the most common trigger, followed by oversized headers from authentication tokens or custom headers.
+Salesforce returns HTTP 414 when the combined URI path and headers exceed 16,384 bytes (16 KB). See all [Salesforce API errors](/salesforce/) in our complete reference. This limit applies to the entire HTTP request line and header section — not just the URL. Long SOQL queries in the query string are the most common trigger, followed by oversized headers from authentication tokens or custom headers.
 
 The limit is a Salesforce platform restriction enforced at the edge. GET requests with long SOQL queries in the `?q=` parameter are the #1 cause. The error typically appears as a raw HTTP 414 without a JSON body because the Salesforce application layer never receives the request — it's rejected at the HTTP server level.
 
@@ -201,6 +201,8 @@ for chunk in chunk_list(ids, 200):
 - Use the Composite API to batch multiple requests into one HTTP call
 - Monitor request URL size and add validation to stay under 16 KB
 - Prefer parameterized queries over string concatenation for dynamic filters
+- Similar URI length issues occur with [HubSpot 414](/hubspot/errors/414).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

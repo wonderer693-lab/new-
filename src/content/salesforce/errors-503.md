@@ -113,7 +113,7 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes Salesforce 503
 
-Salesforce returns HTTP 503 when the server is temporarily unable to handle the request due to maintenance, overload, or throttling. This is a server-side error that indicates the Salesforce platform is under load or undergoing maintenance — not a problem with the request itself.
+Salesforce returns HTTP 503 when the server is temporarily unable to handle the request due to maintenance, overload, or throttling. See all [Salesforce API errors](/salesforce/) in our complete reference. This is a server-side error that indicates the Salesforce platform is under load or undergoing maintenance — not a problem with the request itself.
 
 The 503 response typically doesn't include a JSON body — it's a raw HTTP 503 from Salesforce's load balancers or application servers. Salesforce occasionally throttles during high-traffic periods (especially end-of-month for CRM-heavy orgs) and during planned maintenance windows. The error is almost always transient.
 
@@ -216,6 +216,8 @@ class SalesforceCircuitBreaker:
 - Use the Bulk API 2.0 for large operations — it handles server-side retries better than REST API
 - Monitor Salesforce Trust for planned maintenance and pre-schedule downtime
 - Set up a circuit breaker to stop sending requests after repeated 503s to avoid making things worse
+- Similar server issues occur with [Pipedrive 503](/pipedrive/errors/503), [Pipedrive 500](/pipedrive/errors/500), and [Make 500](/make/errors/500).
+- This error also affects integrations. See our [Salesforce to Mailchimp](/integrations/salesforce-to-mailchimp/) and [Salesforce to ActiveCampaign](/integrations/salesforce-to-activecampaign/) integration error guides.
 
 ## Official Documentation
 

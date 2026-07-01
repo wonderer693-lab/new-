@@ -115,14 +115,14 @@ You might be dealing with this issue if you see any of these:
 
 ## The Problem
 
-Bidirectional Salesforce ↔ ActiveCampaign syncs return `REQUEST_LIMIT_EXCEEDED` to every other integration in the org by mid-day. Users see failures in unrelated Mulesoft, Boomi, and native apps because the shared 24-hour Salesforce API quota was consumed by ActiveCampaign polling. Once exhausted, all API integrations stall until the next rolling day.
+Bidirectional Salesforce ↔ ActiveCampaign syncs return `REQUEST_LIMIT_EXCEEDED` to every other integration in the org by mid-day. See all [Salesforce API errors](/salesforce/) or [ActiveCampaign API errors](/activecampaign/) for more troubleshooting. Users see failures in unrelated Mulesoft, Boomi, and native apps because the shared 24-hour Salesforce API quota was consumed by ActiveCampaign polling. Once exhausted, all API integrations stall until the next rolling day.
 
 ## Root Cause
 
 - **Salesforce 24-hour rolling limit** is not per-user or per-app — allocations are **org-wide**. Enterprise edition ships 1,000,000 calls/24h; Professional 1,000/hour and a daily cap. A single chatty AC sync eats the entire org's allocation.
 - **Polling anti-pattern**: ActiveCampaign's connector polls Salesforce every minute via REST (`query`), issuing hundreds of REST calls even when no records changed.
 - **SOQL `SELECT COUNT()` and per-record `GET /sobjects/Contact/{id}` are full API calls**. A 50k-contact sync that fetches one-by-one consumes 50,000 calls.
-- **Bulk API 2.0** (`/services/data/v60.0/jobs/query`) consumes only 1 call per job, not per record.
+- **Bulk API 2.0** (`/services/data/v60.0/jobs/query`) consumes only 1 call per job, not per record. Related: [Salesforce 429](/salesforce/errors/429) for rate limit issues, [ActiveCampaign 429](/activecampaign/errors/429) for AC rate limits.
 
 | Edition | 24h limit | Notes |
 |---|---|---|
