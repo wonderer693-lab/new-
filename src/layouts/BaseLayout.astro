@@ -78,10 +78,61 @@ const robotsDirective = frontmatter.noindex
   )}
 </head>
 <body>
-  <slot />
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="/" class="site-logo">
+        <span class="site-logo-icon">A</span>
+        API Integration Hub
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/integrations">Integrations</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div id="main-content">
+    <slot />
+  </div>
+
   <footer class="site-footer">
-    <p>API Integration Hub — Production-tested fixes for SaaS API errors.</p>
-    <p><a href="/about">About</a> · <a href="/author">Author</a> · <a href="/contact">Contact</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/rss.xml">RSS</a></p>
+    <div class="site-footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>API Integration Hub</strong>
+          <p>Production-tested troubleshooting guides for SaaS API integration errors. Root cause analysis, detection steps, and copy-paste-ready fixes.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/integrations">Integration Guides</a></li>
+            <li><a href="/rss.xml">RSS Feed</a></li>
+            <li><a href="/sitemap-index.xml">Sitemap</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/author">Author</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/privacy">Privacy</a></li>
+            <li><a href="/terms">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; {new Date().getFullYear()} API Integration Hub. All rights reserved.
+      </div>
+    </div>
   </footer>
 </body>
 </html>

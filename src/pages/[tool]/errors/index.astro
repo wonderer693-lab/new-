@@ -23,18 +23,23 @@ const frontmatter = {
   <main>
     <nav aria-label="Breadcrumb">
       <ol>
-        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
-        <li><a href={`/${tool}`}>{displayName}</a><span aria-hidden="true"> / </span></li>
+        <li><a href="/">Home</a><span aria-hidden="true">/</span></li>
+        <li><a href={`/${tool}`}>{displayName}</a><span aria-hidden="true">/</span></li>
         <li><span>Errors</span></li>
       </ol>
     </nav>
 
     <h1>{displayName} API Error Codes</h1>
-    <p>All documented {displayName} API errors with root cause, step-by-step fixes, and production retry strategies.</p>
+    <p>{errors.length} errors documented with root cause analysis, step-by-step fixes, and production retry strategies.</p>
 
     <table>
       <thead>
-        <tr><th>Code</th><th>Name</th><th>Severity</th><th>Category</th></tr>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Severity</th>
+          <th>Category</th>
+        </tr>
       </thead>
       <tbody>
         {errors.map(e => (

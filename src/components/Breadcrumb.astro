@@ -17,6 +17,7 @@ const jsonLd = {
 
 <nav aria-label="Breadcrumb">
   <ol>
+    <li><a href="/">Home</a><span aria-hidden="true">/</span></li>
     {segments.map((s, i) => (
       <li>
         {s.href ? <a href={s.href}>{s.label}</a> : <span>{s.label}</span>}

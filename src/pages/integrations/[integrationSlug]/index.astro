@@ -25,22 +25,23 @@ const frontmatter = {
   <main>
     <nav aria-label="Breadcrumb">
       <ol>
-        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
-        <li><a href="/integrations">Integrations</a><span aria-hidden="true"> / </span></li>
-        <li><span>{toolA} ↔ {toolB}</span></li>
+        <li><a href="/">Home</a><span aria-hidden="true">/</span></li>
+        <li><a href="/integrations">Integrations</a><span aria-hidden="true">/</span></li>
+        <li><span>{toolA} &harr; {toolB}</span></li>
       </ol>
     </nav>
 
-    <h1>{toolA} ↔ {toolB} Integration Errors</h1>
+    <h1>{toolA} &harr; {toolB} Integration Errors</h1>
     <p>All known errors when integrating {toolA} with {toolB}. Each guide includes root cause, detection steps, and production-ready fixes.</p>
 
-    <ul>
+    <ul class="error-list">
       {integrations.map(e => (
         <li>
           <a href={`/integrations/${slug}/errors/${e.data.errorSlug}`}>
-            {e.data.errorName}{e.data.errorType === 'silent-failure' ? ' ⚠ Silent' : ''}
+            <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
+            <span>{e.data.errorName}</span>
+            {e.data.errorType === 'silent-failure' && <span class="badge" style="background: var(--color-warning);">silent</span>}
           </a>
-          <span> — {e.data.category}</span>
         </li>
       ))}
     </ul>

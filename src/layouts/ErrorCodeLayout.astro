@@ -20,19 +20,17 @@ const toolDisplay = tool.charAt(0).toUpperCase() + tool.slice(1);
     <header>
       <h1>{content.title}</h1>
       <dl class="metadata">
-        {severity && <div><dt>Severity</dt><dd class={`badge badge-${severity}`}>{severity}</dd></div>}
-        {httpStatus && <div><dt>HTTP</dt><dd><code>{httpStatus}</code></dd></div>}
-        {lastUpdated && <div><dt>Updated</dt><dd><time datetime={lastUpdated}>{lastUpdated}</time></dd></div>}
+        {severity && <div><dt>Severity</dt><dd><span class={`badge badge-${severity}`}>{severity}</span></dd></div>}
+        {httpStatus && httpStatus !== 0 && <div><dt>HTTP Status</dt><dd><code>{httpStatus}</code></dd></div>}
+        {lastUpdated && <div><dt>Last Updated</dt><dd><time datetime={lastUpdated}>{lastUpdated}</time></dd></div>}
       </dl>
     </header>
 
     <slot />
 
     <footer class="related">
-      <h2>Related Errors</h2>
-      <ul>
-        <li><a href={`/${tool}/errors/${errorCode}`}>More about {errorCode}</a></li>
-      </ul>
+      <h2>More {toolDisplay} Errors</h2>
+      <a href={`/${tool}/errors`}>&larr; View all {toolDisplay} error codes</a>
     </footer>
   </article>
 </BaseLayout>

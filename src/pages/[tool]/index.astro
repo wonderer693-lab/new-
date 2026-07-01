@@ -24,41 +24,43 @@ const frontmatter = {
   <main>
     <nav aria-label="Breadcrumb">
       <ol>
-        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
+        <li><a href="/">Home</a><span aria-hidden="true">/</span></li>
         <li><span>{displayName}</span></li>
       </ol>
     </nav>
 
-    <h1>{displayName} API Integration Guide</h1>
+    <h1>{displayName} API Errors</h1>
+    <p>{errors.length} error codes documented with root cause, step-by-step fixes, and production retry strategies.</p>
 
     <section>
-      <h2>Error Codes ({errors.length})</h2>
-      {errors.length > 0 ? (
-        <ul>
-          {errors.map(e => (
-            <li>
-              <a href={`/${tool}/errors/${e.data.errorCode}`}>
-                <strong>{e.data.errorCode}</strong> — {e.data.errorName}{e.data.severity === 'high' || e.data.severity === 'critical' ? ' ⚠' : ''}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : <p>No error guides yet.</p>}
+      <h2>All Error Codes</h2>
+      <ul class="error-list">
+        {errors.map(e => (
+          <li>
+            <a href={`/${tool}/errors/${e.data.errorCode}`}>
+              <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
+              <strong>{e.data.errorCode}</strong>
+              <span>{e.data.errorName}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
 
-    <section>
-      <h2>Integration Guides ({integrations.length})</h2>
-      {integrations.length > 0 ? (
-        <ul>
+    {integrations.length > 0 && (
+      <section>
+        <h2>Integration Guides</h2>
+        <ul class="error-list">
           {integrations.map(e => (
             <li>
               <a href={`/integrations/${e.data.integrationSlug}/errors/${e.data.errorSlug}`}>
-                {e.data.toolA} ↔ {e.data.toolB}: {e.data.errorName}
+                <span class={`badge badge-${e.data.severity}`}>{e.data.severity}</span>
+                <span>{e.data.toolA} &harr; {e.data.toolB}: {e.data.errorName}</span>
               </a>
             </li>
           ))}
         </ul>
-      ) : <p>No integration guides yet.</p>}
-    </section>
+      </section>
+    )}
   </main>
 </BaseLayout>

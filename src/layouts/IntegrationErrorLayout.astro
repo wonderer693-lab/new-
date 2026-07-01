@@ -14,25 +14,23 @@ const toolBDisplay = toolB.charAt(0).toUpperCase() + toolB.slice(1);
       segments={[
         { label: 'Integrations', href: '/integrations' },
         { label: `${toolADisplay} ↔ ${toolBDisplay}`, href: `/integrations/${integrationSlug}` },
-        { label: 'Errors' },
         { label: errorName || errorSlug },
       ]}
     />
 
     {errorType === 'silent-failure' && (
       <div class="urgency-banner">
-        <strong>Silent failure:</strong> This error produces no HTTP error code.
-        Your data may be wrong right now.
+        <strong>Silent failure:</strong> This error produces no HTTP error code. Your data may be corrupted without any visible warning.
       </div>
     )}
 
     <header>
       <h1>{content.title}</h1>
       <dl class="metadata">
-        {severity && <div><dt>Severity</dt><dd class={`badge badge-${severity}`}>{severity}</dd></div>}
+        {severity && <div><dt>Severity</dt><dd><span class={`badge badge-${severity}`}>{severity}</span></dd></div>}
         {category && <div><dt>Category</dt><dd>{category}</dd></div>}
-        {errorType && <div><dt>Type</dt><dd>{errorType === 'silent-failure' ? '⚠ Silent failure' : errorType}</dd></div>}
-        {lastUpdated && <div><dt>Updated</dt><dd><time datetime={lastUpdated}>{lastUpdated}</time></dd></div>}
+        {errorType && <div><dt>Type</dt><dd>{errorType === 'silent-failure' ? 'Silent failure' : errorType}</dd></div>}
+        {lastUpdated && <div><dt>Last Updated</dt><dd><time datetime={lastUpdated}>{lastUpdated}</time></dd></div>}
       </dl>
     </header>
 
@@ -43,6 +41,7 @@ const toolBDisplay = toolB.charAt(0).toUpperCase() + toolB.slice(1);
       <ul>
         <li><a href={`/${toolA}`}>{toolADisplay} API Reference</a></li>
         <li><a href={`/${toolB}`}>{toolBDisplay} API Reference</a></li>
+        <li><a href={`/integrations/${integrationSlug}`}>All {toolADisplay} &harr; {toolBDisplay} errors</a></li>
       </ul>
     </footer>
   </article>

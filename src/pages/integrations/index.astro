@@ -16,7 +16,7 @@ const frontmatter = {
   <main>
     <nav aria-label="Breadcrumb">
       <ol>
-        <li><a href="/">Home</a><span aria-hidden="true"> / </span></li>
+        <li><a href="/">Home</a><span aria-hidden="true">/</span></li>
         <li><span>Integrations</span></li>
       </ol>
     </nav>
@@ -25,12 +25,14 @@ const frontmatter = {
     <p>Cross-tool integration errors — the silent failure layer most docs don't cover. Each guide includes root cause, detection, and production-ready fixes.</p>
 
     <div class="tool-grid">
-      {pairs.map(([slug, data]) => {
+      {[...pairs].map(([slug, data]) => {
         const count = integrations.filter(e => e.data.integrationSlug === slug).length;
         return (
           <a href={`/integrations/${slug}`} class="tool-card">
-            <h3>{data.toolA} ↔ {data.toolB}</h3>
-            <p>{count} error{count !== 1 ? 's' : ''}</p>
+            <h3>{data.toolA} &harr; {data.toolB}</h3>
+            <div class="tool-card-count">
+              <span>{count} error{count !== 1 ? 's' : ''}</span>
+            </div>
           </a>
         );
       })}
