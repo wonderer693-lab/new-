@@ -114,7 +114,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 403 when the OAuth token's scopes do not include the permissions required for the requested API endpoint. HubSpot uses OAuth scopes to gate access to different API resources — a token without the `crm.objects.contacts.read` scope cannot read contacts, even if the token is otherwise valid.
 
-The response includes `{"status":"error","message":"The provided token does not have the required scopes","category":"MISSING_SCOPES"}`. The `category` field is always `MISSING_SCOPES` for 403 responses. Scopes are assigned during the OAuth authorization flow and cannot be added to an existing token — you must re-authorize.
+The response includes `{"status":"error","message":"The provided token does not have the required scopes","category":"MISSING_SCOPES"}`. The `category` field is always `MISSING_SCOPES` for 403 responses. Scopes are assigned during the OAuth authorization flow and cannot be added to an existing token — you must re-authorize. See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Token only has `crm.objects.contacts.read` but calling `crm.objects.deals.read`
@@ -182,6 +184,7 @@ if resp.status_code == 403:
 - Add a permission check on startup: test a representative endpoint for each scope group
 - Monitor for 403/MISSING_SCOPES errors and trigger automatic re-authorization
 - Use HubSpot's private apps for server-to-server (static scopes, no OAuth flow)
+- Similar permission issues occur with [Salesforce 403](/salesforce/errors/403), [Slack not_in_channel](/slack/errors/not_in_channel), and [Mailchimp 403](/mailchimp/errors/403).
 
 ## Official Documentation
 

@@ -112,7 +112,9 @@ You might be dealing with this issue if you see any of these messages:
 
 Zapier returns HTTP 401 when the access token in the `Authorization` header is invalid, expired, or missing. Zapier access tokens expire after 10 hours and use rotating refresh tokens — each time you refresh, a new refresh token is returned (the old one is invalidated). This rotating behavior means you must store the latest refresh token after every refresh.
 
-The response contains `{"status":"error","message":"Invalid or expired access token"}`. Common causes include using an expired token, using a token generated for a different environment, or failing to persist a new refresh token after rotation.
+The response contains `{"status":"error","message":"Invalid or expired access token"}`. Common causes include using an expired token, using a token generated for a different environment, or failing to persist a new refresh token after rotation. See all [Zapier errors](/zapier/) in our complete reference. Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [Slack invalid_auth](/slack/errors/invalid_auth), and [Make 401](/make/errors/401).
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
 
 ### Common Scenarios
 - Using an access token beyond its 10-hour expiry window
@@ -187,6 +189,7 @@ def call_with_auto_refresh(url, headers):
 - Implement automatic 401 detection: catch 401 → refresh token → retry original request
 - Validate token format before sending: it should start with a specific prefix and not contain whitespace
 - Use environment variables or a secrets manager — never hardcode tokens in source code
+- Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [Slack invalid_auth](/slack/errors/invalid_auth), and [Make 401](/make/errors/401).
 
 ## Official Documentation
 

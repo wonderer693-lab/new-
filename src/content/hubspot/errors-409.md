@@ -112,7 +112,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 409 when attempting to create a record that duplicates an existing record on a unique property (most commonly `email` for Contacts). HubSpot enforces uniqueness on `email` for Contacts, `dealname` for Deals (within the same pipeline), and custom unique properties you've configured.
 
-The response includes `{"status":"error","message":"...","category":"CONFLICT"}`. For Contacts, the message typically says "Contact already exists with this email address." This is HubSpot's safeguard against data duplication — it refuses to create a second record with the same unique identifier.
+The response includes `{"status":"error","message":"...","category":"CONFLICT"}`. For Contacts, the message typically says "Contact already exists with this email address." This is HubSpot's safeguard against data duplication — it refuses to create a second record with the same unique identifier. See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Creating a Contact with an email that already exists in HubSpot

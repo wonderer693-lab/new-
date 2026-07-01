@@ -113,7 +113,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 400 when the request body contains invalid JSON, unknown property names, incorrect property data types, or missing required fields. HubSpot's CRM validates every request against the object type's schema — for example, a Contact creation request must use valid Contact property names like `email`, `firstname`, `lastname`, and values must match the property's data type.
 
-The response includes `{"status":"error","message":"...","category":"VALIDATION_ERROR"}` with details about which field failed validation. The `message` field often includes the specific property name and expected format.
+The response includes `{"status":"error","message":"...","category":"VALIDATION_ERROR"}` with details about which field failed validation. The `message` field often includes the specific property name and expected format. See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Unknown property name — using `firstName` instead of `firstname` (HubSpot uses lowercase API names)
@@ -179,6 +181,7 @@ payload = {"properties": {"email": "test@test.com", "lastname": "Test"}}
 - Validate data types before sending — especially for custom properties with specific types
 - Include `lastname` and `email` in every Contact payload (system-required fields)
 - Test with a single record before sending batch operations
+- Similar validation issues occur with [Salesforce 400](/salesforce/errors/400), [Mailchimp 400](/mailchimp/errors/400), and [Make 400](/make/errors/400).
 
 ## Official Documentation
 

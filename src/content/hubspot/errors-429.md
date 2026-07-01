@@ -116,7 +116,9 @@ You might be dealing with this issue if you see any of these messages:
 
 ## What Causes HubSpot 429
 
-HubSpot enforces rate limits per API key/application. Hitting the limit returns HTTP 429 with a `Retry-After` header.
+HubSpot enforces rate limits per API key/application. Hitting the limit returns HTTP 429 with a `Retry-After` header. See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Current Limits (March 2026+)
 - **Public OAuth apps**: 110 requests per 10 seconds per installed account
@@ -249,6 +251,7 @@ HubSpot's March 2026 date-versioned API update changed rate limit behavior:
 3. **Connection pooling**: Reuse HTTP connections (requests.Session, aiohttp.ClientSession)
 4. **Monitoring**: Set up alert in HubSpot Operations Hub for API usage > 80%
 5. **Key isolation**: Different workflows = different API keys (don't share across parallel services)
+6. Similar rate limit issues occur with [Salesforce 429](/salesforce/errors/429), [Slack rate_limited](/slack/errors/rate_limited), and [Pipedrive 429](/pipedrive/errors/429).
 
 ## People Also Ask
 

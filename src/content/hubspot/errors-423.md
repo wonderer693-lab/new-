@@ -113,7 +113,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 423 when a special rate-limit mechanism called a "system lock" is triggered. This lock activates when HubSpot detects a large volume of requests targeting the same object or the same account within a short timeframe — typically around 4-5 requests per second to the same resource. The lock lasts approximately 2 seconds.
 
-The response is `{"status":"error","message":"Attempting to sync large volume too quickly; system lock for ~2 seconds","category":"LOCKED"}`. This is distinct from the standard 429 rate limit — 423 is a temporary write lock on a specific resource to prevent data inconsistencies during high-frequency updates.
+The response is `{"status":"error","message":"Attempting to sync large volume too quickly; system lock for ~2 seconds","category":"LOCKED"}`. This is distinct from the standard 429 rate limit — 423 is a temporary write lock on a specific resource to prevent data inconsistencies during high-frequency updates. See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Sending rapid updates to the same Contact record (e.g., 10 updates in 1 second)
@@ -196,6 +198,7 @@ for record in updates:
 - Batch individual updates into batch operations (which count as 1 write) instead of multiple PATCH calls
 - Queue write operations and process them at a controlled rate
 - Monitor for 423 responses and add automatic backoff when detected
+- Similar rate limit issues occur with [Salesforce 429](/salesforce/errors/429), [Slack rate_limited](/slack/errors/rate_limited), and [Pipedrive 429](/pipedrive/errors/429).
 
 ## Official Documentation
 

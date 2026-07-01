@@ -123,7 +123,9 @@ HubSpot API 401 means your request lacks valid authentication. Common causes:
 
 - Token sent in wrong header or format
 
+See all [HubSpot API errors](/hubspot/) in our complete reference. Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [Slack invalid_auth](/slack/errors/invalid_auth), and [Make 401](/make/errors/401).
 
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ## Step-by-Step Fix
 
@@ -223,6 +225,7 @@ if resp.status_code == 401:
 - Log authentication failures with token ID to identify revoked tokens
 
 - Use private app tokens for server-to-server integrations (no OAuth flow needed)
+- Similar auth issues occur with [Salesforce 401](/salesforce/errors/401), [Slack invalid_auth](/slack/errors/invalid_auth), and [Make 401](/make/errors/401).
 
 
 

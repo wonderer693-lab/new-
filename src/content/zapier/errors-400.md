@@ -112,7 +112,9 @@ You might be dealing with this issue if you see any of these messages:
 
 Zapier returns HTTP 400 when your request body is malformed JSON, missing required parameters, or contains invalid data types. This is a client-side error — your integration is sending something Zapier's API cannot parse or accept. Zapier's platform expects specific field names and data structures for each endpoint.
 
-The response contains `{"status":"error","message":"Malformed request","errors":[...]}` with details about what's wrong. Common issues include sending a string where an array is expected, missing required fields like `title` or `description`, or invalid date/time formats.
+The response contains `{"status":"error","message":"Malformed request","errors":[...]}` with details about what's wrong. Common issues include sending a string where an array is expected, missing required fields like `title` or `description`, or invalid date/time formats. See all [Zapier errors](/zapier/) in our complete reference.
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
 
 ### Common Scenarios
 - Missing required fields in the request body (e.g., no `title` for a Zap creation)
@@ -182,6 +184,7 @@ payload = {
 - Log the full request body alongside the 400 response for debugging (redact auth tokens)
 - Implement type coercion: parse all values from source data into the expected types
 - Add integration tests that verify payload structure against a known-good example
+- Similar validation issues occur with [Salesforce 400](/salesforce/errors/400), [Mailchimp 400](/mailchimp/errors/400), and [Make 400](/make/errors/400).
 
 ## Official Documentation
 

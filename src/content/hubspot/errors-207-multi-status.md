@@ -111,7 +111,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 207 Multi-Status when using batch endpoints (like `POST /crm/v3/objects/contacts/batch/upsert` or `POST /crm/v3/objects/contacts/batch/read`) with multi-status error handling enabled. Unlike 200 (all success) or 400 (all fail), 207 indicates a mixed result — some individual records succeeded while others failed.
 
-The response contains a `results` array where each item has its own `status` (200 for success, 400+ for failure). This is expected behavior for batch operations — it's not really an "error" but a partial success signal. You must iterate through the `results` array to identify which specific records failed and why.
+The response contains a `results` array where each item has its own `status` (200 for success, 400+ for failure). This is expected behavior for batch operations — it's not really an "error" but a partial success signal. You must iterate through the `results` array to identify which specific records failed and why. See all [HubSpot API errors](/hubspot/) in our complete reference for a full list of status codes you may encounter in batch responses.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Batch upsert where some records are duplicates (409) while others succeed (200)

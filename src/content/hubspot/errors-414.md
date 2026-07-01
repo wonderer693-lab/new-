@@ -112,7 +112,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 414 when the request URI (URL + query parameters) exceeds the maximum allowed length. HubSpot's API enforces a URI length limit (typically around 8 KB). This most commonly occurs when passing many IDs as query parameters for lookup operations.
 
-The response is `{"status":"error","message":"Request URI exceeds limits","category":"URI_TOO_LONG"}`. The typical cause is a GET request with a long list of IDs — e.g., `GET /crm/v3/objects/contacts?ids=1,2,3,...,5000` which can easily exceed the URI length limit.
+The response is `{"status":"error","message":"Request URI exceeds limits","category":"URI_TOO_LONG"}`. The typical cause is a GET request with a long list of IDs — e.g., `GET /crm/v3/objects/contacts?ids=1,2,3,...,5000` which can easily exceed the URI length limit. See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Passing hundreds of record IDs in a GET query parameter for batch lookup

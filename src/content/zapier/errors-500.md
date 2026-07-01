@@ -112,7 +112,9 @@ You might be dealing with this issue if you see any of these messages:
 
 Zapier returns HTTP 500 (and other 5XX codes) when its internal infrastructure encounters a transient error — database timeouts, upstream API failures, or load balancer issues. These are server-side errors outside your control. Zapier's platform runs on a multi-tenant architecture, so a 500 can affect one integration while others remain healthy.
 
-The response body typically contains `{"status":"error","message":"Internal Server Error"}`. Zapier's reliability SLA targets 99.9% uptime, and 5XX errors are rare during normal operations. They tend to spike during platform deployments or upstream provider incidents.
+The response body typically contains `{"status":"error","message":"Internal Server Error"}`. Zapier's reliability SLA targets 99.9% uptime, and 5XX errors are rare during normal operations. They tend to spike during platform deployments or upstream provider incidents. See all [Zapier errors](/zapier/) in our complete reference.
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
 
 ### Common Scenarios
 - Temporary database connectivity issues within Zapier's infrastructure
@@ -174,6 +176,7 @@ if consecutive_500s > 5:
 - Monitor status.zapier.com changes via their RSS feed or API
 - Add a circuit breaker that stops calls after 5 consecutive 500s and alerts the team
 - Distribute traffic across multiple Zapier API keys if available
+- Similar server issues occur with [Pipedrive 500](/pipedrive/errors/500), [Make 500](/make/errors/500), and [Salesforce 503](/salesforce/errors/503).
 
 ## Official Documentation
 

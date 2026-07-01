@@ -113,7 +113,9 @@ You might be dealing with this issue if you see any of these messages:
 
 Zapier's API platform enforces rate limits to protect its infrastructure. The exact limits depend on your Zapier plan: Free/Starter plans have tighter limits, while Professional/Team/Company plans have higher caps. When you exceed the limit, Zapier returns HTTP 429 with a `Retry-After` header indicating the cooldown period in seconds.
 
-The response includes `{"status":"error","message":"Rate limit exceeded"}`. Zapier uses a rolling window approach — each request resets the window rather than having fixed-minute boundaries. A 60-second cooldown period is typical after hitting the limit.
+The response includes `{"status":"error","message":"Rate limit exceeded"}`. Zapier uses a rolling window approach — each request resets the window rather than having fixed-minute boundaries. A 60-second cooldown period is typical after hitting the limit. See all [Zapier errors](/zapier/) in our complete reference.
+
+This error also affects integrations. See our [Zapier to Calendly integration errors](/integrations/zapier-to-calendly/) for common cross-tool issues.
 
 ### Common Scenarios
 - Polling the Zapier API faster than once per few seconds
@@ -183,6 +185,7 @@ for item in items:
 - Use Zapier's webhook-triggered approach instead of polling where possible
 - Upgrade your Zapier plan if you consistently exceed the rate allocation
 - Monitor `X-RateLimit-Remaining` headers (if available) and slow down proactively
+- Similar rate limit issues occur with [Salesforce 429](/salesforce/errors/429), [Slack rate_limited](/slack/errors/rate_limited), and [Pipedrive 429](/pipedrive/errors/429).
 
 ## Official Documentation
 

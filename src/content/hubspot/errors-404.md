@@ -113,7 +113,9 @@ You might be dealing with this issue if you see any of these messages:
 
 HubSpot returns HTTP 404 when the requested resource does not exist — a contact, deal, or company with that ID was never created, has been deleted, or the object type is misspelled. HubSpot's REST API is strict about object types and IDs.
 
-The response includes `{"status":"error","message":"Resource not found","category":"OBJECT_NOT_FOUND"}`. The `category` field is usually `OBJECT_NOT_FOUND` for missing records, but can also be related to incorrect object type names (e.g., `contact` instead of `contacts`).
+The response includes `{"status":"error","message":"Resource not found","category":"OBJECT_NOT_FOUND"}`. The `category` field is usually `OBJECT_NOT_FOUND` for missing records, but can also be related to incorrect object type names (e.g., `contact` instead of `contacts`). See all [HubSpot API errors](/hubspot/) in our complete reference.
+
+This error also affects integrations. See our [HubSpot to Slack integration errors](/integrations/hubspot-to-slack/) for common cross-tool issues.
 
 ### Common Scenarios
 - Referencing a record ID that was deleted or never existed
@@ -194,6 +196,7 @@ if resp.status_code == 404:
 - Cache record IDs and periodically verify they still exist in HubSpot
 - Implement a 404 handler that cleans up stale references from your local database
 - Use HubSpot's search API for lookups instead of direct ID access when possible
+- Similar not-found issues occur with [Salesforce 404](/salesforce/errors/404), [Mailchimp 404](/mailchimp/errors/404), and [ActiveCampaign 404](/activecampaign/errors/404).
 
 ## Official Documentation
 
