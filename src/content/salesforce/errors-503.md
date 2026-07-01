@@ -52,19 +52,17 @@ for attempt in range(5):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 503 Service Unavailable error from the Salesforce API.
 > The error message is: "SERVER_UNAVAILABLE" or the response has no JSON body.
 > This happens intermittently — sometimes requests work, sometimes they don't.
 > Please give me a step-by-step fix with working Python code that implements exponential backoff retry and a circuit breaker pattern.
 
-**What to expect:** The AI should give you a retry function with exponential backoff and jitter, plus a circuit breaker that stops sending requests after repeated failures.
+You should get a retry function with exponential backoff and jitter, plus a circuit breaker that stops sending requests after repeated failures.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm getting 503 errors consistently for hours. Here's my retry code: [paste your code]. Is this a Salesforce outage?
-
-**Best AI tools for this:** Claude (best at explaining retry patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

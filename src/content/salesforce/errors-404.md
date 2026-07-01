@@ -49,19 +49,17 @@ if resp.status_code == 404:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 404 Not Found error from the Salesforce API.
 > The error message is: "NOT_FOUND" — "The requested resource does not exist"
 > I'm trying to read a Contact record by its ID.
 > Please give me a step-by-step fix with working Python code that checks if a record exists before accessing it.
 
-**What to expect:** The AI should give you a lookup function that queries for the record first using SOQL, validates the ID format, and handles the case where the record was deleted.
+You should get a lookup function that queries for the record first using SOQL, validates the ID format, and handles the case where the record was deleted.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. The record definitely exists in Salesforce but I still get 404. Here's the ID I'm using: [paste ID]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Salesforce ID formats), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

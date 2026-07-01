@@ -48,19 +48,17 @@ print(resp.status_code)  # 200 means it works
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting a 401 Unauthorized error from the ActiveCampaign API.
 > The error message is: "Invalid or missing API token"
 > I'm using a custom integration that sends requests with the Api-Token header.
 > Please give me a step-by-step fix with working Python code to authenticate correctly.
 
-**What to expect:** The AI should tell you how to find and update your API key, and show you the correct header format.
+The response should tell you how to find and update your API key, and show you the correct header format.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I'm still getting 401 errors. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining auth issues), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

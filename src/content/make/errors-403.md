@@ -49,19 +49,17 @@ if resp.status_code == 403:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting a 403 Forbidden error from Make (Integromat).
 > The error message is: "Forbidden — insufficient permissions"
 > I'm trying to perform an action in Make but my account doesn't have permission.
 > Please give me a step-by-step fix to check my plan and token permissions.
 
-**What to expect:** The AI should help you identify whether it's a plan limitation or a token scope issue, and guide you through fixing it.
+The response should help you identify whether it's a plan limitation or a token scope issue, and guide you through fixing it.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I'm still getting 403 errors. Here's my Make plan and what I'm trying to do: [paste details]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Make permissions), ChatGPT-4 (good at plan comparisons), Cursor (if you want inline code fixes)
 
 </div>
 

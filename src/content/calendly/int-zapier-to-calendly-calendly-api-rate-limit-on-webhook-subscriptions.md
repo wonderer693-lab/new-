@@ -57,16 +57,14 @@ def list_webhooks(token, org):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating Zapier with Calendly and getting 429 rate limit errors when creating webhook subscriptions. My Zap creates a new webhook subscription on every test run and I've exceeded Calendly's API quota. How do I cache and reuse existing webhook subscriptions?
 
-**What to expect:** The AI should help you implement subscription caching and clean up orphan subscriptions.
+Expect back help implementing subscription caching and cleaning up orphan subscriptions.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I cleaned up subscriptions but I'm still hitting the rate limit during Zap testing. How do I reduce API calls to Calendly during development?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

@@ -57,16 +57,14 @@ if limits["Remaining"] < limits["Max"] * 0.2:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating Salesforce with ActiveCampaign and the sync exhausts Salesforce's daily API limit by mid-day. The bidirectional sync polls REST endpoints every minute, consuming the org-wide quota. How do I reduce API calls using Bulk API 2.0 and scheduling?
 
-**What to expect:** The AI should help you switch to Bulk API 2.0, schedule off-peak syncs, and add field-level filters.
+The AI should provide help switching to Bulk API 2.0, scheduling off-peak syncs, and adding field-level filters.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I switched to Bulk API 2.0 but the limit is still being hit. Could other integrations in the org be sharing the same quota?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

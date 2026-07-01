@@ -54,16 +54,14 @@ print(blocks_json)  # Paste into Block Kit Builder to validate
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating Make with Slack and complex Block Kit messages fail with 'invalid_blocks' errors. Make's structured Slack module can't handle deeply nested JSON -- a single missing comma breaks everything. How do I build Block Kit messages as a text string and validate them before sending?
 
-**What to expect:** The AI should help you build Block Kit JSON as a templated string and validate it with Slack's Block Kit Builder.
+Expect back help building Block Kit JSON as a templated string and validating it with Slack's Block Kit Builder.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I switched to a text string but dynamic values with quotes still break the JSON. How do I escape special characters in Make variables?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

@@ -51,19 +51,17 @@ resp = requests.post(
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 400 Bad Request error from the Pipedrive API.
 > The error message is: "Request not understood — malformed JSON or invalid parameters"
 > I'm trying to create a deal but Pipedrive rejects my data.
 > Please give me a step-by-step fix with working Python code that validates the payload before sending.
 
-**What to expect:** The AI should give you a validated payload builder that checks required fields and data types before calling Pipedrive.
+The AI should return a validated payload builder that checks required fields and data types before calling Pipedrive.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting 400 errors. Here's my payload: [paste your JSON]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining validation), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

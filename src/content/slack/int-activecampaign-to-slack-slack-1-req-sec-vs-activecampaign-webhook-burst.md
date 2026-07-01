@@ -61,16 +61,14 @@ def drain(tag):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating ActiveCampaign with Slack and bulk tag updates only deliver 1 out of 100 Slack notifications. ActiveCampaign fires a webhook per contact, and Slack's 1 req/sec rate limit rejects the rest. How do I aggregate webhooks into a single summary Slack message?
 
-**What to expect:** The AI should help you implement webhook buffering and message aggregation to stay under Slack's rate limit.
+Expect back help implementing webhook buffering and message aggregation to stay under Slack's rate limit.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I added aggregation but individual notifications are still needed for some events. How do I handle both summary and per-contact messages?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

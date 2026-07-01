@@ -56,16 +56,14 @@ def hook():
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating ActiveCampaign with Slack and getting duplicate Slack messages. ActiveCampaign webhooks are being retried because my middleware takes too long to respond (over 5 seconds) while waiting for Slack's API. How do I ACK the webhook immediately and process the Slack message asynchronously?
 
-**What to expect:** The AI should walk you through ACK-first architecture and adding a queue between the webhook receiver and the Slack poster.
+The AI should provide a walkthrough of ACK-first architecture and adding a queue between the webhook receiver and the Slack poster.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I set up ACK-first but I'm still seeing duplicate Slack messages. How do I add idempotency keys using the ActiveCampaign webhook_id?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

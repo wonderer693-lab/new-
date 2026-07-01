@@ -50,19 +50,17 @@ print(resp.status_code)  # 200 = found, 404 = not found
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 404 Not Found error from the Mailchimp API.
 > The error message is: "Resource Not Found" or "list not found"
 > I'm trying to look up a subscriber in a Mailchimp list using their API.
 > Please give me a step-by-step fix with working Python code that generates the correct subscriber hash and verifies the list ID.
 
-**What to expect:** The AI should show you how to lowercase the email before hashing, verify your list ID exists, and confirm you're using the right data center suffix.
+You should get code that lowercases the email before hashing, verifies your list ID exists, and confirms you're using the right data center suffix.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm still getting 404 errors. My list ID is [paste ID] and my data center is [paste suffix]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining hash generation), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

@@ -50,19 +50,17 @@ else:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 403 Forbidden error from the Salesforce API.
 > The error message is: "INSUFFICIENT_ACCESS" or "API_DISABLED_FOR_ORG"
 > My session is valid (I can log in to Salesforce) but API calls are blocked.
 > Please give me a step-by-step guide to fix this, including what to tell my Salesforce admin.
 
-**What to expect:** The AI should give you a checklist of Salesforce admin settings to enable (API Enabled, object permissions, field-level security) and code to verify access.
+You should get back a checklist of Salesforce admin settings to enable (API Enabled, object permissions, field-level security) and code to verify access.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > The fix didn't work. My admin says permissions are set correctly but I still get 403. Here's the full error response: [paste response]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Salesforce permissions), ChatGPT-4 (good admin step-by-step guides), Cursor (if you want inline code fixes)
 
 </div>
 

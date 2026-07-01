@@ -49,19 +49,17 @@ if resp.json().get("error") == "user_is_bot":
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a "user_is_bot" error from the Slack API.
 > The response is: {"ok":false,"error":"user_is_bot"}
 > I'm using a bot token (xoxb-) to call users.setPresence.
 > Please give me a step-by-step fix with working Python code that shows how to use a user token instead.
 
-**What to expect:** The AI should explain the difference between bot and user tokens and show you how to get a user token through Slack's OAuth flow.
+You should get back the difference between bot and user tokens and how to get a user token through Slack's OAuth flow.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > The fix didn't work. I got a user token but still get user_is_bot. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Slack token types), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

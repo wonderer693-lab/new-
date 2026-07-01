@@ -50,19 +50,17 @@ if resp.status_code == 400:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 400 Bad Request error from the HubSpot API when trying to create a contact.
 > The error message says "Invalid input" and "Property value is not valid."
 > I'm sending this data: [paste your JSON payload].
 > Please tell me which fields are wrong and give me the corrected payload.
 
-**What to expect:** The AI should identify the invalid property names or data types and give you a corrected JSON payload that matches HubSpot's schema.
+The AI should return identify the invalid property names or data types and give you a corrected JSON payload that matches HubSpot's schema.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. Here's the full error response: [paste the error JSON]. Please debug this step by step.
-
-**Best AI tools for this:** Claude (best at explaining validation rules), ChatGPT-4 (good at fixing JSON payloads), Cursor (if you want inline code fixes)
 
 </div>
 

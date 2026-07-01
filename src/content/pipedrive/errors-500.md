@@ -53,19 +53,17 @@ def pipedrive_call(url, max_retries=4):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 500 Internal Server Error from the Pipedrive API.
 > The error message is: "Internal Server Error" with no additional details.
 > My integration was working fine but now some calls fail with 500.
 > Please give me code to retry with exponential backoff and detect if it's a Pipedrive-wide outage.
 
-**What to expect:** The AI should give you a retry strategy with backoff and code to check the Pipedrive status page for outages.
+You should get a retry strategy with backoff and code to check the Pipedrive status page for outages.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm still getting 500 errors after retries. Here's the endpoint: [paste URL]. Is Pipedrive down?
-
-**Best AI tools for this:** Claude (best at explaining server errors), ChatGPT-4 (good retry code), Cursor (if you want inline code fixes)
 
 </div>
 

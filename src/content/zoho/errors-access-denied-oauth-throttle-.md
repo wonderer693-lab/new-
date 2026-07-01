@@ -48,19 +48,17 @@ if "OAuth throttle" in resp.text:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting an "Access Denied (OAuth throttle)" error from the Zoho API.
 > The error message is: "Made too many OAuth token requests continuously"
 > I'm using a Zoho CRM integration that refreshes OAuth tokens.
 > Please give me a step-by-step fix with working Python code that caches tokens and adds delays between refresh calls.
 
-**What to expect:** The AI should give you a token manager that caches access tokens and spaces out refresh calls to stay under Zoho's 10-per-10-minute limit.
+The response should give you a token manager that caches access tokens and spaces out refresh calls to stay under Zoho's 10-per-10-minute limit.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I'm still getting OAuth throttle errors. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

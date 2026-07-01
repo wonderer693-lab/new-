@@ -58,16 +58,14 @@ for p in persons_no_email[:5]:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating Pipedrive with Mailchimp and the Mailchimp audience is smaller than expected. Pipedrive allows persons without email, but Mailchimp requires email as the primary key. My sync silently skips these contacts with no error. How do I detect and handle missing emails?
 
-**What to expect:** The AI should help you add email validation, log skipped contacts, and set up data enrichment workflows.
+The AI should provide help adding email validation, logging skipped contacts, and setting up data enrichment workflows.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I added validation but some Pipedrive persons have email arrays with empty values like [{value: ''}]. How do I handle these edge cases?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

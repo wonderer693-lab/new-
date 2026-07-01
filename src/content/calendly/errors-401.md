@@ -52,19 +52,17 @@ new_token = resp.json()["access_token"]
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting a 401 Unauthorized error from the Calendly API.
 > The error message is: "Invalid or missing token"
 > I'm using an OAuth integration that connects to Calendly.
 > Please give me a step-by-step fix with working Python code that handles token refresh.
 
-**What to expect:** The AI should give you a token refresh function and explain the difference between OAuth tokens and Personal Access Tokens.
+The response should give you a token refresh function and explain the difference between OAuth tokens and Personal Access Tokens.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I'm still getting 401 errors. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

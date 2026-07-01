@@ -52,19 +52,17 @@ access_token = resp.json()["access_token"]
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting a 401 Unauthorized error from the Salesforce API.
 > The error message is: "INVALID_SESSION_ID" — "Session expired or invalid"
 > I'm using OAuth to authenticate with Salesforce.
 > Please give me a step-by-step fix with working Python code that auto-refreshes the token when it expires.
 
-**What to expect:** The AI should give you a token refresh function with auto-retry logic that detects 401 errors and refreshes the token automatically.
+The response should give you a token refresh function with auto-retry logic that detects 401 errors and refreshes the token automatically.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I'm still getting 401 errors after refreshing. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

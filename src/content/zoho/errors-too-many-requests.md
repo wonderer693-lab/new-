@@ -47,19 +47,17 @@ print(f"Daily credit limit: {limit_info.get('api_limit')}")
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Try this prompt in ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a "TOO_MANY_REQUESTS" error from the Zoho CRM API.
 > The error message is: "Daily credit limit exceeded"
 > I'm running a Zoho integration that makes many API calls throughout the day.
 > Please give me a step-by-step fix with working Python code that monitors remaining credits, uses UPSERT to reduce calls, and implements retry logic for when credits run low.
 
-**What to expect:** The AI should give you code that checks remaining credits before each call, switches to UPSERT to halve credit usage, and pauses when credits are low.
+The AI should outline code that checks remaining credits before each call, switches to UPSERT to halve credit usage, and pauses when credits are low.
 
-**If it doesn't work**, add this follow-up:
+Need more? Follow up with:
 > The fix didn't work. I'm still running out of daily credits. Here's my Zoho edition and how many calls I make per day: [details]. Please help me optimize or decide if I need to upgrade.
-
-**Best AI tools for this:** Claude (best at explaining API credit systems), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

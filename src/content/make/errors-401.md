@@ -49,19 +49,17 @@ if resp.status_code == 401:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting a 401 Unauthorized error from Make (Integromat).
 > The error message is: "Unauthorized — invalid or missing token"
 > I'm trying to connect to Make's API or a connected app's authentication expired.
 > Please give me a step-by-step fix to re-authenticate and update my token.
 
-**What to expect:** The AI should walk you through regenerating your Make API token and updating your integration configuration.
+Expect the AI to walk you through regenerating your Make API token and updating your integration configuration. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. I'm still getting 401 errors. Here's what I tried: [paste your steps]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Make authentication), ChatGPT-4 (good at token management), Cursor (if you want inline code fixes)
 
 </div>
 

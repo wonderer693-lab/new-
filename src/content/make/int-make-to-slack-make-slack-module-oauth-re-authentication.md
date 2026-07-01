@@ -58,19 +58,17 @@ print(resp.json())  # Should show {"ok": true}
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > My Make (Integromat) scenario that posts to Slack has stopped working.
 > The error message is: "Connection Error" on the Slack module.
 > The scenario shows as "paused" in Make dashboard.
 > Please give me step-by-step instructions to fix this and prevent it from happening again.
 
-**What to expect:** The AI should walk you through re-authorizing the Slack connection in Make and setting up an error handler for alerts.
+You should get a walkthrough of re-authorizing the Slack connection in Make and setting up an error handler for alerts.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I re-authorized but the scenario still shows "Connection Error." The test connection button says "invalid_auth." What should I do?
-
-**Best AI tools for this:** ChatGPT-4 (good at Make/Slack UI navigation), Claude (good at explaining OAuth token lifecycle)
 
 </div>
 

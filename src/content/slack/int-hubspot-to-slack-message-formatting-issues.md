@@ -60,16 +60,14 @@ print(json.dumps(deal_card, indent=2))
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > I'm integrating HubSpot with Slack and deal notifications look like walls of plain text. Amounts show as raw numbers (1000000 instead of $1,000,000), dates are ISO strings, and there's no formatting. How do I use Slack Block Kit to create properly formatted deal cards?
 
-**What to expect:** The AI should help you build Block Kit deal card templates with proper currency formatting and mrkdwn styling.
+You should get help building Block Kit deal card templates with proper currency formatting and mrkdwn styling.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I built a Block Kit template but HubSpot product names with asterisks break the formatting. How do I escape mrkdwn special characters?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

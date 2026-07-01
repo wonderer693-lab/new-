@@ -49,19 +49,17 @@ print(f"Valid contact IDs: {valid_ids}")
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 404 Not Found error from the ActiveCampaign API.
 > The error message is: "Requested resource does not exist"
 > I'm trying to access a contact by ID but it says it doesn't exist.
 > Please give me a step-by-step fix with working Python code to find valid IDs.
 
-**What to expect:** The AI should show you how to list existing resources, validate IDs before using them, and handle 404 errors gracefully.
+The AI should return code that lists existing resources, validates IDs before using them, and handles 404 errors gracefully.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting 404 errors even with IDs I got from the list endpoint. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining REST resource patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

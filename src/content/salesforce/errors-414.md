@@ -49,19 +49,17 @@ print(resp.json()["records"])
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 414 URI Too Long error from the Salesforce API.
 > The error message is: "Request-URI Too Large"
 > I'm running a SOQL query with hundreds of IDs in a WHERE IN clause using GET.
 > Please give me a step-by-step fix with working Python code that uses POST instead and chunks large queries.
 
-**What to expect:** The AI should give you code that switches to POST for the query endpoint and splits large IN clauses into batches of 200 IDs.
+A good response will give you code that switches to POST for the query endpoint and splits large IN clauses into batches of 200 IDs.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I switched to POST but I'm still getting errors with very large queries. Here's my query: [paste query]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining SOQL optimization), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

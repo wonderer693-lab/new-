@@ -49,19 +49,17 @@ if resp.json().get("channel", {}).get("is_archived"):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting an "is_archived" error from the Slack API when trying to post a message.
 > The response is: {"ok":false,"error":"is_archived"}
 > My bot needs to send notifications to this channel.
 > Please give me a step-by-step fix with working Python code that checks if a channel is archived and uses a fallback channel.
 
-**What to expect:** The AI should give you code that checks channel status before posting and routes messages to a backup channel if the original is archived.
+You should get code that checks channel status before posting and routes messages to a backup channel if the original is archived.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm still getting is_archived even after switching channels. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Slack channel management), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

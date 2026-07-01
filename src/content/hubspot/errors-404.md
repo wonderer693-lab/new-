@@ -50,19 +50,17 @@ if resp.status_code == 404:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 404 Not Found error from the HubSpot API.
 > The error says "Object not found" and "record does not exist."
 > I'm trying to look up a contact by ID but it keeps failing.
 > Please give me code that searches for the contact by email instead, and handles the case where the record was deleted.
 
-**What to expect:** The AI should give you a search-based lookup function that finds records by email or other properties instead of relying on a specific ID.
+A good response will give you a search-based lookup function that finds records by email or other properties instead of relying on a specific ID.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. The record might be in a different HubSpot account or object type. How do I check multiple object types?
-
-**Best AI tools for this:** Claude (best at explaining search vs. direct lookup), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

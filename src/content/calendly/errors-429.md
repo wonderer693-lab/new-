@@ -50,19 +50,17 @@ if resp.status_code == 429:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Send this to your AI coding assistant and ask it to generate working code:
 
 > I'm getting a 429 Too Many Requests error from the Calendly API.
 > The error message is: "Rate limit exceeded"
 > I'm using an integration that makes multiple API calls to Calendly.
 > Please give me a step-by-step fix with working Python code that handles rate limiting with exponential backoff.
 
-**What to expect:** The AI should give you a retry function with exponential backoff and jitter, and explain Calendly's rate limit behavior.
+You want code that the AI should give you a retry function with exponential backoff and jitter, and explain Calendly's rate limit behavior.
 
-**If it doesn't work**, add this follow-up:
+If the generated code doesn't handle the edge cases, refine with:
 > The fix didn't work. I'm still getting 429 errors. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

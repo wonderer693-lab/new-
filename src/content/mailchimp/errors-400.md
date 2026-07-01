@@ -50,19 +50,17 @@ else:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 400 Bad Request error from the Mailchimp API.
 > The error message is: "Invalid Resource" or "email address is invalid"
 > I'm trying to add a subscriber to a Mailchimp list using their API.
 > Please give me a step-by-step fix with working Python code that validates the data before sending.
 
-**What to expect:** The AI should give you email validation code and show you how to check merge field types match what Mailchimp expects.
+A good response will give you email validation code and show you how to check merge field types match what Mailchimp expects.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting 400 errors. Here's the full error response: [paste the JSON]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining validation rules), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

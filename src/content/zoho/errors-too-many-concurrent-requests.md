@@ -47,19 +47,17 @@ for record in records:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into any AI tool:
 
 > I'm getting a "TOO_MANY_CONCURRENT_REQUESTS" error from the Zoho CRM API.
 > The error message is: "Exceeded concurrency limit for org/app"
 > I'm running multiple parallel API calls to Zoho using asyncio/threading.
 > Please give me a step-by-step fix with working Python code that serializes requests with a semaphore to stay under Zoho's 5 concurrent request limit.
 
-**What to expect:** The AI should give you code that uses a semaphore or queue to limit parallel requests to 3 at a time, well under Zoho's concurrency cap.
+Expect back the AI should give you code that uses a semaphore or queue to limit parallel requests to 3 at a time, well under Zoho's concurrency cap.
 
-**If it doesn't work**, add this follow-up:
+Still hitting the error? Send:
 > The fix didn't work. I'm still getting concurrent request errors. Here's my current setup: [paste your code and worker count]. Please help me reduce parallelism.
-
-**Best AI tools for this:** Claude (best at explaining concurrency patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

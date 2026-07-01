@@ -48,19 +48,17 @@ if resp.json().get("error") == "account_inactive":
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting an "account_inactive" error from the Slack API.
 > The response is: {"ok":false,"error":"account_inactive"}
 > My integration was working before but now it stopped.
 > Please explain what this means and give me a step-by-step fix with working Python code.
 
-**What to expect:** The AI should explain that the Slack user account behind your token was deactivated and walk you through re-authorizing with an active account.
+The response should explain that the Slack user account behind your token was deactivated and walk you through re-authorizing with an active account.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I still get account_inactive after re-installing. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Slack auth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

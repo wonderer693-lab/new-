@@ -53,19 +53,17 @@ else:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 404 Not Found error from the Pipedrive API.
 > The error message is: "Resource unavailable"
 > I'm trying to look up a deal by ID but Pipedrive says it doesn't exist.
 > Please give me code to verify the ID is correct and handle deleted records gracefully.
 
-**What to expect:** The AI should give you code that checks if a record exists before acting on it and cleans up stale references.
+A good response will give you code that checks if a record exists before acting on it and cleans up stale references.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting 404 errors. Here's the deal ID I'm using: [paste ID]. Please help me debug.
-
-**Best AI tools for this:** Claude (best at explaining data sync issues), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

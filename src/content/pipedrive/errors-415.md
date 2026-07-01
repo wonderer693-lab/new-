@@ -51,19 +51,17 @@ if resp.status_code == 415:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 415 error from the Pipedrive API.
 > The error message is: "Feature is not enabled for the account"
 > I'm trying to use webhooks but my plan might not support them.
 > Please give me code to detect which features are available and suggest fallback approaches.
 
-**What to expect:** The AI should give you feature detection code and alternative approaches when premium features aren't available on your plan.
+The AI should return feature detection code and alternative approaches when premium features aren't available on your plan.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. Here's the endpoint I'm calling: [paste URL]. Is there an alternative way to do this?
-
-**Best AI tools for this:** Claude (best at explaining plan features), ChatGPT-4 (good fallback code), Cursor (if you want inline code fixes)
 
 </div>
 

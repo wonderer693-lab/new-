@@ -51,19 +51,17 @@ new_token = resp.json()["access_token"]
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting an "INVALID_OAUTHTOKEN" error from the Zoho CRM API.
 > The error message is: "Access token is invalid or expired"
 > I have a refresh token but I'm not sure how to use it to get a new access token.
 > Please give me a step-by-step fix with working Python code that auto-refreshes the token before it expires.
 
-**What to expect:** The AI should give you a token manager class that tracks expiry and refreshes automatically, so you never hit this error again.
+Expect the AI to give you a token manager class that tracks expiry and refreshes automatically, so you never hit this error again. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. My refresh token also seems invalid. Here's what I tried: [paste your code]. Please help me re-authorize.
-
-**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

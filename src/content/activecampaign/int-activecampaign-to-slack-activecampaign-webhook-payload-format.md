@@ -56,16 +56,14 @@ def render(event):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating ActiveCampaign with Slack and my Slack notifications show blank fields. The ActiveCampaign webhook sends different JSON formats for contact events vs deal events, and my single Slack template can't handle both. How do I parse each event type and render the correct fields in Slack?
 
-**What to expect:** The AI should help you create separate Slack templates per ActiveCampaign event type and add routing logic.
+Expect back help creating separate Slack templates per ActiveCampaign event type and adding routing logic.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I split my Zaps by event type but some ActiveCampaign webhooks still arrive with unexpected fields. How do I add a fallback Slack message for unknown event types?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

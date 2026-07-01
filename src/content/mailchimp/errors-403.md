@@ -49,19 +49,17 @@ print(f"Role: {resp.json().get('account_role')}")
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting a 403 Forbidden error from the Mailchimp API.
 > The error message is: "User role lacks permission for the action"
 > I'm using an API key to add subscribers to a Mailchimp list.
 > Please give me a step-by-step fix and explain which Mailchimp user roles can use the API.
 
-**What to expect:** The AI should explain Mailchimp's role system (Admin, Manager, Read Only) and walk you through generating a new API key with the right permissions.
+Expect the AI to explain Mailchimp's role system (Admin, Manager, Read Only) and walk you through generating a new API key with the right permissions. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. I'm still getting 403 errors. My account role is [paste the role from the API response]. Please help me fix the permissions.
-
-**Best AI tools for this:** Claude (best at explaining permissions), ChatGPT-4 (good step-by-step guides), Cursor (if you want inline code fixes)
 
 </div>
 

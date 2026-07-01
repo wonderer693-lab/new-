@@ -52,19 +52,17 @@ for wh in webhooks:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 422 Unprocessable Entity error from the Pipedrive API.
 > The error message is: "Webhooks limit reached"
 > I need to create a new webhook but Pipedrive says I have too many.
 > Please give me code to list, audit, and delete unused webhooks so I can create new ones.
 
-**What to expect:** The AI should give you a webhook management script that lists all webhooks, identifies stale ones, and deletes them safely.
+A good response will give you a webhook management script that lists all webhooks, identifies stale ones, and deletes them safely.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I deleted webhooks but still get 422. Here's my current webhook count: [paste count]. Please help.
-
-**Best AI tools for this:** Claude (best at explaining limits), ChatGPT-4 (good cleanup scripts), Cursor (if you want inline code fixes)
 
 </div>
 

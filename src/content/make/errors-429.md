@@ -50,19 +50,17 @@ if resp.status_code == 429:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into any AI tool:
 
 > I'm getting a 429 Too Many Requests error from Make (Integromat).
 > The error message is: "Rate limit exceeded"
 > I'm running a Make scenario that makes many API calls and it's hitting the rate limit.
 > Please give me a step-by-step fix to reduce scenario frequency and add delays.
 
-**What to expect:** The AI should help you adjust your scenario scheduling and add proper delays between API calls.
+Expect back the AI should help you adjust your scenario scheduling and add proper delays between API calls.
 
-**If it doesn't work**, add this follow-up:
+Still hitting the error? Send:
 > The fix didn't work. I'm still getting 429 errors. Here's my scenario schedule: [paste settings]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good at scheduling optimization), Cursor (if you want inline code fixes)
 
 </div>
 

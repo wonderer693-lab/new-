@@ -52,19 +52,17 @@ if resp.json().get("error") == "too_many_requests":
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into any AI tool:
 
 > I'm getting a "too_many_requests" error from the Slack API.
 > The response is: {"ok":false,"error":"too_many_requests"} (with HTTP 200, not 429).
 > I'm making multiple Slack API calls at the same time from different parts of my app.
 > Please give me a step-by-step fix with working Python code that spaces out Slack API requests to avoid burst limits.
 
-**What to expect:** The AI should give you a rate limiter that adds delays between requests and explains the difference between Slack's burst limits and per-method limits.
+Expect back the AI should give you a rate limiter that adds delays between requests and explains the difference between Slack's burst limits and per-method limits.
 
-**If it doesn't work**, add this follow-up:
+Still hitting the error? Send:
 > The fix didn't work. I added delays but still get too_many_requests. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

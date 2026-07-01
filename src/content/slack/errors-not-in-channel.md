@@ -49,19 +49,17 @@ if resp.json().get("ok"):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting a "not_in_channel" error from the Slack API when trying to post a message.
 > The response is: {"ok":false,"error":"not_in_channel"}
 > My bot needs to send messages to this channel but hasn't been added yet.
 > Please give me a step-by-step fix with working Python code that invites the bot to the channel and then posts a message.
 
-**What to expect:** The AI should give you code that checks if the bot is in the channel, invites it if not, and then sends the message.
+Expect the AI to give you code that checks if the bot is in the channel, invites it if not, and then sends the message. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. The bot still can't post after joining. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Slack bot permissions), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

@@ -48,19 +48,17 @@ resp = requests.post(f"{base_url}/Leads", headers=headers, json=payload)
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a "MANDATORY_NOT_FOUND" error from the Zoho CRM API.
 > The error message is: "required field not found" and the missing field is "Last_Name".
 > I'm trying to create a new Lead/Contact in Zoho.
 > Please give me a step-by-step fix with working Python code that fetches all mandatory fields from Zoho and validates the payload before sending.
 
-**What to expect:** The AI should give you code that dynamically fetches required fields from Zoho's schema and validates your data before making the API call.
+The AI should return code that dynamically fetches required fields from Zoho's schema and validates your data before making the API call.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting MANDATORY_NOT_FOUND for a custom field. Here's the field name: [field name]. Please help me find the correct api_name.
-
-**Best AI tools for this:** Claude (best at explaining Zoho field schemas), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

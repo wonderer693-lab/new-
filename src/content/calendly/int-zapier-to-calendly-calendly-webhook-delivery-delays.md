@@ -56,16 +56,14 @@ print(f"End-to-end latency: {latency}s")
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > I'm integrating Zapier with Calendly and my notifications are delayed by 1-15 minutes. Calendly webhooks take 30-120 seconds to deliver, and my Zapier polling trigger adds even more delay. How do I switch to an instant trigger for real-time Calendly notifications?
 
-**What to expect:** The AI should help you switch from a polling trigger to an instant webhook trigger and reduce end-to-end latency.
+You should get help switching from a polling trigger to an instant webhook trigger and reducing end-to-end latency.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I switched to an instant trigger but I'm still seeing 30-60 second delays. Is this normal for Calendly webhook delivery?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

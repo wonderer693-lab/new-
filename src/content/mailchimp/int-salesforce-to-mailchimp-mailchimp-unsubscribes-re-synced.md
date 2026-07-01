@@ -59,16 +59,14 @@ else:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating Salesforce with Mailchimp and unsubscribed contacts are getting re-subscribed. My sync sends 'status: subscribed' on every update, which overrides the member's opt-out. How do I prevent re-subscribing people who opted out while still updating their other fields?
 
-**What to expect:** The AI should help you add a status guard that skips unsubscribed members and uses status_if_new for new members only.
+The AI should provide a status guard that skips unsubscribed members and uses status_if_new for new members only.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I removed the status field but new contacts aren't getting subscribed. Should I use status_if_new instead?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

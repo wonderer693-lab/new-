@@ -49,19 +49,17 @@ print(f"Organization: {user['current_organization']}")
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 403 Forbidden error from the Calendly API.
 > The error message is: "Insufficient permissions or subscription level"
 > I'm trying to access Calendly resources with my integration.
 > Please give me a step-by-step fix to check my OAuth scopes and subscription level.
 
-**What to expect:** The AI should help you check your account permissions and explain which Calendly endpoints need a paid plan.
+You should get back help checking your account permissions and which Calendly endpoints need a paid plan.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > The fix didn't work. I'm still getting 403 errors. Here's my account info: [paste response from /users/me]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining permission models), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

@@ -50,19 +50,17 @@ if resp.status_code == 400:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 400 Bad Request error from the Salesforce API.
 > The error message is: "INVALID_FIELD" or "MALFORMED_QUERY"
 > I'm sending a POST request to create a Contact record.
 > Please give me a step-by-step fix with working Python code that validates the payload before sending.
 
-**What to expect:** The AI should give you a payload validator that checks field names against the Salesforce SObject describe endpoint and fixes JSON formatting issues.
+A good response will give you a payload validator that checks field names against the Salesforce SObject describe endpoint and fixes JSON formatting issues.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting 400 errors. Here's my payload: [paste your payload]. Here's the error: [paste error response]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Salesforce field types), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

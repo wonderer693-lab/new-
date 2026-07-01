@@ -51,19 +51,17 @@ if resp.status_code == 429:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Try this prompt in ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a "rate_limited" error from the Slack API with HTTP 429.
 > The response is: {"ok":false,"error":"rate_limited"} and there's a Retry-After header.
 > I'm calling conversations.list too frequently.
 > Please give me a step-by-step fix with working Python code that handles Slack rate limiting with retry logic.
 
-**What to expect:** The AI should give you a retry function that reads the Retry-After header, waits the right amount of time, and tries again.
+The AI should outline a retry function that reads the Retry-After header, waits the right amount of time, and tries again.
 
-**If it doesn't work**, add this follow-up:
+Need more? Follow up with:
 > The fix didn't work. I'm still getting rate_limited after adding delays. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

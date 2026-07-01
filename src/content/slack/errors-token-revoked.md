@@ -48,19 +48,17 @@ if resp.json().get("error") == "token_revoked":
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a "token_revoked" error from the Slack API.
 > The response is: {"ok":false,"error":"token_revoked"}
 > My integration was working fine until someone revoked the token.
 > Please give me a step-by-step fix with working Python code to detect this error and trigger a re-authorization flow.
 
-**What to expect:** The AI should explain that revoked tokens can't be recovered and walk you through generating a new install URL for re-authorization.
+You should get back an explanation that revoked tokens can't be recovered and a walkthrough for generating a new install URL for re-authorization.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > The fix didn't work. I re-installed the app but still get token_revoked. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Slack OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

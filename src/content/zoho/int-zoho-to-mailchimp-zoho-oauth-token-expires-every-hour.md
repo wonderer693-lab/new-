@@ -66,16 +66,14 @@ def get_token(client_id, client_secret, refresh_token):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating Zoho CRM with Mailchimp and the sync silently stops after about an hour. Zoho OAuth tokens expire every 60 minutes, and my middleware doesn't refresh them -- the remaining contacts get 401 errors. How do I auto-refresh the token before it expires?
 
-**What to expect:** The AI should help you implement proactive token refresh and retry-on-401 logic.
+Expect back help implementing proactive token refresh and retry-on-401 logic.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I added auto-refresh but I'm getting 'invalid_code' errors on refresh. Could it be that I'm reusing a rotated refresh token?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

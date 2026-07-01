@@ -57,16 +57,14 @@ for i, batch in enumerate(batches):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating Pipedrive with Mailchimp and my bulk sync fails partway through. Mailchimp says 'Daily Add Limit Reached' after adding about 500 contacts. How do I spread a large Pipedrive sync across multiple days to stay under Mailchimp's daily add limit?
 
-**What to expect:** The AI should help you implement multi-day batching and pre-filter contacts that already exist in Mailchimp.
+Expect back help implementing multi-day batching and pre-filtering contacts that already exist in Mailchimp.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I set up multi-day batching but some contacts are still failing. Could it be that contacts I'm trying to add already exist in Mailchimp and are counting toward the daily limit?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

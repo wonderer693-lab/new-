@@ -50,19 +50,17 @@ if remaining < 100:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Try this prompt in ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 429 REQUEST_LIMIT_EXCEEDED error from the Salesforce API.
 > The error message is: "API limit exceeded"
 > My integration makes many API calls to Salesforce throughout the day.
 > Please give me a step-by-step fix with working Python code that uses Composite API batching and monitors remaining API calls.
 
-**What to expect:** The AI should give you code that batches requests using the Composite API, monitors your daily limit, and implements backoff when you're running low.
+The AI should outline code that batches requests using the Composite API, monitors your daily limit, and implements backoff when you're running low.
 
-**If it doesn't work**, add this follow-up:
+Need more? Follow up with:
 > The fix didn't work. I'm still hitting the daily limit even with batching. Here's my usage pattern: [describe how many calls per day]. Please suggest a better strategy.
-
-**Best AI tools for this:** Claude (best at explaining Salesforce API limits), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

@@ -54,19 +54,17 @@ if resp.status_code == 403:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 403 Forbidden error from the Pipedrive API.
 > The error message is: "Request not allowed"
 > I'm not sure if it's a permission issue, an entity limit, or a Cloudflare block.
 > Please give me code to detect which type of 403 it is and how to fix each one.
 
-**What to expect:** The AI should give you detection code that identifies the block type and provides specific fixes for each scenario.
+You should get back detection code that identifies the block type and provides specific fixes for each scenario.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > The fix didn't work. I'm still getting 403 errors. Here's the full response: [paste response]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining permission models), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

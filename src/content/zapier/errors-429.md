@@ -50,19 +50,17 @@ if resp.status_code == 429:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Try this prompt in ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 429 Too Many Requests error from Zapier.
 > The error message says: "Rate limit exceeded" with a Retry-After header.
 > My Zaps are running too many API calls and Zapier is throttling me.
 > Please give me a step-by-step fix to slow down my Zaps and avoid hitting this rate limit again.
 
-**What to expect:** The AI should show you how to add delays between Zap actions, reduce polling frequency, and set up retry logic.
+The AI should outline how to add delays between Zap actions, reduce polling frequency, and set up retry logic.
 
-**If it doesn't work**, add this follow-up:
+Need more? Follow up with:
 > I added delays but I'm still getting 429 errors. Here's my Zap setup: [describe your Zaps]. What else can I do?
-
-**Best AI tools for this:** Claude (great at explaining rate limit strategies), ChatGPT-4 (good at Zapier scheduling tips), Cursor (if you're writing custom retry code)
 
 </div>
 

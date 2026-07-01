@@ -57,16 +57,14 @@ for f in r.json()["data"]:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating Pipedrive with Mailchimp and after migrating to Pipedrive API v2, all custom field merge fields in Mailchimp are blank. Pipedrive v2 uses 40-character hash keys instead of numeric IDs for custom fields. How do I update my field mapping?
 
-**What to expect:** The AI should help you fetch the v2 field schema, build a hash-key-to-merge-tag mapping, and update your middleware.
+Expect back help fetching the v2 field schema, building a hash-key-to-merge-tag mapping, and updating your middleware.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I updated the field mapping but email fields are also blank. Did Pipedrive v2 change the email format too?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

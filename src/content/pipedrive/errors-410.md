@@ -53,19 +53,17 @@ resp = requests.get(
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 410 Gone error from the Pipedrive API.
 > The error message is: "Old resource permanently unavailable (deprecated v1 endpoints)"
 > My integration uses v1 endpoints and I need to migrate to v2.
 > Please give me a step-by-step migration guide with code examples for the most common endpoints.
 
-**What to expect:** The AI should give you a mapping of v1 to v2 endpoints and updated code with v2 authentication and cursor-based pagination.
+You should get a mapping of v1 to v2 endpoints and updated code with v2 authentication and cursor-based pagination.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The migration didn't work. Here's my v1 code: [paste your code]. Please convert it to v2.
-
-**Best AI tools for this:** Claude (best at explaining API migrations), ChatGPT-4 (good code conversion), Cursor (if you want inline code fixes)
 
 </div>
 

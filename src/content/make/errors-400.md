@@ -49,19 +49,17 @@ if resp.status_code == 400:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 400 Bad Request error from Make (Integromat).
 > The error message is: "Invalid request parameters"
 > I'm trying to configure a scenario module in Make.
 > Please give me a step-by-step fix to find and correct the invalid settings.
 
-**What to expect:** The AI should walk you through checking each module's required fields and data types in your Make scenario.
+A good response will walk you through checking each module's required fields and data types in your Make scenario.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting 400 errors. Here's what my module settings look like: [paste your settings]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Make module settings), ChatGPT-4 (good at spotting missing fields), Cursor (if you want inline code fixes)
 
 </div>
 

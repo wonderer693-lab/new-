@@ -47,19 +47,17 @@ resp = requests.post(f"{base_url}/Leads/upsert", headers=headers, json=payload)
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a "DUPLICATE_DATA" error from the Zoho CRM API.
 > The error message is: "Record with same unique field value already exists"
 > I'm trying to create a new Lead/Contact but Zoho says it's a duplicate.
 > Please give me a step-by-step fix with working Python code that uses UPSERT with duplicate_check_fields to handle existing records.
 
-**What to expect:** The AI should give you code that uses the UPSERT endpoint to either create new records or update existing ones, avoiding the duplicate error entirely.
+A good response will give you code that uses the UPSERT endpoint to either create new records or update existing ones, avoiding the duplicate error entirely.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting DUPLICATE_DATA errors. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Zoho API patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

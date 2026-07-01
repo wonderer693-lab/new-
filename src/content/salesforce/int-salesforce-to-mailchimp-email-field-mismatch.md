@@ -61,16 +61,14 @@ def to_mailchimp(sf_contact):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > I'm integrating Salesforce with Mailchimp and contacts are silently missing from the audience. Salesforce contacts without an Email field (or with an alternate email field) are skipped by the sync. How do I transform and coalesce email fields so more contacts reach Mailchimp?
 
-**What to expect:** The AI should help you coalesce email fields, normalize addresses, and set up skip logging.
+You should get help coalescing email fields, normalizing addresses, and setting up skip logging.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I added a formula field but some contacts still have no email at all. How do I set up a data enrichment workflow for these contacts?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

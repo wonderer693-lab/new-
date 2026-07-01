@@ -56,16 +56,14 @@ return { verified: true };
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating Zapier with Calendly and webhook events are arriving unverified. I'm using 'Webhooks by Zapier' as the trigger and it doesn't check the Calendly-Webhook-Signature header. How do I verify the HMAC signature to ensure webhooks are authentic?
 
-**What to expect:** The AI should walk you through verifying Calendly's HMAC-SHA256 signature in a Zapier code step, or switching to the official Calendly trigger.
+The AI should provide a walkthrough of verifying Calendly's HMAC-SHA256 signature in a Zapier code step, or switching to the official Calendly trigger.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I added signature verification but Calendly is still retrying events. Could the issue be that I'm returning 200 for invalid signatures instead of 401?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

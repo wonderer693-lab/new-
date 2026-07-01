@@ -49,19 +49,17 @@ print("Created or updated successfully" if resp.status_code in (200, 207) else "
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 409 Conflict error from the HubSpot API when creating contacts.
 > The error says "Contact already exists" and "duplicate email."
 > I'm using POST /crm/v3/objects/contacts to create new contacts.
 > Please give me code that uses upsert instead of create, so it updates existing contacts instead of failing.
 
-**What to expect:** The AI should give you code using the batch upsert endpoint with `idProperty: "email"` that creates new records and updates existing ones without errors.
+You should get code using the batch upsert endpoint with `idProperty: "email"` that creates new records and updates existing ones without errors.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm still getting 409 errors in batch operations. Here's my payload: [paste it]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining upsert vs. create), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

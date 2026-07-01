@@ -50,19 +50,17 @@ if resp.status_code == 423:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Try this prompt in ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 423 Locked error from the HubSpot API.
 > The error says "Resource is locked" and "concurrent modification."
 > I'm updating the same contact record multiple times in quick succession.
 > Please give me code that adds a delay between writes and retries automatically when a 423 occurs.
 
-**What to expect:** The AI should give you a retry function with a 2-3 second delay that handles locked records gracefully and prevents rapid-fire writes.
+The AI should outline a retry function with a 2-3 second delay that handles locked records gracefully and prevents rapid-fire writes.
 
-**If it doesn't work**, add this follow-up:
+Need more? Follow up with:
 > The fix didn't work. I'm still getting 423 errors even with delays. I have multiple threads updating the same record. How do I add a write queue?
-
-**Best AI tools for this:** Claude (best at explaining concurrency patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

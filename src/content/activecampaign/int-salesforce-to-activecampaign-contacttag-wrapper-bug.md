@@ -56,16 +56,14 @@ def attach_tag(contact_id, tag_id, ac_url, ac_token):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > I'm integrating Salesforce with ActiveCampaign and getting HTTP 400 errors when trying to tag contacts. The error says 'Validation failed: Contact must be a valid contact id, Tag must be a valid tag id' but my IDs are correct. What's the correct payload format for the /contactTags endpoint?
 
-**What to expect:** The AI should explain the required contactTag wrapper and help you fix the payload structure.
+You should get an explanation of the required contactTag wrapper and help fixing the payload structure.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I fixed the wrapper but I'm still getting 400 errors. Could the issue be that I'm sending integer IDs instead of string IDs?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

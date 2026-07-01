@@ -50,19 +50,17 @@ if resp.status_code == 402:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting a 402 Payment Required error from the Pipedrive API.
 > The error message is: "Company account not open (trial expired, payment not entered)"
 > My integration was working before but now every API call fails with 402.
 > Please explain what's happening and give me code to detect and alert on this error automatically.
 
-**What to expect:** The AI should explain the billing issue and give you monitoring code that alerts your team when 402 errors occur.
+The response should explain the billing issue and give you monitoring code that alerts your team when 402 errors occur.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > I've fixed billing but still getting 402. How long does it take for the API to start working again?
-
-**Best AI tools for this:** Claude (best at explaining billing flows), ChatGPT-4 (good monitoring code), Cursor (if you want inline code fixes)
 
 </div>
 

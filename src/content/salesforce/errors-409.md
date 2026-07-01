@@ -50,19 +50,17 @@ if resp.json()["totalSize"] > 0:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 409 Conflict error from the Salesforce API.
 > The error message is: "DUPLICATE_VALUE" — a record with this value already exists.
 > I'm trying to create new Account records but duplicate rules are blocking me.
 > Please give me a step-by-step fix with working Python code that checks for duplicates before creating records.
 
-**What to expect:** The AI should give you a "find or create" pattern — search for existing records first, update if found, create if not.
+The AI should return a "find or create" pattern — search for existing records first, update if found, create if not.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting 409 errors. Here's my code: [paste your code]. The duplicate rule seems to match on fuzzy logic. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining duplicate rule logic), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

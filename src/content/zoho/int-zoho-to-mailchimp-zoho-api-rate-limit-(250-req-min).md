@@ -61,16 +61,14 @@ class ZohoLimiter:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > I'm integrating Zoho CRM with Mailchimp and bulk syncs stall after a few hundred records. Zoho returns 429 'Rate Limit Exceeded' at 250 requests/minute. How do I pace API calls and use batch queries to sync large contact lists?
 
-**What to expect:** The AI should help you implement rate limiting, batch queries, and resume bookmarks for Zoho-to-Mailchimp syncs.
+You should get help implementing rate limiting, batch queries, and resume bookmarks for Zoho-to-Mailchimp syncs.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I added rate limiting but the sync is still too slow for 10,000 contacts. Can I use Zoho's bulk export API instead of Coql?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

@@ -54,19 +54,17 @@ def pipedrive_request(url, max_retries=5):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 503 Service Unavailable error from the Pipedrive API.
 > The error message is: "Service Unavailable" — Pipedrive might be under maintenance.
 > I need my integration to handle this gracefully and recover automatically.
 > Please give me code with exponential backoff retry and a check against the Pipedrive status page.
 
-**What to expect:** The AI should give you retry code with backoff and a way to check if Pipedrive has announced maintenance.
+The AI should return retry code with backoff and a way to check if Pipedrive has announced maintenance.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. Pipedrive has been returning 503 for over an hour. Here's the status page info: [paste status]. What should I do?
-
-**Best AI tools for this:** Claude (best at explaining outage handling), ChatGPT-4 (good retry code), Cursor (if you want inline code fixes)
 
 </div>
 

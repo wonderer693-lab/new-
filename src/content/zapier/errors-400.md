@@ -49,19 +49,17 @@ if resp.status_code == 400:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 400 Bad Request error from Zapier when I try to save or run my Zap.
 > The error message says: "invalid configuration" or "Malformed request"
 > I'm setting up a Zap that connects [App A] to [App B].
 > Please walk me through how to find and fix the bad field in my Zap step settings.
 
-**What to expect:** The AI should help you identify which Zap step has the wrong data and show you how to correct it.
+You should get help identifying which Zap step has the wrong data and learn how to correct it.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. Here's the exact error message I'm seeing: [paste error]. What else could be wrong?
-
-**Best AI tools for this:** Claude (great at explaining Zapier step configs), ChatGPT-4 (good at spotting missing fields), Cursor (if you're writing custom API code)
 
 </div>
 

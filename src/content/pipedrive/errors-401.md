@@ -50,19 +50,17 @@ print(resp.status_code)
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting a 401 Unauthorized error from the Pipedrive API.
 > The error message is: "Invalid API token or OAuth access token"
 > I have an API token but I'm not sure if I'm using it correctly.
 > Please give me a step-by-step fix with working Python code for both v1 and v2 authentication.
 
-**What to expect:** The AI should show you the correct way to pass your token for each API version and help you refresh OAuth tokens.
+Expect the AI to show you the correct way to pass your token for each API version and help you refresh OAuth tokens. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. I'm still getting 401 errors. Here's my code: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining auth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

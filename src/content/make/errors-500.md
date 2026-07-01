@@ -49,19 +49,17 @@ if resp.status_code >= 500:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 500 Internal Server Error from Make (Integromat).
 > The error message is: "Internal Server Error — server error"
 > I'm running a Make scenario and Make's server is returning an error.
 > Please give me a step-by-step fix to retry the scenario and check Make's status.
 
-**What to expect:** The AI should help you set up retry logic and show you how to monitor Make's system status.
+A good response will help you set up retry logic and show you how to monitor Make's system status.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting 500 errors. Here's when it happens: [paste timing details]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining retry strategies), ChatGPT-4 (good at status monitoring), Cursor (if you want inline code fixes)
 
 </div>
 

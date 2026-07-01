@@ -60,16 +60,14 @@ def paced_slack_post(session, messages, token):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating HubSpot with Slack and bulk deal updates cause Slack to return 429 'ratelimited' errors. HubSpot fires webhooks for every deal in a bulk update, and my middleware posts each to Slack instantly. How do I pace messages or aggregate them into a summary?
 
-**What to expect:** The AI should help you implement message pacing or aggregation to stay under Slack's 1 req/sec limit.
+The AI should provide help implementing message pacing or aggregation to stay under Slack's 1 req/sec limit.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I added a 1-second delay but multiple HubSpot Zaps are still colliding on the same Slack workspace. How do I coordinate rate limiting across multiple integrations?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

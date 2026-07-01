@@ -49,19 +49,17 @@ results = resp.json().get("results", [])
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 414 URI Too Long error from the HubSpot API.
 > The error says "Request-URI Too Large."
 > I'm passing hundreds of contact IDs as query parameters in a GET request.
 > Please give me code that uses the POST batch/read endpoint instead, with batching for large ID lists.
 
-**What to expect:** The AI should give you code that sends IDs in the request body via POST instead of the URL, and splits large lists into batches of 100.
+The AI should return code that sends IDs in the request body via POST instead of the URL, and splits large lists into batches of 100.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting 414 errors. Here's my current URL: [paste it]. Please help me convert this to a POST request.
-
-**Best AI tools for this:** Claude (best at explaining batch patterns), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

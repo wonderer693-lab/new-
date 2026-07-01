@@ -56,16 +56,14 @@ for field in f["fields"]:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating Salesforce with ActiveCampaign and custom fields are syncing blank. Salesforce sends picklist values as internal names but ActiveCampaign dropdowns expect option labels. How do I map Salesforce picklist values to ActiveCampaign dropdown options correctly?
 
-**What to expect:** The AI should help you build a mapping between Salesforce picklist values and ActiveCampaign dropdown labels, and handle boolean/date conversions.
+The AI should provide a mapping between Salesforce picklist values and ActiveCampaign dropdown labels, and handle boolean/date conversions.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I mapped the dropdown values but date fields are still failing. Salesforce sends ISO timestamps -- what format does ActiveCampaign expect?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

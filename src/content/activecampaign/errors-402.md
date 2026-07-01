@@ -49,19 +49,17 @@ if resp.status_code == 402:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 402 Payment Required error from the ActiveCampaign API.
 > The error message is: "Account payment issues"
 > My integration was working before but now all API calls fail with 402.
 > Please tell me what this means and how to fix it step by step.
 
-**What to expect:** The AI should explain that this is a billing problem (not a code problem) and walk you through checking your ActiveCampaign subscription.
+You should get back an explanation that this is a billing problem (not a code problem) and a walkthrough for checking your ActiveCampaign subscription.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > I've updated my payment method but I'm still getting 402 errors. How long does it take for API access to come back?
-
-**Best AI tools for this:** ChatGPT-4 (good at explaining billing flows), Claude (clear step-by-step guidance)
 
 </div>
 

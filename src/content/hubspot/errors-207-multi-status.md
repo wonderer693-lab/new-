@@ -48,19 +48,17 @@ if resp.status_code == 207:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Send this to your AI coding assistant and ask it to generate working code:
 
 > I'm getting a 207 Multi-Status response from the HubSpot batch API.
 > Some records in my batch upsert succeeded but others failed.
 > The error message says "partial success" and I don't know which records failed.
 > Please give me Python code that parses the results array, identifies failures, and retries only the failed records.
 
-**What to expect:** The AI should give you code that loops through the `results` array, separates successes from failures, and retries only the failed items.
+You want code that the AI should give you code that loops through the `results` array, separates successes from failures, and retries only the failed items.
 
-**If it doesn't work**, add this follow-up:
+If the generated code doesn't handle the edge cases, refine with:
 > The fix didn't work. Here's the response body I'm getting: [paste your JSON]. Please help me identify which records failed and why.
-
-**Best AI tools for this:** Claude (best at explaining batch error handling), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

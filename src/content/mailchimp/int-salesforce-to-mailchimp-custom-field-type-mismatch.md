@@ -59,16 +59,14 @@ print(sf_to_mc_number("5000"))  # 5000.0
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Ask your AI coding assistant to diagnose the cross-tool issue:
 
 > I'm integrating Salesforce with Mailchimp and merge fields are blank or show raw ISO timestamps. Salesforce sends dates as full timestamps and numbers as strings, but Mailchimp expects YYYY-MM-DD dates and numeric values. How do I convert these fields correctly?
 
-**What to expect:** The AI should help you build field converters for dates, numbers, and birthdays between Salesforce and Mailchimp.
+You should get help building field converters for dates, numbers, and birthdays between Salesforce and Mailchimp.
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with:
 > I fixed dates and numbers but birthday fields are still blank. What format does Mailchimp expect for birthday merge fields?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

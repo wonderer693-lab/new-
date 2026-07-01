@@ -50,19 +50,17 @@ if resp.status_code == 420:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into any AI tool:
 
 > I'm getting a 420 "Enhance Your Calm" error from the Salesforce API.
 > The error message mentions concurrent API request limits or Edge routing issues.
 > My integration makes frequent API calls to Salesforce.
 > Please give me a step-by-step fix with working Python code that adds delays and retries for 420 errors.
 
-**What to expect:** The AI should give you a retry function with exponential backoff and explain how to space out API calls to avoid Salesforce throttling.
+Expect back the AI should give you a retry function with exponential backoff and explain how to space out API calls to avoid Salesforce throttling.
 
-**If it doesn't work**, add this follow-up:
+Still hitting the error? Send:
 > The fix didn't work. I'm still getting 420 errors even with delays. Here's my retry code: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Salesforce throttling), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

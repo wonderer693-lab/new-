@@ -60,16 +60,14 @@ for email, contacts in list(dupes.items())[:5]:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI assistant the full picture of both tools involved:
 
 > I'm integrating Zoho CRM with Mailchimp and contacts with the same email are overwriting each other. Zoho allows duplicate emails but Mailchimp uses email as the unique key. How do I detect and resolve duplicates before syncing?
 
-**What to expect:** The AI should help you detect Zoho duplicates, choose winners, and suppress losers before the Mailchimp sync.
+The AI should provide help detecting Zoho duplicates, choosing winners, and suppressing losers before the Mailchimp sync.
 
-**If it doesn't work**, add this follow-up:
+If the first attempt misses a tool-specific detail, follow up with:
 > I resolved duplicates but some emails differ only by casing (User@Example.com vs user@example.com). How do I normalize emails before deduplication?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

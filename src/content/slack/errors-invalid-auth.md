@@ -48,19 +48,17 @@ if resp.json().get("error") == "invalid_auth":
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start by asking your AI coding tool:
 
 > I'm getting an "invalid_auth" error from the Slack API.
 > The response is: {"ok":false,"error":"invalid_auth"}
 > I'm using a bot token that starts with xoxb-.
 > Please give me a step-by-step fix with working Python code to validate and fix my Slack token.
 
-**What to expect:** The AI should walk you through checking your token format, testing it against Slack's auth.test endpoint, and regenerating it if needed.
+The response should walk you through checking your token format, testing it against Slack's auth.test endpoint, and regenerating it if needed.
 
-**If it doesn't work**, add this follow-up:
+If that doesn't resolve it, send a second prompt:
 > The fix didn't work. I regenerated the token but still get invalid_auth. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining Slack auth), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

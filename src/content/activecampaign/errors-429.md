@@ -50,19 +50,17 @@ if resp.status_code == 429:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into any AI tool:
 
 > I'm getting a 429 Too Many Requests error from the ActiveCampaign API.
 > The error message is: "Rate limit exceeded"
 > I'm running a bulk contact sync that makes many API calls in a loop.
 > Please give me a step-by-step fix with working Python code that handles rate limiting with delays and retries.
 
-**What to expect:** The AI should give you a throttling function with delays between requests and exponential backoff for retries.
+Expect back the AI should give you a throttling function with delays between requests and exponential backoff for retries.
 
-**If it doesn't work**, add this follow-up:
+Still hitting the error? Send:
 > The fix didn't work. I'm still getting 429 errors even with delays. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining rate limit strategies), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

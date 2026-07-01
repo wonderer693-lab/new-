@@ -50,19 +50,17 @@ if resp.status_code == 422:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 422 Unprocessable Entity error from the ActiveCampaign API.
 > The error message is: "Missing or invalid parameter"
 > I'm trying to create a contact but ActiveCampaign rejects my request.
 > Please give me a step-by-step fix with working Python code and the correct payload format.
 
-**What to expect:** The AI should show you the correct payload structure, list required fields, and explain how to read the error details to find the exact problem field.
+A good response will show you the correct payload structure, list required fields, and explain how to read the error details to find the exact problem field.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. Here's my payload and the full error response: [paste both]. Please tell me exactly which field is wrong.
-
-**Best AI tools for this:** Claude (best at explaining API schemas), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

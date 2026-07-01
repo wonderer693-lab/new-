@@ -49,19 +49,17 @@ if resp.status_code >= 500:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 500 Internal Server Error from Zapier when my Zap tries to run.
 > The error message says: "Internal Server Error" or "server error"
 > My Zap was working fine before and I haven't changed anything.
 > Please tell me how to check if Zapier is down, and how to set up automatic retries so my Zap recovers on its own.
 
-**What to expect:** The AI should show you how to check Zapier's status page and set up retry logic so your Zap automatically tries again when the server recovers.
+The AI should return instructions for checking Zapier's status page and setting up retry logic so your Zap automatically tries again when the server recovers.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > Zapier's status page says everything is fine, but I'm still getting 500 errors. Here's my Zap setup: [describe your Zap]. What should I do?
-
-**Best AI tools for this:** Claude (best at explaining server errors simply), ChatGPT-4 (good at Zapier troubleshooting steps), Cursor (if you're writing custom retry logic)
 
 </div>
 

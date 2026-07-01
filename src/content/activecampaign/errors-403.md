@@ -49,19 +49,17 @@ if resp.status_code == 403:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting a 403 Forbidden error from the ActiveCampaign API.
 > The error message is: "Authentication failed or user not authorized for resource"
 > My API key works for some endpoints but not others.
 > Please give me a step-by-step fix to grant the right permissions.
 
-**What to expect:** The AI should walk you through checking user permissions in ActiveCampaign and show you which modules need to be enabled.
+Expect the AI to walk you through checking user permissions in ActiveCampaign and show you which modules need to be enabled. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > I've enabled all permissions but I'm still getting 403 on the deals endpoint. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining permission models), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

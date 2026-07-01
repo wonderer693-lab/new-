@@ -51,19 +51,17 @@ if resp.status_code == 403:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting a 403 Forbidden error from the HubSpot API.
 > The error says "Missing scopes" and "insufficient permissions."
 > I'm trying to read deals using the CRM API.
 > Please tell me which OAuth scopes I need and how to re-authorize my app with those scopes.
 
-**What to expect:** The AI should list the exact OAuth scopes needed for your endpoint and give you the authorization URL with those scopes included.
+Expect the AI to list the exact OAuth scopes needed for your endpoint and give you the authorization URL with those scopes included. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. I re-authorized but still get 403. Here's my authorization URL: [paste it]. Please check if the scopes are correct.
-
-**Best AI tools for this:** Claude (best at explaining OAuth scopes), ChatGPT-4 (good at building auth URLs), Cursor (if you want inline code fixes)
 
 </div>
 

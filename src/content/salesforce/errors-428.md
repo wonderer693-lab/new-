@@ -50,19 +50,17 @@ resp = requests.patch(f"{instance_url}/services/data/v60.0/sobjects/Contact/003I
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Send this to your AI coding assistant and ask it to generate working code:
 
 > I'm getting a 428 Precondition Required error from the Salesforce API.
 > The error message is: "Precondition Required" or "PRECONDITION_REQUIRED"
 > I'm trying to update a Salesforce record with a PATCH request.
 > Please give me a step-by-step fix with working Python code that reads the ETag and adds the If-Match header.
 
-**What to expect:** The AI should give you a read-then-update pattern that fetches the ETag first and includes it in the update request headers.
+You want code that the AI should give you a read-then-update pattern that fetches the ETag first and includes it in the update request headers.
 
-**If it doesn't work**, add this follow-up:
+If the generated code doesn't handle the edge cases, refine with:
 > The fix didn't work. I added the If-Match header but now I'm getting 412 Precondition Failed. Here's my code: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining HTTP conditional requests), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

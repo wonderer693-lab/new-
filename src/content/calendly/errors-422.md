@@ -53,19 +53,17 @@ print(resp.json().get("errors", "Success"))
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 422 Unprocessable Entity error from the Calendly API.
 > The error message is: "validation error"
 > I'm trying to create a scheduled event in Calendly with a booking request.
 > Please give me a step-by-step fix to validate my invitee data and request payload before sending.
 
-**What to expect:** The AI should show you how to validate UUIDs, check required fields, and format dates correctly for Calendly bookings.
+You should get code that validates UUIDs, checks required fields, and formats dates correctly for Calendly bookings.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm still getting 422 errors. Here's my request payload: [paste your JSON]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining validation rules), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

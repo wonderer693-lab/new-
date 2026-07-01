@@ -52,19 +52,17 @@ instance_url = resp.json()["instance_url"]
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+The more context you give your AI, the better the fix. Send this:
 
 > I'm getting an INVALID_SESSION_ID error from the Salesforce API.
 > The error message is: "Session expired or invalid"
 > My integration was working fine but suddenly started failing on every request.
 > Please give me a step-by-step fix with working Python code that auto-detects INVALID_SESSION_ID and refreshes the OAuth token automatically.
 
-**What to expect:** The AI should give you a wrapper function that catches INVALID_SESSION_ID errors, refreshes the token, and retries the original request — all automatically.
+Expect the AI to give you a wrapper function that catches INVALID_SESSION_ID errors, refreshes the token, and retries the original request — all automatically. 
 
-**If it doesn't work**, add this follow-up:
+Still stuck? Reply with this:
 > The fix didn't work. The refresh token is also returning an error. Here's the error: [paste error]. Please help me re-authenticate.
-
-**Best AI tools for this:** Claude (best at explaining Salesforce session management), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

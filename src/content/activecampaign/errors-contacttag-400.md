@@ -47,19 +47,17 @@ print(resp.status_code)  # 201 means it worked
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 400 Bad Request error from the ActiveCampaign contactTags API.
 > The error message mentions "contactTag wrapper" or "Invalid request".
 > I'm sending POST /api/3/contactTags with payload {"contact": "1", "tag": "2"}.
 > Please give me the correct payload format with working Python code.
 
-**What to expect:** The AI should show you the correct wrapper structure and explain that ActiveCampaign requires all resource payloads to be wrapped in a resource key.
+You should get the correct wrapper structure and understand that ActiveCampaign requires all resource payloads to be wrapped in a resource key.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm using the contactTag wrapper but still getting 400. Here's my exact payload: [paste it]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining API payload structures), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

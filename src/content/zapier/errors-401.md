@@ -49,19 +49,17 @@ if resp.status_code == 401:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 401 Unauthorized error from Zapier when my Zap tries to run.
 > The error message says: "authentication failed" or "Invalid or expired access token"
 > My Zap connects to [App Name] and was working fine before.
 > Please walk me through how to reconnect the app in Zapier and fix this auth error.
 
-**What to expect:** The AI should guide you through reconnecting the expired app in Zapier's "My Apps" page and explain why the token expired.
+You should get back a guide through reconnecting the expired app in Zapier's "My Apps" page and an explanation of why the token expired.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > I reconnected the app but I'm still getting 401 errors. Here's what I see: [paste error]. What else could be wrong?
-
-**Best AI tools for this:** Claude (best at explaining OAuth token expiry), ChatGPT-4 (good step-by-step Zapier walkthroughs), Cursor (if you're writing custom token refresh code)
 
 </div>
 

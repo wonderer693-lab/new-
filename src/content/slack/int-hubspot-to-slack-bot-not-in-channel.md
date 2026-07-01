@@ -57,16 +57,14 @@ print(resp.json())  # Should show {"ok": true}
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm integrating HubSpot with Slack and getting 'not_in_channel' errors when posting to private channels. The Slack bot has chat:write scope but hasn't been invited to the target channel. How do I invite the bot and prevent this from happening with new channels?
 
-**What to expect:** The AI should walk you through inviting the bot to the channel and setting up auto-join for future channels.
+Expect back a walkthrough of inviting the bot to the channel and setting up auto-join for future channels.
 
-**If it doesn't work**, add this follow-up:
+Didn't work? Send a refinement prompt:
 > I invited the bot but it still gets 'not_in_channel' on some channels. Could workspace admin policies be blocking the bot?
-
-**Best AI tools for this:** ChatGPT-4 (good at step-by-step UI navigation), Claude (good at explaining API concepts)
 
 </div>
 

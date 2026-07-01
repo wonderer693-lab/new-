@@ -47,19 +47,17 @@ for i in range(0, len(all_records), batch_size):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 413 Payload Too Large error from Make (Integromat).
 > The error message is: "Payload too large — data size exceeded"
 > I'm trying to send a large amount of data through Make but it's too big.
 > Please give me a step-by-step fix to split the data into smaller chunks.
 
-**What to expect:** The AI should give you code to batch your data and explain Make's payload size limits.
+The AI should return code to batch your data and explain Make's payload size limits.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting 413 errors. Here's my payload size: [paste size]. Please help me reduce it further.
-
-**Best AI tools for this:** Claude (best at explaining batching strategies), ChatGPT-4 (good at chunking code), Cursor (if you want inline code fixes)
 
 </div>
 

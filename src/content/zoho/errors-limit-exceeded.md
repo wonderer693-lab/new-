@@ -49,19 +49,17 @@ if resp.json().get("code") == "LIMIT_EXCEEDED":
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Send this to your AI coding assistant and ask it to generate working code:
 
 > I'm getting a "LIMIT_EXCEEDED" error from the Zoho CRM API.
 > The error message is: "General limit exceeded"
 > I'm running an integration that makes many API calls to Zoho.
 > Please give me a step-by-step fix with working Python code that implements exponential backoff and checks my plan's rate limits.
 
-**What to expect:** The AI should give you a retry function with exponential backoff and help you identify which Zoho limit you're hitting (per-minute, daily, or concurrent).
+You want code that the AI should give you a retry function with exponential backoff and help you identify which Zoho limit you're hitting (per-minute, daily, or concurrent).
 
-**If it doesn't work**, add this follow-up:
+If the generated code doesn't handle the edge cases, refine with:
 > The fix didn't work. I'm still getting LIMIT_EXCEEDED errors. Here's my Zoho edition and how many calls I make per minute: [details]. Please help me optimize.
-
-**Best AI tools for this:** Claude (best at explaining API limits), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

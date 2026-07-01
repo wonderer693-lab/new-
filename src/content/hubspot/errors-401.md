@@ -50,19 +50,17 @@ new_token = resp.json()["access_token"]
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Paste this into ChatGPT, Claude, Cursor, or Gemini:
 
 > I'm getting a 401 Unauthorized error from the HubSpot API.
 > The error message says "Invalid API key" and "authentication failed."
 > I'm using OAuth tokens with a refresh token flow.
 > Please give me code that detects expired tokens, refreshes them automatically, and retries the original request.
 
-**What to expect:** The AI should give you a token refresh function with automatic retry logic that handles expired access tokens gracefully.
+You should get back a token refresh function with automatic retry logic that handles expired access tokens gracefully.
 
-**If it doesn't work**, add this follow-up:
+If the first fix doesn't work, follow up with:
 > The fix didn't work. My refresh token might also be invalid. How do I re-authorize the OAuth flow from scratch?
-
-**Best AI tools for this:** Claude (best at explaining OAuth flows), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

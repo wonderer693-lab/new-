@@ -49,19 +49,17 @@ for et in resp.json().get("collection", []):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Give your AI as much detail as you can. Paste this:
 
 > I'm getting a 404 Not Found error from the Calendly API.
 > The error message is: "Resource not found"
 > I'm trying to access a Calendly event type or scheduled event by its UUID.
 > Please give me a step-by-step fix to verify the event type URI and handle missing resources.
 
-**What to expect:** The AI should show you how to list valid event types, validate UUIDs, and handle deleted resources gracefully.
+The AI should return code that lists valid event types, validates UUIDs, and handles deleted resources gracefully.
 
-**If it doesn't work**, add this follow-up:
+If you're still seeing errors, send a second prompt with what you tried:
 > The fix didn't work. I'm still getting 404 errors. Here's the UUID I'm using: [paste your UUID]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining UUID issues), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

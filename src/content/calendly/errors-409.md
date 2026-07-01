@@ -49,19 +49,17 @@ for wh in resp.json().get("collection", []):
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Start with this prompt in ChatGPT, Claude, or any AI coding assistant:
 
 > I'm getting a 409 Conflict error from the Calendly API.
 > The error message is: "Resource already exists" or "already booked"
 > I'm trying to create a webhook subscription or book a time slot in Calendly.
 > Please give me a step-by-step fix to check for existing resources and add an availability check before booking.
 
-**What to expect:** The AI should show you how to list existing resources, delete duplicates, and add availability checks before creating new bookings.
+A good response will show you how to list existing resources, delete duplicates, and add availability checks before creating new bookings.
 
-**If it doesn't work**, add this follow-up:
+Follow up with additional context if needed:
 > The fix didn't work. I'm still getting 409 errors. Here's what I tried: [paste your code]. Please debug this.
-
-**Best AI tools for this:** Claude (best at explaining conflict resolution), ChatGPT-4 (good code generation), Cursor (if you want inline code fixes)
 
 </div>
 

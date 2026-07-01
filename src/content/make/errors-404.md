@@ -48,19 +48,17 @@ if resp.status_code == 404:
 
 ## Fix This With AI <span class="audience-badge audience-badge--no-code">No Code</span>
 
-Copy this prompt and paste it into ChatGPT, Claude, or your AI coding assistant:
+Copy and send this to your AI tool:
 
 > I'm getting a 404 Not Found error from Make (Integromat).
 > The error message is: "Resource not found"
 > I'm trying to access a Make scenario or module but it says it doesn't exist.
 > Please give me a step-by-step fix to verify the resource ID and find the correct one.
 
-**What to expect:** The AI should help you list your existing scenarios and modules to find the correct IDs.
+You should get help listing your existing scenarios and modules to find the correct IDs.
 
-**If it doesn't work**, add this follow-up:
+If the error persists, try this follow-up:
 > The fix didn't work. I'm still getting 404 errors. Here's the ID I'm using: [paste ID]. Please help me find the right one.
-
-**Best AI tools for this:** Claude (best at explaining Make resource IDs), ChatGPT-4 (good at listing resources), Cursor (if you want inline code fixes)
 
 </div>
 
